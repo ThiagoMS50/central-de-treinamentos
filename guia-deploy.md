@@ -95,11 +95,13 @@ git push -u origin main
 1. Acesse [render.com](https://render.com/) e faça login com sua conta GitHub.
 2. Clique em **New → Web Service** e selecione o repositório.
 3. O Render detecta o `Dockerfile` na raiz e usa Docker automaticamente (ele já faz o build do React e do backend em conjunto — veja o `Dockerfile` na raiz do projeto).
-4. Em **Environment Variables**, adicione:
+4. Em **Environment Variables**, adicione (atenção: os quatro primeiros nomes usam **dois** underlines `__`, não um — é assim que o .NET entende que são sub-configurações dentro de "Supabase"):
    - `Supabase__Url`
    - `Supabase__AnonKey`
    - `Supabase__ServiceRoleKey`
    - `Supabase__AdminBootstrapEmail`
+   - `VITE_SUPABASE_URL` (mesmo valor de `Supabase__Url`) — o **frontend** (React) precisa dessa cópia porque ele grava a URL dentro dos arquivos já na hora da construção do site, e não consegue reaproveitar a variável do backend.
+   - `VITE_SUPABASE_ANON_KEY` (mesmo valor de `Supabase__AnonKey`) — pelo mesmo motivo.
 5. Selecione o plano **Free** e clique em **Create Web Service**. O Render injeta a variável `PORT` automaticamente — o `Dockerfile` já está preparado pra escutar nela. O Render gera uma URL pública (ex: `https://seu-projeto.onrender.com`) — essa é a única URL do sistema, front e back juntos.
 
 ## 5. Checklist antes de uma apresentação ao vivo
