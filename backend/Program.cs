@@ -26,6 +26,15 @@ var supabaseOptions = builder.Configuration.GetSection(SupabaseOptions.SectionNa
 // Tolerante a erros comuns de copiar/colar a variável de ambiente (aspas ou espaços sobrando).
 var supabaseUrl = (supabaseOptions.Url ?? string.Empty).Trim().Trim('"').TrimEnd('/');
 
+// Falha alto e claro (mostrando o valor recebido — não é segredo) em vez de deixar o erro
+// genérico e confuso do JwtBearer aparecer em toda requisição.
+if (!supabaseUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+{
+    throw new InvalidOperationException(
+        $"Configuração inválida: a variável de ambiente Supabase__Url precisa começar com https://. " +
+        $"Valor recebido (comprimento {supabaseUrl.Length}): '{supabaseUrl}'");
+}
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
