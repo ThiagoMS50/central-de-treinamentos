@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
+// Containers Linux com poucos recursos (ex: plano free do Render) têm um limite baixo de
+// "inotify instances" — o recurso do SO que o .NET usaria para vigiar o appsettings.json e
+// recarregar sozinho se ele mudasse. Isso não é necessário num deploy (o arquivo não muda em
+// produção), então desligamos antes de criar o builder para evitar o container derrubar o app.
+Environment.SetEnvironmentVariable("DOTNET_hostBuilder__reloadConfigOnChange", "false");
+
 var builder = WebApplication.CreateBuilder(args);
 
 const string DevCorsPolicy = "DevCorsPolicy";
