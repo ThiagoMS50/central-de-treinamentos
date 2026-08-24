@@ -17,3 +17,6 @@ frontend/.env*.local
 .vscode/
 .idea/
 .DS_Store
+
+# Claude Code (config local desta máquina, não é parte do projeto)
+.claude/settings.local.json

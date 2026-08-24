@@ -16,7 +16,9 @@ builder.Services.Configure<SupabaseOptions>(
 
 var supabaseOptions = builder.Configuration.GetSection(SupabaseOptions.SectionName).Get<SupabaseOptions>()
     ?? new SupabaseOptions();
-var supabaseUrl = supabaseOptions.Url.TrimEnd('/');
+
+// Tolerante a erros comuns de copiar/colar a variável de ambiente (aspas ou espaços sobrando).
+var supabaseUrl = (supabaseOptions.Url ?? string.Empty).Trim().Trim('"').TrimEnd('/');
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
