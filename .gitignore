@@ -1,0 +1,19 @@
+# .NET
+backend/bin/
+backend/obj/
+backend/appsettings.Development.json
+
+# Build do React copiado para dentro do backend (gerado em cada build/deploy)
+backend/wwwroot/
+
+# Node / React
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env*.local
+
+# Editores / SO
+.vs/
+.vscode/
+.idea/
+.DS_Store

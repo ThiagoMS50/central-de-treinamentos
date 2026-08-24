@@ -1,0 +1,184 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "actions": "Actions",
+    "empty": "Nothing here yet.",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "hours": "hours",
+    "confirmDelete": "Are you sure you want to delete this?",
+    "logout": "Log out",
+    "search": "Search..."
+  },
+  "nav": {
+    "cursos": "Courses",
+    "relatorios": "Reports",
+    "admin": "Administration"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up",
+      "invalidCredentials": "Invalid email or password."
+    },
+    "cadastro": {
+      "title": "Create account",
+      "nome": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "submit": "Sign up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "passwordMismatch": "Passwords don't match.",
+      "checkEmail": "Check your email to confirm your registration."
+    }
+  },
+  "dashboard": {
+    "title": "My training",
+    "trilhasTitle": "My learning tracks",
+    "cursosTitle": "Courses",
+    "emptyCursos": "No courses available yet.",
+    "emptyTrilhas": "No learning tracks available yet."
+  },
+  "status": {
+    "nao_iniciado": "Not started",
+    "em_andamento": "In progress",
+    "concluido": "Completed",
+    "em_dia": "On track",
+    "atrasado": "Overdue"
+  },
+  "curso": {
+    "materiais": "Materials",
+    "downloadMaterial": "Download",
+    "quiz": "Practice quiz",
+    "markComplete": "Mark as completed",
+    "completed": "Completed",
+    "downloadCertificate": "Download certificate",
+    "deadline": "Deadline",
+    "noMaterials": "No materials added yet.",
+    "noQuiz": "This course has no practice quiz.",
+    "cargaHoraria": "Duration"
+  },
+  "quiz": {
+    "correct": "Correct!",
+    "incorrect": "Incorrect.",
+    "submit": "Answer"
+  },
+  "trilha": {
+    "progress": "Progress",
+    "coursesInTrack": "Courses in this track",
+    "completeAll": "Complete all courses to issue the track certificate.",
+    "downloadCertificate": "Download track certificate"
+  },
+  "admin": {
+    "cursos": {
+      "title": "Courses",
+      "new": "New course",
+      "edit": "Edit course",
+      "titulo": "Title",
+      "descricao": "Description",
+      "cargaHoraria": "Duration (hours)",
+      "temPrazo": "This course has a deadline",
+      "prazoDias": "Deadline (days after first access)",
+      "materiais": "Materials",
+      "addMaterial": "Add material",
+      "quizBuilder": "Practice quiz",
+      "addQuestion": "Add question",
+      "question": "Question",
+      "correctAnswer": "Correct",
+      "alternative": "Option",
+      "addAlternative": "Add option",
+      "saveQuiz": "Save quiz"
+    },
+    "trilhas": {
+      "title": "Learning tracks",
+      "new": "New track",
+      "edit": "Edit track",
+      "titulo": "Title",
+      "descricao": "Description",
+      "assignCourses": "Courses in this track",
+      "order": "Order",
+      "availableCourses": "Available courses"
+    },
+    "usuarios": {
+      "title": "Users",
+      "nome": "Name",
+      "email": "Email",
+      "role": "Role",
+      "manager": "Manager",
+      "none": "None"
+    }
+  },
+  "roles": {
+    "aluno": "Student",
+    "gestor": "Team manager",
+    "admin": "Administrator"
+  },
+  "relatorios": {
+    "title": "Reports",
+    "period": "Period",
+    "course": "Course",
+    "user": "Employee",
+    "exportCsv": "Export CSV",
+    "completionRate": "Overall completion rate",
+    "avgTime": "Average completion time (days)",
+    "avgQuizScore": "Average quiz score",
+    "completionByCourse": "Completion by course",
+    "overdue": "Overdue",
+    "teamProgress": "Progress by team",
+    "noData": "No data for the selected filters.",
+    "from": "From",
+    "to": "To"
+  },
+  "tour": {
+    "skip": "Skip",
+    "next": "Next",
+    "prev": "Previous",
+    "finish": "Finish",
+    "stepCounter": "Step {{current}} of {{total}}",
+    "replay": "Watch tour again",
+    "steps": {
+      "welcome": {
+        "title": "Welcome to the Training Hub!",
+        "body": "Let's take a quick tour of the platform's main features. You can skip at any time."
+      },
+      "dashboard": {
+        "title": "Your training",
+        "body": "Here you see every available learning track and course, with each one's status: not started, in progress, or completed."
+      },
+      "curso": {
+        "title": "Inside a course",
+        "body": "Opening a course shows its downloadable materials and, when available, a practice quiz — it's just for reinforcing the content, with no passing score or attempt limit."
+      },
+      "certificado": {
+        "title": "Complete and issue a certificate",
+        "body": "After going through the content, click \"Mark as completed\". A PDF certificate becomes available for download immediately, with a validation code."
+      },
+      "idioma": {
+        "title": "Language and your account",
+        "body": "At the top of the screen you can switch language (Português, English, Español) and, from your name's menu, sign out."
+      },
+      "relatorios": {
+        "title": "Team reports",
+        "body": "As a Team manager, you have access to Reports: track your team's progress, see who's overdue, and export the data as CSV."
+      },
+      "admin": {
+        "title": "Administration area",
+        "body": "As an Administrator, you also have access to Administration: create courses, materials, quizzes, learning tracks, and manage each user's role (student, manager, or admin)."
+      }
+    }
+  }
+}

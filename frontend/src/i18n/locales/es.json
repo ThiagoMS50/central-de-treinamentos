@@ -1,0 +1,184 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error.",
+    "retry": "Intentar de nuevo",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "actions": "Acciones",
+    "empty": "Nada por aquí todavía.",
+    "yes": "Sí",
+    "no": "No",
+    "back": "Volver",
+    "hours": "horas",
+    "confirmDelete": "¿Seguro que quieres eliminar esto?",
+    "logout": "Salir",
+    "search": "Buscar..."
+  },
+  "nav": {
+    "cursos": "Cursos",
+    "relatorios": "Informes",
+    "admin": "Administración"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Entrar",
+      "noAccount": "¿No tienes una cuenta?",
+      "signupLink": "Regístrate",
+      "invalidCredentials": "Correo electrónico o contraseña inválidos."
+    },
+    "cadastro": {
+      "title": "Crear cuenta",
+      "nome": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Iniciar sesión",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "checkEmail": "Revisa tu correo para confirmar el registro."
+    }
+  },
+  "dashboard": {
+    "title": "Mis capacitaciones",
+    "trilhasTitle": "Mis rutas de aprendizaje",
+    "cursosTitle": "Cursos",
+    "emptyCursos": "Aún no hay cursos disponibles.",
+    "emptyTrilhas": "Aún no hay rutas de aprendizaje disponibles."
+  },
+  "status": {
+    "nao_iniciado": "No iniciado",
+    "em_andamento": "En curso",
+    "concluido": "Completado",
+    "em_dia": "Al día",
+    "atrasado": "Atrasado"
+  },
+  "curso": {
+    "materiais": "Materiales",
+    "downloadMaterial": "Descargar",
+    "quiz": "Cuestionario de práctica",
+    "markComplete": "Marcar como completado",
+    "completed": "Completado",
+    "downloadCertificate": "Descargar certificado",
+    "deadline": "Plazo",
+    "noMaterials": "Aún no hay materiales agregados.",
+    "noQuiz": "Este curso no tiene cuestionario de práctica.",
+    "cargaHoraria": "Duración"
+  },
+  "quiz": {
+    "correct": "¡Correcto!",
+    "incorrect": "Incorrecto.",
+    "submit": "Responder"
+  },
+  "trilha": {
+    "progress": "Progreso",
+    "coursesInTrack": "Cursos de esta ruta",
+    "completeAll": "Completa todos los cursos para emitir el certificado de la ruta.",
+    "downloadCertificate": "Descargar certificado de la ruta"
+  },
+  "admin": {
+    "cursos": {
+      "title": "Cursos",
+      "new": "Nuevo curso",
+      "edit": "Editar curso",
+      "titulo": "Título",
+      "descricao": "Descripción",
+      "cargaHoraria": "Duración (horas)",
+      "temPrazo": "Este curso tiene plazo",
+      "prazoDias": "Plazo (días después del primer acceso)",
+      "materiais": "Materiales",
+      "addMaterial": "Agregar material",
+      "quizBuilder": "Cuestionario de práctica",
+      "addQuestion": "Agregar pregunta",
+      "question": "Pregunta",
+      "correctAnswer": "Correcta",
+      "alternative": "Opción",
+      "addAlternative": "Agregar opción",
+      "saveQuiz": "Guardar cuestionario"
+    },
+    "trilhas": {
+      "title": "Rutas de aprendizaje",
+      "new": "Nueva ruta",
+      "edit": "Editar ruta",
+      "titulo": "Título",
+      "descricao": "Descripción",
+      "assignCourses": "Cursos de esta ruta",
+      "order": "Orden",
+      "availableCourses": "Cursos disponibles"
+    },
+    "usuarios": {
+      "title": "Usuarios",
+      "nome": "Nombre",
+      "email": "Correo electrónico",
+      "role": "Rol",
+      "manager": "Gestor",
+      "none": "Ninguno"
+    }
+  },
+  "roles": {
+    "aluno": "Alumno",
+    "gestor": "Gestor de equipo",
+    "admin": "Administrador"
+  },
+  "relatorios": {
+    "title": "Informes",
+    "period": "Período",
+    "course": "Curso",
+    "user": "Colaborador",
+    "exportCsv": "Exportar CSV",
+    "completionRate": "Tasa de finalización general",
+    "avgTime": "Tiempo medio de finalización (días)",
+    "avgQuizScore": "Puntuación media de los cuestionarios",
+    "completionByCourse": "Finalización por curso",
+    "overdue": "Atrasados",
+    "teamProgress": "Progreso por equipo",
+    "noData": "No hay datos para los filtros seleccionados.",
+    "from": "Desde",
+    "to": "Hasta"
+  },
+  "tour": {
+    "skip": "Omitir",
+    "next": "Siguiente",
+    "prev": "Anterior",
+    "finish": "Finalizar",
+    "stepCounter": "Paso {{current}} de {{total}}",
+    "replay": "Ver el recorrido de nuevo",
+    "steps": {
+      "welcome": {
+        "title": "¡Bienvenido(a) a la Central de Capacitaciones!",
+        "body": "Hagamos un recorrido rápido por las principales funciones de la plataforma. Puedes omitirlo en cualquier momento."
+      },
+      "dashboard": {
+        "title": "Tus capacitaciones",
+        "body": "Aquí ves todas las rutas de aprendizaje y todos los cursos disponibles, con el estado de cada uno: no iniciado, en curso o completado."
+      },
+      "curso": {
+        "title": "Dentro de un curso",
+        "body": "Al abrir un curso encontrarás los materiales para descargar y, cuando exista, un cuestionario de práctica — es solo para reforzar el contenido, sin puntuación mínima ni límite de intentos."
+      },
+      "certificado": {
+        "title": "Completar y emitir el certificado",
+        "body": "Después de estudiar el contenido, haz clic en \"Marcar como completado\". Un certificado en PDF queda disponible para descargar de inmediato, con un código de validación."
+      },
+      "idioma": {
+        "title": "Idioma y tu cuenta",
+        "body": "En la parte superior puedes cambiar el idioma (Português, English, Español) y, en el menú de tu nombre, cerrar sesión."
+      },
+      "relatorios": {
+        "title": "Informes del equipo",
+        "body": "Como Gestor de equipo, tienes acceso a Informes: sigue el progreso de tu equipo, ve quién está atrasado y exporta los datos en CSV."
+      },
+      "admin": {
+        "title": "Área de Administración",
+        "body": "Como Administrador, también tienes acceso a Administración: crea cursos, materiales, cuestionarios, rutas de aprendizaje y gestiona el rol de cada usuario (alumno, gestor o admin)."
+      }
+    }
+  }
+}

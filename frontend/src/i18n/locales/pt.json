@@ -1,0 +1,184 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro.",
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "create": "Criar",
+    "actions": "Ações",
+    "empty": "Nada por aqui ainda.",
+    "yes": "Sim",
+    "no": "Não",
+    "back": "Voltar",
+    "hours": "horas",
+    "confirmDelete": "Tem certeza que deseja excluir?",
+    "logout": "Sair",
+    "search": "Buscar..."
+  },
+  "nav": {
+    "cursos": "Cursos",
+    "relatorios": "Relatórios",
+    "admin": "Administração"
+  },
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "email": "E-mail",
+      "password": "Senha",
+      "submit": "Entrar",
+      "noAccount": "Não tem uma conta?",
+      "signupLink": "Cadastre-se",
+      "invalidCredentials": "E-mail ou senha inválidos."
+    },
+    "cadastro": {
+      "title": "Criar conta",
+      "nome": "Nome",
+      "email": "E-mail",
+      "password": "Senha",
+      "confirmPassword": "Confirmar senha",
+      "submit": "Cadastrar",
+      "hasAccount": "Já tem uma conta?",
+      "loginLink": "Entrar",
+      "passwordMismatch": "As senhas não coincidem.",
+      "checkEmail": "Verifique seu e-mail para confirmar o cadastro."
+    }
+  },
+  "dashboard": {
+    "title": "Meus treinamentos",
+    "trilhasTitle": "Minhas trilhas",
+    "cursosTitle": "Cursos",
+    "emptyCursos": "Nenhum curso disponível ainda.",
+    "emptyTrilhas": "Nenhuma trilha disponível ainda."
+  },
+  "status": {
+    "nao_iniciado": "Não iniciado",
+    "em_andamento": "Em andamento",
+    "concluido": "Concluído",
+    "em_dia": "Em dia",
+    "atrasado": "Atrasado"
+  },
+  "curso": {
+    "materiais": "Materiais",
+    "downloadMaterial": "Baixar",
+    "quiz": "Quiz de prática",
+    "markComplete": "Marcar como concluído",
+    "completed": "Concluído",
+    "downloadCertificate": "Baixar certificado",
+    "deadline": "Prazo",
+    "noMaterials": "Nenhum material cadastrado ainda.",
+    "noQuiz": "Este curso não tem quiz de prática.",
+    "cargaHoraria": "Carga horária"
+  },
+  "quiz": {
+    "correct": "Correto!",
+    "incorrect": "Incorreto.",
+    "submit": "Responder"
+  },
+  "trilha": {
+    "progress": "Progresso",
+    "coursesInTrack": "Cursos desta trilha",
+    "completeAll": "Complete todos os cursos para emitir o certificado da trilha.",
+    "downloadCertificate": "Baixar certificado da trilha"
+  },
+  "admin": {
+    "cursos": {
+      "title": "Cursos",
+      "new": "Novo curso",
+      "edit": "Editar curso",
+      "titulo": "Título",
+      "descricao": "Descrição",
+      "cargaHoraria": "Carga horária (horas)",
+      "temPrazo": "Este curso tem prazo",
+      "prazoDias": "Prazo (dias após o primeiro acesso)",
+      "materiais": "Materiais",
+      "addMaterial": "Adicionar material",
+      "quizBuilder": "Quiz de prática",
+      "addQuestion": "Adicionar pergunta",
+      "question": "Pergunta",
+      "correctAnswer": "Correta",
+      "alternative": "Alternativa",
+      "addAlternative": "Adicionar alternativa",
+      "saveQuiz": "Salvar quiz"
+    },
+    "trilhas": {
+      "title": "Trilhas",
+      "new": "Nova trilha",
+      "edit": "Editar trilha",
+      "titulo": "Título",
+      "descricao": "Descrição",
+      "assignCourses": "Cursos desta trilha",
+      "order": "Ordem",
+      "availableCourses": "Cursos disponíveis"
+    },
+    "usuarios": {
+      "title": "Usuários",
+      "nome": "Nome",
+      "email": "E-mail",
+      "role": "Papel",
+      "manager": "Gestor",
+      "none": "Nenhum"
+    }
+  },
+  "roles": {
+    "aluno": "Aluno",
+    "gestor": "Gestor de equipe",
+    "admin": "Administrador"
+  },
+  "relatorios": {
+    "title": "Relatórios",
+    "period": "Período",
+    "course": "Curso",
+    "user": "Colaborador",
+    "exportCsv": "Exportar CSV",
+    "completionRate": "Taxa de conclusão geral",
+    "avgTime": "Tempo médio de conclusão (dias)",
+    "avgQuizScore": "Nota média nos quizzes",
+    "completionByCourse": "Conclusão por curso",
+    "overdue": "Atrasados",
+    "teamProgress": "Progresso por equipe",
+    "noData": "Sem dados para os filtros selecionados.",
+    "from": "De",
+    "to": "Até"
+  },
+  "tour": {
+    "skip": "Pular",
+    "next": "Próximo",
+    "prev": "Anterior",
+    "finish": "Concluir",
+    "stepCounter": "Passo {{current}} de {{total}}",
+    "replay": "Ver tour novamente",
+    "steps": {
+      "welcome": {
+        "title": "Bem-vindo(a) à Central de Treinamentos!",
+        "body": "Vamos fazer um tour rápido pelas principais funções da plataforma. Você pode pular a qualquer momento."
+      },
+      "dashboard": {
+        "title": "Seus treinamentos",
+        "body": "Aqui você vê todas as trilhas e todos os cursos disponíveis, com o status de cada um: não iniciado, em andamento ou concluído."
+      },
+      "curso": {
+        "title": "Dentro de um curso",
+        "body": "Ao abrir um curso, você encontra os materiais para baixar e, quando houver, um quiz de prática — ele é só para fixar o conteúdo, não tem nota mínima nem limite de tentativas."
+      },
+      "certificado": {
+        "title": "Concluir e emitir certificado",
+        "body": "Depois de estudar o conteúdo, clique em \"Marcar como concluído\". Um certificado em PDF fica disponível para download imediatamente, com um código de validação."
+      },
+      "idioma": {
+        "title": "Idioma e sua conta",
+        "body": "No topo da tela você pode trocar o idioma (Português, English, Español) e, no menu do seu nome, sair da conta."
+      },
+      "relatorios": {
+        "title": "Relatórios da equipe",
+        "body": "Como Gestor, você tem acesso a Relatórios: acompanhe o progresso da sua equipe, veja quem está atrasado e exporte os dados em CSV."
+      },
+      "admin": {
+        "title": "Área de Administração",
+        "body": "Como Administrador, você também tem acesso a Administração: cadastre cursos, materiais, quizzes, trilhas, e gerencie o papel de cada usuário (aluno, gestor ou admin)."
+      }
+    }
+  }
+}
