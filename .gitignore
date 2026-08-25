@@ -12,6 +12,9 @@ frontend/dist/
 frontend/.env.local
 frontend/.env*.local
 
+# Docker local (contém chaves do Supabase — veja docker.env.local.example)
+docker.env.local
+
 # Editores / SO
 .vs/
 .vscode/
