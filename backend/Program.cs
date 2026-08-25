@@ -57,6 +57,14 @@ builder.Services.AddHttpClient<ISupabaseStorageClient, SupabaseStorageClient>(cl
     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseOptions.ServiceRoleKey}");
 });
 
+// Endpoint público do GoTrue (envio de e-mail de recuperação de senha) — usa a anon key, igual
+// ao que o supabase-js do frontend usaria, já que não é uma operação privilegiada.
+builder.Services.AddHttpClient<ISupabaseAuthClient, SupabaseAuthClient>(client =>
+{
+    client.BaseAddress = new Uri($"{supabaseUrl}/auth/v1/");
+    client.DefaultRequestHeaders.Add("apikey", supabaseOptions.AnonKey);
+});
+
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddSingleton<INotificationService, LogOnlyNotificationService>();
 builder.Services.AddScoped<ProgressoService>();

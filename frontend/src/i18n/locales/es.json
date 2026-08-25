@@ -16,7 +16,9 @@
     "hours": "horas",
     "confirmDelete": "¿Seguro que quieres eliminar esto?",
     "logout": "Salir",
-    "search": "Buscar..."
+    "search": "Buscar...",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
   },
   "nav": {
     "cursos": "Cursos",
@@ -31,7 +33,9 @@
       "submit": "Entrar",
       "noAccount": "¿No tienes una cuenta?",
       "signupLink": "Regístrate",
-      "invalidCredentials": "Correo electrónico o contraseña inválidos."
+      "invalidCredentials": "Correo electrónico o contraseña inválidos.",
+      "forgotPassword": "Olvidé mi contraseña",
+      "passwordResetSuccess": "Contraseña restablecida con éxito. Inicia sesión con tu nueva contraseña."
     },
     "cadastro": {
       "title": "Crear cuenta",
@@ -44,6 +48,24 @@
       "loginLink": "Iniciar sesión",
       "passwordMismatch": "Las contraseñas no coinciden.",
       "checkEmail": "Revisa tu correo para confirmar el registro."
+    },
+    "esqueciSenha": {
+      "title": "Olvidé mi contraseña",
+      "instructions": "Ingresa tu correo registrado. Si existe, te enviaremos un enlace para crear una nueva contraseña.",
+      "email": "Correo electrónico",
+      "submit": "Enviar enlace de restablecimiento",
+      "backToLogin": "Volver a iniciar sesión",
+      "notFound": "No encontramos una cuenta con este correo electrónico.",
+      "success": "Enviamos un correo con un enlace para que crees una nueva contraseña."
+    },
+    "redefinirSenha": {
+      "title": "Crear nueva contraseña",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "submit": "Guardar nueva contraseña",
+      "mismatch": "Las contraseñas no coinciden.",
+      "invalidLink": "Este enlace de restablecimiento es inválido o ha caducado.",
+      "requestNewLink": "Solicitar un nuevo enlace"
     }
   },
   "dashboard": {

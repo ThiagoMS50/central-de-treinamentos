@@ -16,7 +16,9 @@
     "hours": "horas",
     "confirmDelete": "Tem certeza que deseja excluir?",
     "logout": "Sair",
-    "search": "Buscar..."
+    "search": "Buscar...",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha"
   },
   "nav": {
     "cursos": "Cursos",
@@ -31,7 +33,9 @@
       "submit": "Entrar",
       "noAccount": "Não tem uma conta?",
       "signupLink": "Cadastre-se",
-      "invalidCredentials": "E-mail ou senha inválidos."
+      "invalidCredentials": "E-mail ou senha inválidos.",
+      "forgotPassword": "Esqueci minha senha",
+      "passwordResetSuccess": "Senha redefinida com sucesso. Faça login com sua nova senha."
     },
     "cadastro": {
       "title": "Criar conta",
@@ -44,6 +48,24 @@
       "loginLink": "Entrar",
       "passwordMismatch": "As senhas não coincidem.",
       "checkEmail": "Verifique seu e-mail para confirmar o cadastro."
+    },
+    "esqueciSenha": {
+      "title": "Esqueci minha senha",
+      "instructions": "Informe seu e-mail cadastrado. Se ele existir, enviaremos um link para você criar uma nova senha.",
+      "email": "E-mail",
+      "submit": "Enviar link de redefinição",
+      "backToLogin": "Voltar para o login",
+      "notFound": "Não encontramos um cadastro com este e-mail.",
+      "success": "Enviamos um e-mail com um link para você criar uma nova senha."
+    },
+    "redefinirSenha": {
+      "title": "Criar nova senha",
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar nova senha",
+      "submit": "Salvar nova senha",
+      "mismatch": "As senhas não coincidem.",
+      "invalidLink": "Este link de redefinição é inválido ou expirou.",
+      "requestNewLink": "Solicitar um novo link"
     }
   },
   "dashboard": {

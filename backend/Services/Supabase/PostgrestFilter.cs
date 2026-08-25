@@ -5,6 +5,9 @@ public static class PostgrestFilter
 {
     public static string Eq(string column, object value) => $"{column}=eq.{Uri.EscapeDataString(value.ToString() ?? string.Empty)}";
 
+    // ilike sem "%" faz uma comparação exata mas sem diferenciar maiúsculas/minúsculas — útil pra e-mail.
+    public static string Ilike(string column, object value) => $"{column}=ilike.{Uri.EscapeDataString(value.ToString() ?? string.Empty)}";
+
     public static string In(string column, IEnumerable<object> values)
     {
         var joined = string.Join(",", values.Select(v => Uri.EscapeDataString(v.ToString() ?? string.Empty)));

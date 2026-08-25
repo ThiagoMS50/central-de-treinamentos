@@ -5,6 +5,8 @@ import { RedirectIfAuthenticated } from './RedirectIfAuthenticated';
 import { AppLayout } from '../components/layout/AppLayout';
 import { LoginPage } from '../pages/auth/LoginPage';
 import { CadastroPage } from '../pages/auth/CadastroPage';
+import { EsqueciSenhaPage } from '../pages/auth/EsqueciSenhaPage';
+import { RedefinirSenhaPage } from '../pages/auth/RedefinirSenhaPage';
 import { DashboardPage } from '../pages/aluno/DashboardPage';
 import { CursoDetalhePage } from '../pages/aluno/CursoDetalhePage';
 import { TrilhaDetalhePage } from '../pages/aluno/TrilhaDetalhePage';
@@ -23,7 +25,13 @@ export function AppRouter() {
       <Route element={<RedirectIfAuthenticated />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cadastro" element={<CadastroPage />} />
+        <Route path="/esqueci-senha" element={<EsqueciSenhaPage />} />
       </Route>
+
+      {/* Fora dos dois grupos acima: durante a redefinição a sessão de recuperação do Supabase
+          já deixa o usuário "autenticado", então RedirectIfAuthenticated o mandaria pra /cursos
+          antes de trocar a senha, e RequireAuth o mandaria pro /login se o link já tiver expirado. */}
+      <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
 
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>

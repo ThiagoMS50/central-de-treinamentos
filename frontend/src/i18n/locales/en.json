@@ -16,7 +16,9 @@
     "hours": "hours",
     "confirmDelete": "Are you sure you want to delete this?",
     "logout": "Log out",
-    "search": "Search..."
+    "search": "Search...",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "nav": {
     "cursos": "Courses",
@@ -31,7 +33,9 @@
       "submit": "Sign in",
       "noAccount": "Don't have an account?",
       "signupLink": "Sign up",
-      "invalidCredentials": "Invalid email or password."
+      "invalidCredentials": "Invalid email or password.",
+      "forgotPassword": "Forgot my password",
+      "passwordResetSuccess": "Password reset successfully. Sign in with your new password."
     },
     "cadastro": {
       "title": "Create account",
@@ -44,6 +48,24 @@
       "loginLink": "Sign in",
       "passwordMismatch": "Passwords don't match.",
       "checkEmail": "Check your email to confirm your registration."
+    },
+    "esqueciSenha": {
+      "title": "Forgot my password",
+      "instructions": "Enter your registered email. If it exists, we'll send you a link to create a new password.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "backToLogin": "Back to sign in",
+      "notFound": "We couldn't find an account with this email.",
+      "success": "We sent an email with a link for you to create a new password."
+    },
+    "redefinirSenha": {
+      "title": "Create new password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Save new password",
+      "mismatch": "Passwords don't match.",
+      "invalidLink": "This reset link is invalid or has expired.",
+      "requestNewLink": "Request a new link"
     }
   },
   "dashboard": {
