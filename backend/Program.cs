@@ -71,6 +71,10 @@ builder.Services.AddScoped<ProgressoService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<CertificadoPdfService>();
 
+// Precisa ser configurado antes de qualquer PdfDocument/XFont ser criado (ver comentário em
+// CertificadoFontResolver.cs — sem isso, gerar certificado falha em produção/Linux).
+PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new CertificadoFontResolver();
+
 builder.Services.AddTransient<IClaimsTransformation, SupabaseClaimsTransformation>();
 
 // Valida os tokens (JWT) emitidos pelo Supabase Auth. O Supabase expõe descoberta OIDC/JWKS
