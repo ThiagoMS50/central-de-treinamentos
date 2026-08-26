@@ -101,3 +101,30 @@ public class CertificadoRow
     public string CodigoValidacao { get; set; } = string.Empty;
     public DateTimeOffset EmitidoEm { get; set; }
 }
+
+// tipo: "curso_concluido" | "quiz_correto" | "trilha_concluida"
+public class PontosEventoRow
+{
+    public Guid Id { get; set; }
+    public Guid AlunoId { get; set; }
+    public string Tipo { get; set; } = string.Empty;
+    public int Pontos { get; set; }
+    public Guid? ReferenciaId { get; set; }
+    public DateTimeOffset CriadoEm { get; set; }
+}
+
+public class BadgeRow
+{
+    public Guid Id { get; set; }
+    public string Codigo { get; set; } = string.Empty;
+    public string Nome { get; set; } = string.Empty;
+    public string Descricao { get; set; } = string.Empty;
+    public string Icone { get; set; } = string.Empty;
+}
+
+public class AlunoBadgeRow
+{
+    public Guid AlunoId { get; set; }
+    public Guid BadgeId { get; set; }
+    public DateTimeOffset ConquistadoEm { get; set; }
+}

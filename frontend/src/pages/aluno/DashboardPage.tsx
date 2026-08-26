@@ -6,6 +6,7 @@ import { useTrilhasQuery } from '../../hooks/useTrilhas';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { StatusBadge, PrazoBadge } from '../../components/ui/Badge';
 import { ProgressBar } from '../../components/ui/ProgressBar';
+import { GamificacaoWidget } from '../../components/GamificacaoWidget';
 
 export function DashboardPage() {
   const { t } = useTranslation();
@@ -29,6 +30,8 @@ export function DashboardPage() {
           onChange={(e) => setBusca(e.target.value)}
         />
       </div>
+
+      <GamificacaoWidget />
 
       <section>
         <h2>{t('dashboard.trilhasTitle')}</h2>

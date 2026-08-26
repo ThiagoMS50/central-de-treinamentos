@@ -14,11 +14,13 @@ public class QuizController : ControllerBase
 {
     private readonly ISupabaseRestClient _rest;
     private readonly ICurrentUserService _currentUser;
+    private readonly GamificacaoService _gamificacao;
 
-    public QuizController(ISupabaseRestClient rest, ICurrentUserService currentUser)
+    public QuizController(ISupabaseRestClient rest, ICurrentUserService currentUser, GamificacaoService gamificacao)
     {
         _rest = rest;
         _currentUser = currentUser;
+        _gamificacao = gamificacao;
     }
 
     [HttpGet]
@@ -97,6 +99,9 @@ public class QuizController : ControllerBase
         var alternativa = await _rest.GetByIdAsync<AlternativaRow>("alternativas", request.AlternativaId);
         if (alternativa is null || alternativa.PerguntaId != perguntaId) return BadRequest(new { message = "Alternativa inválida." });
 
+        var pergunta = await _rest.GetByIdAsync<PerguntaRow>("perguntas", perguntaId);
+        if (pergunta is null) return NotFound();
+
         await _rest.UpsertAsync<RespostaQuizRow>("respostas_quiz", new
         {
             aluno_id = _currentUser.UserId,
@@ -107,6 +112,8 @@ public class QuizController : ControllerBase
 
         var alternativaCorreta = (await _rest.SelectAsync<AlternativaRow>("alternativas", PostgrestFilter.Eq("pergunta_id", perguntaId)))
             .First(a => a.Correta);
+
+        await _gamificacao.RegistrarRespostaAsync(_currentUser.UserId, perguntaId, pergunta.QuizId, alternativa.Correta);
 
         return new ResponderPerguntaResponse(alternativa.Correta, alternativaCorreta.Id);
     }

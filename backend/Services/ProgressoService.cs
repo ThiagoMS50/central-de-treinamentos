@@ -8,10 +8,12 @@ namespace LmsApi.Services;
 public class ProgressoService
 {
     private readonly ISupabaseRestClient _rest;
+    private readonly GamificacaoService _gamificacao;
 
-    public ProgressoService(ISupabaseRestClient rest)
+    public ProgressoService(ISupabaseRestClient rest, GamificacaoService gamificacao)
     {
         _rest = rest;
+        _gamificacao = gamificacao;
     }
 
     public async Task<MatriculaRow> GetOrCreateMatriculaAsync(Guid alunoId, Guid cursoId)
@@ -38,13 +40,18 @@ public class ProgressoService
             PostgrestFilter.And(PostgrestFilter.Eq("aluno_id", alunoId), PostgrestFilter.Eq("curso_id", cursoId)),
             new { concluido_em = DateTimeOffset.UtcNow });
 
+        await _gamificacao.RegistrarConclusaoCursoAsync(alunoId, cursoId);
+
         var vinculosDoCurso = await _rest.SelectAsync<CursoTrilhaRow>("curso_trilhas", PostgrestFilter.Eq("curso_id", cursoId));
         var trilhasCompletas = new List<Guid>();
 
         foreach (var vinculo in vinculosDoCurso)
         {
             if (await TrilhaEstaCompletaAsync(alunoId, vinculo.TrilhaId))
+            {
                 trilhasCompletas.Add(vinculo.TrilhaId);
+                await _gamificacao.RegistrarConclusaoTrilhaAsync(alunoId, vinculo.TrilhaId);
+            }
         }
 
         return trilhasCompletas;

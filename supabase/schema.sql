@@ -105,10 +105,36 @@ create table if not exists public.certificados (
   constraint certificado_tem_curso_ou_trilha check (curso_id is not null or trilha_id is not null)
 );
 
--- Índices de apoio para os relatórios gerenciais
+-- 10. Gamificação: pontos (histórico de eventos, não só um total, pra auditoria) e badges
+create table if not exists public.pontos_eventos (
+  id uuid primary key default gen_random_uuid(),
+  aluno_id uuid not null references public.profiles(id) on delete cascade,
+  tipo text not null check (tipo in ('curso_concluido', 'quiz_correto', 'trilha_concluida')),
+  pontos integer not null,
+  referencia_id uuid,
+  criado_em timestamptz not null default now()
+);
+
+create table if not exists public.badges (
+  id uuid primary key default gen_random_uuid(),
+  codigo text not null unique,
+  nome text not null,
+  descricao text not null,
+  icone text not null default '🏆'
+);
+
+create table if not exists public.aluno_badges (
+  aluno_id uuid not null references public.profiles(id) on delete cascade,
+  badge_id uuid not null references public.badges(id) on delete cascade,
+  conquistado_em timestamptz not null default now(),
+  primary key (aluno_id, badge_id)
+);
+
+-- Índices de apoio para os relatórios gerenciais e o ranking de gamificação
 create index if not exists idx_matriculas_curso on public.matriculas(curso_id);
 create index if not exists idx_matriculas_aluno on public.matriculas(aluno_id);
 create index if not exists idx_profiles_manager on public.profiles(manager_id);
+create index if not exists idx_pontos_eventos_aluno on public.pontos_eventos(aluno_id);
 
 -- RLS: habilitado em tudo, sem policies — só a service_role key (backend) acessa.
 alter table public.profiles enable row level security;
@@ -122,3 +148,14 @@ alter table public.alternativas enable row level security;
 alter table public.matriculas enable row level security;
 alter table public.respostas_quiz enable row level security;
 alter table public.certificados enable row level security;
+alter table public.pontos_eventos enable row level security;
+alter table public.badges enable row level security;
+alter table public.aluno_badges enable row level security;
+
+insert into public.badges (codigo, nome, descricao, icone) values
+  ('primeiro_curso', 'Primeiro Passo', 'Concluiu o primeiro curso', '🥇'),
+  ('cinco_cursos', 'Maratonista', 'Concluiu 5 cursos', '🏃'),
+  ('dez_cursos', 'Mestre em Aprendizado', 'Concluiu 10 cursos', '🎓'),
+  ('trilha_completa', 'Trilha Completa', 'Concluiu uma trilha inteira', '🧭'),
+  ('quiz_perfeito', 'Nota Máxima', 'Acertou 100% em um quiz de prática', '🎯')
+on conflict (codigo) do nothing;

@@ -22,6 +22,7 @@
   },
   "nav": {
     "cursos": "Courses",
+    "ranking": "Ranking",
     "relatorios": "Reports",
     "admin": "Administration"
   },
@@ -189,6 +190,10 @@
         "title": "Complete and issue a certificate",
         "body": "After going through the content, click \"Mark as completed\". A PDF certificate becomes available for download immediately, with a validation code."
       },
+      "ranking": {
+        "title": "Points, achievements and ranking",
+        "body": "You earn points by completing courses, tracks, and correct quiz answers, plus unlock achievements at milestones. Here you see your position on the overall ranking."
+      },
       "idioma": {
         "title": "Language and your account",
         "body": "At the top of the screen you can switch language (Português, English, Español) and, from your name's menu, sign out."
@@ -202,5 +207,28 @@
         "body": "As an Administrator, you also have access to Administration: create courses, materials, quizzes, learning tracks, and manage each user's role (student, manager, or admin)."
       }
     }
+  },
+  "gamificacao": {
+    "myPoints": "My points",
+    "points_one": "{{count}} point",
+    "points_other": "{{count}} points",
+    "rank": "Rank #{{posicao}}",
+    "badges": "Achievements",
+    "badgeLocked": "Not earned yet",
+    "badgeList": {
+      "primeiro_curso": { "nome": "First Step", "descricao": "Completed your first course" },
+      "cinco_cursos": { "nome": "Marathoner", "descricao": "Completed 5 courses" },
+      "dez_cursos": { "nome": "Learning Master", "descricao": "Completed 10 courses" },
+      "trilha_completa": { "nome": "Track Complete", "descricao": "Completed an entire learning track" },
+      "quiz_perfeito": { "nome": "Perfect Score", "descricao": "Scored 100% on a practice quiz" }
+    }
+  },
+  "ranking": {
+    "title": "Ranking",
+    "position": "Rank",
+    "name": "Name",
+    "points": "Points",
+    "you": "(you)",
+    "empty": "No one has scored yet — complete a course to show up here!"
   }
 }

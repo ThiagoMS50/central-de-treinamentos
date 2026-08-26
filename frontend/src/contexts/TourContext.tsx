@@ -15,6 +15,7 @@ const BASE_STEPS: TourStep[] = [
   { key: 'dashboard', path: () => '/cursos' },
   { key: 'curso', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
   { key: 'certificado', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
+  { key: 'ranking', path: () => '/ranking' },
   { key: 'idioma', path: () => '/cursos' },
 ];
 

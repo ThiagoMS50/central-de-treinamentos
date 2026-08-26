@@ -16,6 +16,7 @@ import { AdminTrilhasListPage } from '../pages/admin/AdminTrilhasListPage';
 import { AdminTrilhaFormPage } from '../pages/admin/AdminTrilhaFormPage';
 import { AdminUsuariosPage } from '../pages/admin/AdminUsuariosPage';
 import { RelatoriosPage } from '../pages/relatorios/RelatoriosPage';
+import { RankingPage } from '../pages/ranking/RankingPage';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 
@@ -39,6 +40,7 @@ export function AppRouter() {
           <Route path="/cursos" element={<DashboardPage />} />
           <Route path="/cursos/:id" element={<CursoDetalhePage />} />
           <Route path="/trilhas/:id" element={<TrilhaDetalhePage />} />
+          <Route path="/ranking" element={<RankingPage />} />
 
           <Route element={<RequireRole roles={['gestor', 'admin']} />}>
             <Route path="/relatorios" element={<RelatoriosPage />} />

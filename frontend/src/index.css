@@ -642,6 +642,87 @@ textarea {
   font-size: 0.9rem;
 }
 
+/* ---------- Gamificação ---------- */
+
+.gamificacao-widget {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.gamificacao-pontos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  min-width: 140px;
+}
+
+.gamificacao-pontos-valor {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.gamificacao-pontos-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.gamificacao-badges {
+  flex: 1;
+  min-width: 220px;
+}
+
+.gamificacao-badges h3 {
+  margin-top: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  width: 84px;
+  text-align: center;
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+
+.badge-item-conquistado {
+  opacity: 1;
+  filter: none;
+}
+
+.badge-item-icone {
+  font-size: 1.8rem;
+}
+
+.badge-item-nome {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.ranking-row-eu {
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
 /* ---------- Tour guiado ---------- */
 
 .tour-overlay {

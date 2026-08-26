@@ -53,6 +53,9 @@ export function useResponderPerguntaMutation(cursoId: string) {
         method: 'POST',
         body: { alternativaId },
       }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['quiz', cursoId] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['quiz', cursoId] });
+      queryClient.invalidateQueries({ queryKey: ['gamificacao'] });
+    },
   });
 }

@@ -119,3 +119,25 @@ export interface RelatorioDashboard {
   atrasados: Pendencia[];
   progressoPorEquipe: EquipeProgresso[];
 }
+
+export interface Badge {
+  codigo: string;
+  nome: string;
+  descricao: string;
+  icone: string;
+  conquistado: boolean;
+  conquistadoEm: string | null;
+}
+
+export interface MeuProgressoGamificacao {
+  totalPontos: number;
+  posicao: number;
+  badges: Badge[];
+}
+
+export interface RankingItem {
+  posicao: number;
+  nome: string;
+  pontos: number;
+  souEu: boolean;
+}

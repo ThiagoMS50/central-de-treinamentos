@@ -22,6 +22,7 @@
   },
   "nav": {
     "cursos": "Cursos",
+    "ranking": "Clasificación",
     "relatorios": "Informes",
     "admin": "Administración"
   },
@@ -189,6 +190,10 @@
         "title": "Completar y emitir el certificado",
         "body": "Después de estudiar el contenido, haz clic en \"Marcar como completado\". Un certificado en PDF queda disponible para descargar de inmediato, con un código de validación."
       },
+      "ranking": {
+        "title": "Puntos, logros y clasificación",
+        "body": "Ganas puntos al completar cursos, rutas y responder correctamente en los cuestionarios, y desbloqueas logros por hitos. Aquí ves tu posición en la clasificación general."
+      },
       "idioma": {
         "title": "Idioma y tu cuenta",
         "body": "En la parte superior puedes cambiar el idioma (Português, English, Español) y, en el menú de tu nombre, cerrar sesión."
@@ -202,5 +207,28 @@
         "body": "Como Administrador, también tienes acceso a Administración: crea cursos, materiales, cuestionarios, rutas de aprendizaje y gestiona el rol de cada usuario (alumno, gestor o admin)."
       }
     }
+  },
+  "gamificacao": {
+    "myPoints": "Mis puntos",
+    "points_one": "{{count}} punto",
+    "points_other": "{{count}} puntos",
+    "rank": "Posición #{{posicao}}",
+    "badges": "Logros",
+    "badgeLocked": "Aún no conquistado",
+    "badgeList": {
+      "primeiro_curso": { "nome": "Primer Paso", "descricao": "Completó su primer curso" },
+      "cinco_cursos": { "nome": "Maratonista", "descricao": "Completó 5 cursos" },
+      "dez_cursos": { "nome": "Maestro del Aprendizaje", "descricao": "Completó 10 cursos" },
+      "trilha_completa": { "nome": "Ruta Completa", "descricao": "Completó una ruta de aprendizaje entera" },
+      "quiz_perfeito": { "nome": "Puntuación Máxima", "descricao": "Acertó el 100% en un cuestionario de práctica" }
+    }
+  },
+  "ranking": {
+    "title": "Clasificación",
+    "position": "Posición",
+    "name": "Nombre",
+    "points": "Puntos",
+    "you": "(tú)",
+    "empty": "Nadie ha puntuado todavía — ¡completa un curso para aparecer aquí!"
   }
 }

@@ -60,7 +60,7 @@ public class CertificadoPdfService
         gfx.DrawString("Certificado de Conclusão", titleFont, new XSolidBrush(CorPrimaria), new XRect(0, 110, width, 45), center);
 
         gfx.DrawString("Certificamos que", bodyFont, XBrushes.Black, new XRect(0, 168, width, 25), center);
-        gfx.DrawString(model.NomeAluno, nameFont, new XSolidBrush(CorSecundaria), new XRect(0, 196, width, 32), center);
+        gfx.DrawString(model.NomeAluno.ToUpperInvariant(), nameFont, new XSolidBrush(CorSecundaria), new XRect(0, 196, width, 32), center);
 
         var cargaHorariaTexto = model.CargaHorariaHoras is > 0
             ? $", com carga horária de {model.CargaHorariaHoras.Value:0.#} horas,"

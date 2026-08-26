@@ -22,6 +22,7 @@
   },
   "nav": {
     "cursos": "Cursos",
+    "ranking": "Ranking",
     "relatorios": "Relatórios",
     "admin": "Administração"
   },
@@ -189,6 +190,10 @@
         "title": "Concluir e emitir certificado",
         "body": "Depois de estudar o conteúdo, clique em \"Marcar como concluído\". Um certificado em PDF fica disponível para download imediatamente, com um código de validação."
       },
+      "ranking": {
+        "title": "Pontos, conquistas e ranking",
+        "body": "Você ganha pontos ao concluir cursos, trilhas e acertar perguntas do quiz, além de desbloquear conquistas por marcos. Aqui você vê sua posição no ranking geral."
+      },
       "idioma": {
         "title": "Idioma e sua conta",
         "body": "No topo da tela você pode trocar o idioma (Português, English, Español) e, no menu do seu nome, sair da conta."
@@ -202,5 +207,28 @@
         "body": "Como Administrador, você também tem acesso a Administração: cadastre cursos, materiais, quizzes, trilhas, e gerencie o papel de cada usuário (aluno, gestor ou admin)."
       }
     }
+  },
+  "gamificacao": {
+    "myPoints": "Meus pontos",
+    "points_one": "{{count}} ponto",
+    "points_other": "{{count}} pontos",
+    "rank": "Posição #{{posicao}}",
+    "badges": "Conquistas",
+    "badgeLocked": "Ainda não conquistado",
+    "badgeList": {
+      "primeiro_curso": { "nome": "Primeiro Passo", "descricao": "Concluiu o primeiro curso" },
+      "cinco_cursos": { "nome": "Maratonista", "descricao": "Concluiu 5 cursos" },
+      "dez_cursos": { "nome": "Mestre em Aprendizado", "descricao": "Concluiu 10 cursos" },
+      "trilha_completa": { "nome": "Trilha Completa", "descricao": "Concluiu uma trilha inteira" },
+      "quiz_perfeito": { "nome": "Nota Máxima", "descricao": "Acertou 100% em um quiz de prática" }
+    }
+  },
+  "ranking": {
+    "title": "Ranking",
+    "position": "Posição",
+    "name": "Nome",
+    "points": "Pontos",
+    "you": "(você)",
+    "empty": "Ninguém pontuou ainda — conclua um curso para aparecer aqui!"
   }
 }

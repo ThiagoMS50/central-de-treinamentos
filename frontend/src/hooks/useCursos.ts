@@ -57,6 +57,7 @@ export function useConcluirCursoMutation(id: string) {
       queryClient.invalidateQueries({ queryKey: ['cursos'] });
       queryClient.invalidateQueries({ queryKey: ['cursos', id] });
       queryClient.invalidateQueries({ queryKey: ['trilhas'] });
+      queryClient.invalidateQueries({ queryKey: ['gamificacao'] });
     },
   });
 }

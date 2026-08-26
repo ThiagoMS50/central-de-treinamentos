@@ -37,6 +37,9 @@ export function AppLayout() {
             <NavLink to="/cursos" className={linkClass}>
               {t('nav.cursos')}
             </NavLink>
+            <NavLink to="/ranking" className={linkClass}>
+              {t('nav.ranking')}
+            </NavLink>
             {profile && (profile.role === 'gestor' || profile.role === 'admin') && (
               <NavLink to="/relatorios" className={linkClass}>
                 {t('nav.relatorios')}
