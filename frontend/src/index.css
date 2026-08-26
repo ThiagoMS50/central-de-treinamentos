@@ -395,6 +395,18 @@ textarea {
   padding: 1rem 0;
 }
 
+.saved-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #dcfce7;
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+}
+
 .error-banner {
   display: flex;
   align-items: center;

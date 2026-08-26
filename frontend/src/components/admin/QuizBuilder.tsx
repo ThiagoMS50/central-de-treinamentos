@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuizQuery, useSalvarQuizMutation, type QuizFormPergunta } from '../../hooks/useQuiz';
+import { useSavedFeedback } from '../../hooks/useSavedFeedback';
 
 function novaPergunta(ordem: number): QuizFormPergunta {
   return {
@@ -17,6 +18,7 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
   const { t } = useTranslation();
   const quizQuery = useQuizQuery(cursoId, true);
   const salvarMutation = useSalvarQuizMutation(cursoId);
+  const { salvo, mostrar } = useSavedFeedback();
 
   const [titulo, setTitulo] = useState('Quiz de prática');
   const [perguntas, setPerguntas] = useState<QuizFormPergunta[]>([]);
@@ -76,7 +78,7 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
   }
 
   function handleSalvar() {
-    salvarMutation.mutate({ titulo, perguntas });
+    salvarMutation.mutate({ titulo, perguntas }, { onSuccess: mostrar });
   }
 
   return (
@@ -127,9 +129,12 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
         {t('admin.cursos.addQuestion')}
       </button>
 
-      <button type="button" className="btn btn-primary" disabled={salvarMutation.isPending} onClick={handleSalvar}>
-        {t('admin.cursos.saveQuiz')}
-      </button>
+      <div className="form-inline">
+        <button type="button" className="btn btn-primary" disabled={salvarMutation.isPending} onClick={handleSalvar}>
+          {t('admin.cursos.saveQuiz')}
+        </button>
+        {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
+      </div>
     </div>
   );
 }

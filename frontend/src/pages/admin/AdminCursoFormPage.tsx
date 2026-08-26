@@ -1,10 +1,11 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCursoQuery, useCriarCursoMutation, useAtualizarCursoMutation, type CursoFormValues } from '../../hooks/useCursos';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
 import { MateriaisManager } from '../../components/admin/MateriaisManager';
 import { QuizBuilder } from '../../components/admin/QuizBuilder';
+import { useSavedFeedback } from '../../hooks/useSavedFeedback';
 
 const VALORES_INICIAIS: CursoFormValues = {
   titulo: '',
@@ -18,11 +19,13 @@ export function AdminCursoFormPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const editando = !!id;
 
   const cursoQuery = useCursoQuery(id);
   const criarMutation = useCriarCursoMutation();
   const atualizarMutation = useAtualizarCursoMutation(id ?? '');
+  const { salvo, mostrar } = useSavedFeedback();
 
   const [valores, setValores] = useState<CursoFormValues>(VALORES_INICIAIS);
 
@@ -37,6 +40,16 @@ export function AdminCursoFormPage() {
     });
   }, [cursoQuery.data]);
 
+  // Ao criar um curso novo, a página navega direto pra tela de edição — mostramos a confirmação
+  // já nessa tela de destino, usando um sinal passado pelo navigate().
+  useEffect(() => {
+    if ((location.state as { criadoAgora?: boolean } | null)?.criadoAgora) {
+      mostrar();
+      window.history.replaceState({}, '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (editando && cursoQuery.isLoading) return <Spinner />;
   if (editando && cursoQuery.isError) return <ErrorBanner onRetry={() => cursoQuery.refetch()} />;
 
@@ -44,9 +57,10 @@ export function AdminCursoFormPage() {
     e.preventDefault();
     if (editando) {
       await atualizarMutation.mutateAsync(valores);
+      mostrar();
     } else {
       const criado = await criarMutation.mutateAsync(valores);
-      navigate(`/admin/cursos/${criado.id}/editar`, { replace: true });
+      navigate(`/admin/cursos/${criado.id}/editar`, { replace: true, state: { criadoAgora: true } });
     }
   }
 
@@ -97,9 +111,12 @@ export function AdminCursoFormPage() {
           </label>
         )}
 
-        <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending}>
-          {t('common.save')}
-        </button>
+        <div className="form-inline">
+          <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending}>
+            {t('common.save')}
+          </button>
+          {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
+        </div>
       </form>
 
       {editando && cursoQuery.data && (
