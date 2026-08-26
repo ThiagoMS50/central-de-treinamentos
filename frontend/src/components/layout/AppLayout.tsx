@@ -7,11 +7,14 @@ import { UserMenu } from './UserMenu';
 import { OnboardingTour } from '../OnboardingTour';
 import { TourProvider } from '../../contexts/TourContext';
 import { useAuth } from '../../hooks/useAuth';
+import { useConfiguracoesQuery } from '../../hooks/useConfiguracoes';
 
 export function AppLayout() {
   const { profile } = useAuth();
   const { t } = useTranslation();
   const [menuAberto, setMenuAberto] = useState(false);
+  const configuracoesQuery = useConfiguracoesQuery();
+  const rankingHabilitado = configuracoesQuery.data?.rankingHabilitado ?? true;
 
   const linkClass = ({ isActive }: { isActive: boolean }) => `nav-link${isActive ? ' nav-link-active' : ''}`;
 
@@ -37,9 +40,11 @@ export function AppLayout() {
             <NavLink to="/cursos" className={linkClass}>
               {t('nav.cursos')}
             </NavLink>
-            <NavLink to="/ranking" className={linkClass}>
-              {t('nav.ranking')}
-            </NavLink>
+            {rankingHabilitado && (
+              <NavLink to="/ranking" className={linkClass}>
+                {t('nav.ranking')}
+              </NavLink>
+            )}
             {profile && (profile.role === 'gestor' || profile.role === 'admin') && (
               <NavLink to="/relatorios" className={linkClass}>
                 {t('nav.relatorios')}

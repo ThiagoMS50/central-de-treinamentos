@@ -15,6 +15,7 @@ import { AdminCursoFormPage } from '../pages/admin/AdminCursoFormPage';
 import { AdminTrilhasListPage } from '../pages/admin/AdminTrilhasListPage';
 import { AdminTrilhaFormPage } from '../pages/admin/AdminTrilhaFormPage';
 import { AdminUsuariosPage } from '../pages/admin/AdminUsuariosPage';
+import { AdminConfiguracoesPage } from '../pages/admin/AdminConfiguracoesPage';
 import { RelatoriosPage } from '../pages/relatorios/RelatoriosPage';
 import { RankingPage } from '../pages/ranking/RankingPage';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
@@ -54,6 +55,7 @@ export function AppRouter() {
             <Route path="/admin/trilhas/novo" element={<AdminTrilhaFormPage />} />
             <Route path="/admin/trilhas/:id/editar" element={<AdminTrilhaFormPage />} />
             <Route path="/admin/usuarios" element={<AdminUsuariosPage />} />
+            <Route path="/admin/configuracoes" element={<AdminConfiguracoesPage />} />
           </Route>
 
           <Route path="/403" element={<ForbiddenPage />} />

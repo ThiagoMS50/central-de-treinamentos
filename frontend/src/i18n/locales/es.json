@@ -146,6 +146,11 @@
       "role": "Rol",
       "manager": "Gestor",
       "none": "Ninguno"
+    },
+    "configuracoes": {
+      "title": "Configuración",
+      "rankingHabilitado": "Clasificación habilitada",
+      "rankingHint": "Cuando está desactivada, la clasificación y los puntos/logros desaparecen del menú, del panel y del recorrido guiado para todos."
     }
   },
   "roles": {

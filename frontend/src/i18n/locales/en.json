@@ -146,6 +146,11 @@
       "role": "Role",
       "manager": "Manager",
       "none": "None"
+    },
+    "configuracoes": {
+      "title": "Settings",
+      "rankingHabilitado": "Ranking enabled",
+      "rankingHint": "When disabled, the ranking and points/achievements disappear from the menu, dashboard, and guided tour for everyone."
     }
   },
   "roles": {

@@ -141,6 +141,7 @@ export interface RankingItem {
   nome: string;
   pontos: number;
   souEu: boolean;
+  podeVerDetalhes: boolean;
 }
 
 export interface ItemConcluido {
@@ -155,4 +156,8 @@ export interface DetalheParticipante {
   cursos: ItemConcluido[];
   trilhas: ItemConcluido[];
   badges: Badge[];
+}
+
+export interface Configuracoes {
+  rankingHabilitado: boolean;
 }

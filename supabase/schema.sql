@@ -159,3 +159,14 @@ insert into public.badges (codigo, nome, descricao, icone) values
   ('trilha_completa', 'Trilha Completa', 'Concluiu uma trilha inteira', '🧭'),
   ('quiz_perfeito', 'Nota Máxima', 'Acertou 100% em um quiz de prática', '🎯')
 on conflict (codigo) do nothing;
+
+-- 11. Configurações gerais do sistema (chave/valor booleano) — hoje só liga/desliga o ranking
+create table if not exists public.configuracoes (
+  chave text primary key,
+  valor boolean not null
+);
+
+alter table public.configuracoes enable row level security;
+
+insert into public.configuracoes (chave, valor) values ('ranking_habilitado', true)
+on conflict (chave) do nothing;

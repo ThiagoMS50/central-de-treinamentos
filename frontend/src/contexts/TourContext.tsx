@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState, type ReactNode } from 'rea
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCursosQuery } from '../hooks/useCursos';
+import { useConfiguracoesQuery } from '../hooks/useConfiguracoes';
 
 const STORAGE_PREFIX = 'lms_tour_seen_';
 
@@ -15,15 +16,16 @@ const BASE_STEPS: TourStep[] = [
   { key: 'dashboard', path: () => '/cursos' },
   { key: 'curso', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
   { key: 'certificado', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
-  { key: 'ranking', path: () => '/ranking' },
   { key: 'idioma', path: () => '/cursos' },
 ];
 
+const RANKING_STEP: TourStep = { key: 'ranking', path: () => '/ranking' };
 const GESTOR_STEP: TourStep = { key: 'relatorios', path: () => '/relatorios' };
 const ADMIN_STEP: TourStep = { key: 'admin', path: () => '/admin/cursos' };
 
-function buildSteps(role: string | undefined): TourStep[] {
+function buildSteps(role: string | undefined, rankingHabilitado: boolean): TourStep[] {
   const steps = [...BASE_STEPS];
+  if (rankingHabilitado) steps.splice(4, 0, RANKING_STEP);
   if (role === 'gestor' || role === 'admin') steps.push(GESTOR_STEP);
   if (role === 'admin') steps.push(ADMIN_STEP);
   return steps;
@@ -61,10 +63,12 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const { profile } = useAuth();
   const navigate = useNavigate();
   const cursosQuery = useCursosQuery();
+  const configuracoesQuery = useConfiguracoesQuery();
   const [open, setOpen] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
-  const steps = useMemo(() => buildSteps(profile?.role), [profile?.role]);
+  const rankingHabilitado = configuracoesQuery.data?.rankingHabilitado ?? true;
+  const steps = useMemo(() => buildSteps(profile?.role, rankingHabilitado), [profile?.role, rankingHabilitado]);
   const exemploCursoId = cursosQuery.data?.[0]?.id ?? null;
 
   useEffect(() => {

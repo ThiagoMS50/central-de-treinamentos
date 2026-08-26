@@ -146,6 +146,11 @@
       "role": "Papel",
       "manager": "Gestor",
       "none": "Nenhum"
+    },
+    "configuracoes": {
+      "title": "Configurações",
+      "rankingHabilitado": "Ranking habilitado",
+      "rankingHint": "Quando desativado, o ranking e os pontos/conquistas somem do menu, do painel e do tour guiado para todo mundo."
     }
   },
   "roles": {

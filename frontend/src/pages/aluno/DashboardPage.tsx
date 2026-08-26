@@ -8,10 +8,12 @@ import { StatusBadge, PrazoBadge } from '../../components/ui/Badge';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { GamificacaoWidget } from '../../components/GamificacaoWidget';
 import { useAuth } from '../../hooks/useAuth';
+import { useConfiguracoesQuery } from '../../hooks/useConfiguracoes';
 
 export function DashboardPage() {
   const { t } = useTranslation();
   const { profile } = useAuth();
+  const configuracoesQuery = useConfiguracoesQuery();
   const [busca, setBusca] = useState('');
 
   const cursosQuery = useCursosQuery();
@@ -38,7 +40,7 @@ export function DashboardPage() {
         />
       </div>
 
-      {!ehAdmin && <GamificacaoWidget />}
+      {!ehAdmin && configuracoesQuery.data?.rankingHabilitado && <GamificacaoWidget />}
 
       <section>
         <h2>{ehAdmin ? t('dashboard.trilhasTitleAdmin') : t('dashboard.trilhasTitle')}</h2>

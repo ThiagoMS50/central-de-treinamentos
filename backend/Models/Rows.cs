@@ -128,3 +128,9 @@ public class AlunoBadgeRow
     public Guid BadgeId { get; set; }
     public DateTimeOffset ConquistadoEm { get; set; }
 }
+
+public class ConfiguracaoRow
+{
+    public string Chave { get; set; } = string.Empty;
+    public bool Valor { get; set; }
+}
