@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRankingQuery } from '../../hooks/useGamificacao';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
+import { ParticipanteDetalheModal } from '../../components/ParticipanteDetalheModal';
 
 export function RankingPage() {
   const { t } = useTranslation();
   const query = useRankingQuery();
+  const [participanteSelecionado, setParticipanteSelecionado] = useState<string | null>(null);
 
   return (
     <div className="page">
@@ -22,6 +25,7 @@ export function RankingPage() {
                 <th>{t('ranking.position')}</th>
                 <th>{t('ranking.name')}</th>
                 <th>{t('ranking.points')}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -32,11 +36,20 @@ export function RankingPage() {
                     {item.nome} {item.souEu && <span className="hint-text">{t('ranking.you')}</span>}
                   </td>
                   <td>{item.pontos}</td>
+                  <td>
+                    <button type="button" className="btn btn-secondary" onClick={() => setParticipanteSelecionado(item.alunoId)}>
+                      {t('ranking.viewDetails')}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+      )}
+
+      {participanteSelecionado && (
+        <ParticipanteDetalheModal alunoId={participanteSelecionado} onClose={() => setParticipanteSelecionado(null)} />
       )}
     </div>
   );

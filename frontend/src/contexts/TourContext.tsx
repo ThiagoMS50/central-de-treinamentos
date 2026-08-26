@@ -15,17 +15,15 @@ const BASE_STEPS: TourStep[] = [
   { key: 'dashboard', path: () => '/cursos' },
   { key: 'curso', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
   { key: 'certificado', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
+  { key: 'ranking', path: () => '/ranking' },
   { key: 'idioma', path: () => '/cursos' },
 ];
 
-const RANKING_STEP: TourStep = { key: 'ranking', path: () => '/ranking' };
 const GESTOR_STEP: TourStep = { key: 'relatorios', path: () => '/relatorios' };
 const ADMIN_STEP: TourStep = { key: 'admin', path: () => '/admin/cursos' };
 
 function buildSteps(role: string | undefined): TourStep[] {
   const steps = [...BASE_STEPS];
-  // Administrador gerencia o conteúdo mas não participa da gamificação (não é "aluno" pra isso).
-  if (role !== 'admin') steps.splice(4, 0, RANKING_STEP);
   if (role === 'gestor' || role === 'admin') steps.push(GESTOR_STEP);
   if (role === 'admin') steps.push(ADMIN_STEP);
   return steps;

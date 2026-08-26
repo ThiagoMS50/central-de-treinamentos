@@ -139,16 +139,68 @@ public class GamificacaoService
             .Select((kv, i) => new { kv.Key, Posicao = i + 1 })
             .FirstOrDefault(x => x.Key == alunoId)?.Posicao ?? pontosPorAluno.Count + 1;
 
+        var badgesDto = await ObterBadgesDoAlunoAsync(alunoId);
+
+        return new MeuProgressoGamificacaoDto(meusPontos, posicao, badgesDto);
+    }
+
+    private async Task<List<BadgeDto>> ObterBadgesDoAlunoAsync(Guid alunoId)
+    {
         var badges = await _rest.SelectAsync<BadgeRow>("badges", order: "nome.asc");
         var meusBadges = await _rest.SelectAsync<AlunoBadgeRow>("aluno_badges", PostgrestFilter.Eq("aluno_id", alunoId));
         var conquistadosPorBadge = meusBadges.ToDictionary(b => b.BadgeId, b => b.ConquistadoEm);
 
-        var badgesDto = badges.Select(b => new BadgeDto(
-            b.Codigo, b.Nome, b.Descricao, b.Icone,
-            conquistadosPorBadge.ContainsKey(b.Id),
-            conquistadosPorBadge.GetValueOrDefault(b.Id))).ToList();
+        return badges.Select(b =>
+        {
+            var conquistado = conquistadosPorBadge.TryGetValue(b.Id, out var conquistadoEm);
+            return new BadgeDto(b.Codigo, b.Nome, b.Descricao, b.Icone, conquistado, conquistado ? conquistadoEm : null);
+        }).ToList();
+    }
 
-        return new MeuProgressoGamificacaoDto(meusPontos, posicao, badgesDto);
+    // Detalhe de um participante do ranking: quais cursos/trilhas concluiu (com os pontos de
+    // cada um) e as conquistas — usado no pop-up de detalhes clicado a partir do ranking.
+    public async Task<DetalheParticipanteDto?> ObterDetalheParticipanteAsync(Guid alunoId)
+    {
+        var perfil = await _rest.GetByIdAsync<ProfileRow>("profiles", alunoId);
+        if (perfil is null) return null;
+
+        var eventos = await _rest.SelectAsync<PontosEventoRow>("pontos_eventos", PostgrestFilter.Eq("aluno_id", alunoId));
+        var totalPontos = eventos.Sum(e => e.Pontos);
+
+        var eventosCurso = eventos.Where(e => e.Tipo == "curso_concluido" && e.ReferenciaId.HasValue).ToList();
+        var eventosTrilha = eventos.Where(e => e.Tipo == "trilha_concluida" && e.ReferenciaId.HasValue).ToList();
+
+        var cursoIds = eventosCurso.Select(e => e.ReferenciaId!.Value).ToList();
+        var cursos = cursoIds.Count == 0
+            ? new List<CursoRow>()
+            : await _rest.SelectAsync<CursoRow>("cursos", PostgrestFilter.In("id", cursoIds.Cast<object>()));
+        var cursosPorId = cursos.ToDictionary(c => c.Id);
+
+        var trilhaIds = eventosTrilha.Select(e => e.ReferenciaId!.Value).ToList();
+        var trilhas = trilhaIds.Count == 0
+            ? new List<TrilhaRow>()
+            : await _rest.SelectAsync<TrilhaRow>("trilhas", PostgrestFilter.In("id", trilhaIds.Cast<object>()));
+        var trilhasPorId = trilhas.ToDictionary(t => t.Id);
+
+        var cursosDto = eventosCurso
+            .Select(e => new ItemConcluidoDto(
+                cursosPorId.TryGetValue(e.ReferenciaId!.Value, out var c) ? c.Titulo : "?",
+                e.Pontos,
+                e.CriadoEm))
+            .OrderByDescending(c => c.ConcluidoEm)
+            .ToList();
+
+        var trilhasDto = eventosTrilha
+            .Select(e => new ItemConcluidoDto(
+                trilhasPorId.TryGetValue(e.ReferenciaId!.Value, out var t) ? t.Titulo : "?",
+                e.Pontos,
+                e.CriadoEm))
+            .OrderByDescending(t => t.ConcluidoEm)
+            .ToList();
+
+        var badgesDto = await ObterBadgesDoAlunoAsync(alunoId);
+
+        return new DetalheParticipanteDto(perfil.Nome, totalPontos, cursosDto, trilhasDto, badgesDto);
     }
 
     public async Task<List<RankingItemDto>> ObterRankingAsync(Guid chamadorId, int top = 20)
@@ -167,7 +219,7 @@ public class GamificacaoService
 
         var ranking = pontosPorAluno
             .OrderByDescending(kv => kv.Value)
-            .Select((kv, i) => new RankingItemDto(i + 1, nomesPorId.GetValueOrDefault(kv.Key, "?"), kv.Value, kv.Key == chamadorId))
+            .Select((kv, i) => new RankingItemDto(i + 1, kv.Key, nomesPorId.GetValueOrDefault(kv.Key, "?"), kv.Value, kv.Key == chamadorId))
             .ToList();
 
         var topN = ranking.Take(top).ToList();

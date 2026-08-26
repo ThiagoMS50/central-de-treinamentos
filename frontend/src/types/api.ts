@@ -137,7 +137,22 @@ export interface MeuProgressoGamificacao {
 
 export interface RankingItem {
   posicao: number;
+  alunoId: string;
   nome: string;
   pontos: number;
   souEu: boolean;
+}
+
+export interface ItemConcluido {
+  titulo: string;
+  pontos: number;
+  concluidoEm: string;
+}
+
+export interface DetalheParticipante {
+  nome: string;
+  totalPontos: number;
+  cursos: ItemConcluido[];
+  trilhas: ItemConcluido[];
+  badges: Badge[];
 }

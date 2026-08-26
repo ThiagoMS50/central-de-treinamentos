@@ -4,4 +4,13 @@ public record BadgeDto(string Codigo, string Nome, string Descricao, string Icon
 
 public record MeuProgressoGamificacaoDto(int TotalPontos, int Posicao, List<BadgeDto> Badges);
 
-public record RankingItemDto(int Posicao, string Nome, int Pontos, bool SouEu);
+public record RankingItemDto(int Posicao, Guid AlunoId, string Nome, int Pontos, bool SouEu);
+
+public record ItemConcluidoDto(string Titulo, int Pontos, DateTimeOffset ConcluidoEm);
+
+public record DetalheParticipanteDto(
+    string Nome,
+    int TotalPontos,
+    List<ItemConcluidoDto> Cursos,
+    List<ItemConcluidoDto> Trilhas,
+    List<BadgeDto> Badges);

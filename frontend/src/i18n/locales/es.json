@@ -232,6 +232,10 @@
     "name": "Nombre",
     "points": "Puntos",
     "you": "(tú)",
-    "empty": "Nadie ha puntuado todavía — ¡completa un curso para aparecer aquí!"
+    "empty": "Nadie ha puntuado todavía — ¡completa un curso para aparecer aquí!",
+    "viewDetails": "Ver detalles",
+    "detailTitle": "Detalles",
+    "coursesCompleted": "Cursos completados",
+    "tracksCompleted": "Rutas completadas"
   }
 }

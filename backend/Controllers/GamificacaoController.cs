@@ -28,4 +28,15 @@ public class GamificacaoController : ControllerBase
     {
         return await _gamificacao.ObterRankingAsync(_currentUser.UserId);
     }
+
+    // Detalhe de um participante (cursos/trilhas concluídos + pontos de cada um + conquistas),
+    // usado no pop-up que abre ao clicar em alguém no ranking. Visível a qualquer autenticado,
+    // no mesmo espírito de transparência do próprio ranking.
+    [HttpGet("participante/{alunoId:guid}")]
+    public async Task<ActionResult<DetalheParticipanteDto>> Participante(Guid alunoId)
+    {
+        var detalhe = await _gamificacao.ObterDetalheParticipanteAsync(alunoId);
+        if (detalhe is null) return NotFound();
+        return detalhe;
+    }
 }

@@ -232,6 +232,10 @@
     "name": "Name",
     "points": "Points",
     "you": "(you)",
-    "empty": "No one has scored yet — complete a course to show up here!"
+    "empty": "No one has scored yet — complete a course to show up here!",
+    "viewDetails": "View details",
+    "detailTitle": "Details",
+    "coursesCompleted": "Completed courses",
+    "tracksCompleted": "Completed tracks"
   }
 }
