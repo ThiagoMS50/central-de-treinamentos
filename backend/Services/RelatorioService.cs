@@ -143,8 +143,11 @@ public class RelatorioService
         var alternativasPorId = dados.Alternativas.ToDictionary(a => a.Id);
         var respostasPorAluno = dados.Respostas.GroupBy(r => r.AlunoId).ToDictionary(g => g.Key, g => g.ToList());
 
+        // Ponto e vírgula (não vírgula) porque é o separador padrão que o Excel em português usa
+        // para CSV — com vírgula, o Excel brasileiro joga tudo numa coluna só.
+        const string separador = ";";
         var sb = new StringBuilder();
-        sb.AppendLine("aluno,equipe_gestor,curso,status,iniciado_em,concluido_em,prazo,atrasado,nota_quiz_media");
+        sb.AppendLine(string.Join(separador, "aluno", "equipe_gestor", "curso", "status", "iniciado_em", "concluido_em", "prazo", "atrasado", "nota_quiz_media"));
 
         foreach (var m in dados.Matriculas)
         {
@@ -162,7 +165,7 @@ public class RelatorioService
                 ? null
                 : minhasRespostas.Count(r => alternativasPorId.TryGetValue(r.AlternativaId, out var a) && a.Correta) * 100.0 / minhasRespostas.Count;
 
-            sb.AppendLine(string.Join(",",
+            sb.AppendLine(string.Join(separador,
                 CsvEscape(aluno?.Nome ?? string.Empty),
                 CsvEscape(gestorNome),
                 CsvEscape(curso?.Titulo ?? string.Empty),
@@ -174,12 +177,18 @@ public class RelatorioService
                 notaMedia.HasValue ? notaMedia.Value.ToString("0.0") : string.Empty));
         }
 
-        return Encoding.UTF8.GetBytes(sb.ToString());
+        // BOM na frente para o Excel reconhecer o arquivo como UTF-8 e não corromper os acentos.
+        var preamble = Encoding.UTF8.GetPreamble();
+        var conteudo = Encoding.UTF8.GetBytes(sb.ToString());
+        var resultado = new byte[preamble.Length + conteudo.Length];
+        preamble.CopyTo(resultado, 0);
+        conteudo.CopyTo(resultado, preamble.Length);
+        return resultado;
     }
 
     private static string CsvEscape(string value)
     {
-        if (value.Contains(',') || value.Contains('"') || value.Contains('\n'))
+        if (value.Contains(';') || value.Contains('"') || value.Contains('\n'))
             return "\"" + value.Replace("\"", "\"\"") + "\"";
         return value;
     }
