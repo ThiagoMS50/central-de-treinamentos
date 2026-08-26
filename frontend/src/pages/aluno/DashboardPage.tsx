@@ -7,9 +7,11 @@ import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { StatusBadge, PrazoBadge } from '../../components/ui/Badge';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { GamificacaoWidget } from '../../components/GamificacaoWidget';
+import { useAuth } from '../../hooks/useAuth';
 
 export function DashboardPage() {
   const { t } = useTranslation();
+  const { profile } = useAuth();
   const [busca, setBusca] = useState('');
 
   const cursosQuery = useCursosQuery();
@@ -19,10 +21,15 @@ export function DashboardPage() {
     c.titulo.toLowerCase().includes(busca.toLowerCase()),
   );
 
+  // Administrador gerencia o conteúdo mas não "estuda" — o painel usa uma linguagem neutra
+  // ("Treinamentos"/"Trilhas") em vez de possessiva ("Meus treinamentos"/"Minhas trilhas"),
+  // e não participa da gamificação (isso é só para quem de fato faz os cursos).
+  const ehAdmin = profile?.role === 'admin';
+
   return (
     <div className="page">
       <div className="page-header">
-        <h1>{t('dashboard.title')}</h1>
+        <h1>{ehAdmin ? t('dashboard.titleAdmin') : t('dashboard.title')}</h1>
         <input
           className="search-input"
           placeholder={t('common.search')}
@@ -31,10 +38,10 @@ export function DashboardPage() {
         />
       </div>
 
-      <GamificacaoWidget />
+      {!ehAdmin && <GamificacaoWidget />}
 
       <section>
-        <h2>{t('dashboard.trilhasTitle')}</h2>
+        <h2>{ehAdmin ? t('dashboard.trilhasTitleAdmin') : t('dashboard.trilhasTitle')}</h2>
         {trilhasQuery.isLoading && <Spinner />}
         {trilhasQuery.isError && <ErrorBanner onRetry={() => trilhasQuery.refetch()} />}
         {trilhasQuery.data && trilhasQuery.data.length === 0 && <EmptyState message={t('dashboard.emptyTrilhas')} />}

@@ -72,7 +72,9 @@
   },
   "dashboard": {
     "title": "My training",
+    "titleAdmin": "Training",
     "trilhasTitle": "My learning tracks",
+    "trilhasTitleAdmin": "Learning tracks",
     "cursosTitle": "Courses",
     "emptyCursos": "No courses available yet.",
     "emptyTrilhas": "No learning tracks available yet."

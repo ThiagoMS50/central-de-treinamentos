@@ -72,7 +72,9 @@
   },
   "dashboard": {
     "title": "Mis capacitaciones",
+    "titleAdmin": "Capacitaciones",
     "trilhasTitle": "Mis rutas de aprendizaje",
+    "trilhasTitleAdmin": "Rutas de aprendizaje",
     "cursosTitle": "Cursos",
     "emptyCursos": "Aún no hay cursos disponibles.",
     "emptyTrilhas": "Aún no hay rutas de aprendizaje disponibles."

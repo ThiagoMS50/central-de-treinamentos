@@ -1,3 +1,4 @@
+using LmsApi.Auth;
 using LmsApi.Dtos;
 using LmsApi.Models;
 using LmsApi.Services.Supabase;
@@ -157,6 +158,11 @@ public class GamificacaoService
         var profiles = alunoIds.Count == 0
             ? new List<ProfileRow>()
             : await _rest.SelectAsync<ProfileRow>("profiles", PostgrestFilter.In("id", alunoIds.Cast<object>()));
+
+        // Administrador gerencia o conteúdo mas não "estuda" — não faz sentido ele competir no
+        // ranking com quem de fato está fazendo os cursos.
+        var idsAdmin = profiles.Where(p => p.Role == RoleNames.Admin).Select(p => p.Id).ToHashSet();
+        pontosPorAluno = pontosPorAluno.Where(kv => !idsAdmin.Contains(kv.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
         var nomesPorId = profiles.ToDictionary(p => p.Id, p => p.Nome);
 
         var ranking = pontosPorAluno
