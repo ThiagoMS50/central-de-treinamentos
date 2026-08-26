@@ -23,3 +23,6 @@ docker.env.local
 
 # Claude Code (config local desta máquina, não é parte do projeto)
 .claude/settings.local.json
+
+# Graphify (mapa/grafo do código, gerado localmente — regenerável, não precisa versionar)
+graphify-out/
