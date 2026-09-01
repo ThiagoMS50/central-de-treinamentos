@@ -129,6 +129,14 @@ export interface RelatorioDashboard {
   progressoPorEquipe: EquipeProgresso[];
 }
 
+export interface AlunoResumo {
+  alunoId: string;
+  nome: string;
+  totalCursos: number;
+  cursosConcluidos: number;
+  progressoPercentual: number;
+}
+
 export interface Badge {
   codigo: string;
   nome: string;

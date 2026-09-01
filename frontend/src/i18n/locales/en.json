@@ -164,6 +164,7 @@
   },
   "relatorios": {
     "title": "Reports",
+    "employees": "Employees",
     "period": "Period",
     "course": "Course",
     "user": "Employee",

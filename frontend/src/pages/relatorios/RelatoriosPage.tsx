@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCursosQuery } from '../../hooks/useCursos';
-import { useRelatorioDashboardQuery, exportarRelatorioCsv, type RelatorioFiltro } from '../../hooks/useRelatorios';
+import { useRelatorioDashboardQuery, useResumoPorAlunoQuery, exportarRelatorioCsv, type RelatorioFiltro } from '../../hooks/useRelatorios';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
+import { ProgressBar } from '../../components/ui/ProgressBar';
+import { AlunoProgressoModal } from '../../components/AlunoProgressoModal';
 import { formatDate } from '../../lib/format';
 
 export function RelatoriosPage() {
   const { t, i18n } = useTranslation();
   const cursosQuery = useCursosQuery();
   const [filtro, setFiltro] = useState<RelatorioFiltro>({});
+  const [alunoSelecionado, setAlunoSelecionado] = useState<{ id: string; nome: string } | null>(null);
 
   const dashboardQuery = useRelatorioDashboardQuery(filtro);
+  const porAlunoQuery = useResumoPorAlunoQuery();
 
   return (
     <div className="page">
@@ -65,6 +69,49 @@ export function RelatoriosPage() {
               <span className="kpi-label">{t('relatorios.avgQuizScore')}</span>
             </div>
           </div>
+
+          <section>
+            <h2>{t('relatorios.employees')}</h2>
+            {porAlunoQuery.isLoading && <Spinner />}
+            {porAlunoQuery.isError && <ErrorBanner onRetry={() => porAlunoQuery.refetch()} />}
+            {porAlunoQuery.data && porAlunoQuery.data.length === 0 && <EmptyState message={t('relatorios.noData')} />}
+            {porAlunoQuery.data && porAlunoQuery.data.length > 0 && (
+              <div className="table-wrap">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>{t('admin.usuarios.nome')}</th>
+                      <th>{t('relatorios.completionByCourse')}</th>
+                      <th>%</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {porAlunoQuery.data.map((aluno) => (
+                      <tr key={aluno.alunoId}>
+                        <td>{aluno.nome}</td>
+                        <td>
+                          {aluno.cursosConcluidos}/{aluno.totalCursos}
+                        </td>
+                        <td style={{ minWidth: 140 }}>
+                          <ProgressBar percent={aluno.progressoPercentual} />
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setAlunoSelecionado({ id: aluno.alunoId, nome: aluno.nome })}
+                          >
+                            {t('admin.usuarios.viewProgress')}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
 
           <section>
             <h2>{t('relatorios.completionByCourse')}</h2>
@@ -150,6 +197,14 @@ export function RelatoriosPage() {
             </section>
           )}
         </>
+      )}
+
+      {alunoSelecionado && (
+        <AlunoProgressoModal
+          alunoId={alunoSelecionado.id}
+          nome={alunoSelecionado.nome}
+          onClose={() => setAlunoSelecionado(null)}
+        />
       )}
     </div>
   );

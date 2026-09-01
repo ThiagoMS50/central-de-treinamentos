@@ -1,4 +1,5 @@
 using System.Text;
+using LmsApi.Auth;
 using LmsApi.Dtos;
 using LmsApi.Models;
 using LmsApi.Services.Supabase;
@@ -133,6 +134,35 @@ public class RelatorioService
             conclusaoPorCurso,
             atrasados.OrderBy(a => a.PrazoEm).ToList(),
             progressoPorEquipe.OrderByDescending(p => p.TotalAlunos).ToList());
+    }
+
+    // Roster de colaboradores com um resumo de conclusão (independente dos filtros de
+    // curso/período do dashboard) — usado na tabela "Colaboradores" dos Relatórios, cada linha
+    // com um botão que abre o pop-up de detalhe (mesmo componente da tela de Usuários).
+    public async Task<List<AlunoResumoDto>> GerarResumoPorAlunoAsync(List<Guid>? escopoAlunoIds)
+    {
+        var profiles = await _rest.SelectAsync<ProfileRow>("profiles", order: "nome.asc");
+        var cursos = await _rest.SelectAsync<CursoRow>("cursos");
+        var matriculas = await _rest.SelectAsync<MatriculaRow>("matriculas");
+
+        // Administrador não é "aluno" pra fins de relatório (mesma regra do ranking) — quando o
+        // escopo é uma equipe específica (gestor), já vem só com os liderados dela.
+        var alunos = escopoAlunoIds is null
+            ? profiles.Where(p => p.Role != RoleNames.Admin).ToList()
+            : profiles.Where(p => escopoAlunoIds.Contains(p.Id)).ToList();
+
+        var totalCursos = cursos.Count;
+        var matriculasPorAluno = matriculas.GroupBy(m => m.AlunoId).ToDictionary(g => g.Key, g => g.ToList());
+
+        return alunos.Select(aluno =>
+        {
+            var minhasMatriculas = matriculasPorAluno.GetValueOrDefault(aluno.Id) ?? new List<MatriculaRow>();
+            var concluidos = minhasMatriculas.Count(m => m.ConcluidoEm.HasValue);
+            var progresso = totalCursos == 0 ? 0 : (double)concluidos / totalCursos * 100;
+            return new AlunoResumoDto(aluno.Id, aluno.Nome, totalCursos, concluidos, Math.Round(progresso, 1));
+        })
+        .OrderByDescending(a => a.ProgressoPercentual)
+        .ToList();
     }
 
     public async Task<byte[]> GerarCsvAsync(RelatorioFiltro filtro, List<Guid>? escopoAlunoIds)

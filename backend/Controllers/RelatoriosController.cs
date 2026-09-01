@@ -55,6 +55,13 @@ public class RelatoriosController : ControllerBase
         return dashboard;
     }
 
+    [HttpGet("por-aluno")]
+    public async Task<ActionResult<List<AlunoResumoDto>>> PorAluno()
+    {
+        var escopo = await ResolverEscopoAsync();
+        return await _relatorios.GerarResumoPorAlunoAsync(escopo);
+    }
+
     [HttpGet("export.csv")]
     public async Task<IActionResult> ExportarCsv(
         [FromQuery] DateTimeOffset? periodoInicio,

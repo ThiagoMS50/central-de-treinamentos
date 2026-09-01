@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiDownload, apiFetch } from '../lib/apiClient';
-import type { RelatorioDashboard } from '../types/api';
+import type { AlunoResumo, RelatorioDashboard } from '../types/api';
 
 export interface RelatorioFiltro {
   periodoInicio?: string;
@@ -29,4 +29,8 @@ export function useRelatorioDashboardQuery(filtro: RelatorioFiltro) {
 
 export function exportarRelatorioCsv(filtro: RelatorioFiltro) {
   return apiDownload(`/relatorios/export.csv${buildQuery(filtro)}`, 'relatorio.csv');
+}
+
+export function useResumoPorAlunoQuery() {
+  return useQuery({ queryKey: ['relatorios', 'por-aluno'], queryFn: () => apiFetch<AlunoResumo[]>('/relatorios/por-aluno') });
 }
