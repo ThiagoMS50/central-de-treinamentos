@@ -16,14 +16,23 @@ public class PerfisController : ControllerBase
     private readonly ISupabaseRestClient _rest;
     private readonly ICurrentUserService _currentUser;
     private readonly SupabaseOptions _supabaseOptions;
+    private readonly ProgressoService _progresso;
+    private readonly VisibilidadeService _visibilidade;
 
     private static readonly string[] PapeisValidos = { RoleNames.Aluno, RoleNames.Gestor, RoleNames.Admin };
 
-    public PerfisController(ISupabaseRestClient rest, ICurrentUserService currentUser, IOptions<SupabaseOptions> supabaseOptions)
+    public PerfisController(
+        ISupabaseRestClient rest,
+        ICurrentUserService currentUser,
+        IOptions<SupabaseOptions> supabaseOptions,
+        ProgressoService progresso,
+        VisibilidadeService visibilidade)
     {
         _rest = rest;
         _currentUser = currentUser;
         _supabaseOptions = supabaseOptions.Value;
+        _progresso = progresso;
+        _visibilidade = visibilidade;
     }
 
     private static ProfileDto ToDto(ProfileRow row) => new(row.Id, row.Nome, row.Email, row.Role, row.ManagerId);
@@ -94,5 +103,21 @@ public class PerfisController : ControllerBase
 
         if (atualizado is null) return NotFound();
         return ToDto(atualizado);
+    }
+
+    // Acompanhamento de progresso: status de todos os cursos para um aluno específico (usado na
+    // Administração e por Gestores). Visibilidade: admin vê qualquer um, gestor só os liderados
+    // (e a si mesmo).
+    [HttpGet("{alunoId:guid}/progresso")]
+    [Authorize(Roles = RoleNames.GestorOuAdmin)]
+    public async Task<ActionResult<List<ProgressoCursoDto>>> Progresso(Guid alunoId)
+    {
+        if (!await _visibilidade.PodeVerAsync(_currentUser.UserId, alunoId))
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = "Você não tem permissão para ver o progresso desta pessoa." });
+
+        var aluno = await _rest.GetByIdAsync<ProfileRow>("profiles", alunoId);
+        if (aluno is null) return NotFound();
+
+        return await _progresso.ObterProgressoDeAlunoAsync(alunoId);
     }
 }

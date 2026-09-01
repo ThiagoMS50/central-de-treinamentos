@@ -67,6 +67,7 @@ builder.Services.AddHttpClient<ISupabaseAuthClient, SupabaseAuthClient>(client =
 
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddSingleton<INotificationService, LogOnlyNotificationService>();
+builder.Services.AddScoped<VisibilidadeService>();
 builder.Services.AddScoped<GamificacaoService>();
 builder.Services.AddScoped<ConfiguracoesService>();
 builder.Services.AddScoped<ProgressoService>();

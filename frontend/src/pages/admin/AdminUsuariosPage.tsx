@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUsuariosQuery, useAtualizarUsuarioMutation } from '../../hooks/useUsuarios';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
 import { AdminTabs } from '../../components/admin/AdminTabs';
+import { AlunoProgressoModal } from '../../components/AlunoProgressoModal';
 import type { Role } from '../../types/api';
 
 const PAPEIS: Role[] = ['aluno', 'gestor', 'admin'];
@@ -10,6 +12,7 @@ export function AdminUsuariosPage() {
   const { t } = useTranslation();
   const usuariosQuery = useUsuariosQuery();
   const atualizarMutation = useAtualizarUsuarioMutation();
+  const [alunoSelecionado, setAlunoSelecionado] = useState<{ id: string; nome: string } | null>(null);
 
   if (usuariosQuery.isLoading) return <Spinner />;
   if (usuariosQuery.isError) return <ErrorBanner onRetry={() => usuariosQuery.refetch()} />;
@@ -30,6 +33,7 @@ export function AdminUsuariosPage() {
               <th>{t('admin.usuarios.email')}</th>
               <th>{t('admin.usuarios.role')}</th>
               <th>{t('admin.usuarios.manager')}</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -72,11 +76,28 @@ export function AdminUsuariosPage() {
                       ))}
                   </select>
                 </td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setAlunoSelecionado({ id: usuario.id, nome: usuario.nome })}
+                  >
+                    {t('admin.usuarios.viewProgress')}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {alunoSelecionado && (
+        <AlunoProgressoModal
+          alunoId={alunoSelecionado.id}
+          nome={alunoSelecionado.nome}
+          onClose={() => setAlunoSelecionado(null)}
+        />
+      )}
     </div>
   );
 }

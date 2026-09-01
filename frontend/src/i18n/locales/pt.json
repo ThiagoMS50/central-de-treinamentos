@@ -145,7 +145,11 @@
       "email": "E-mail",
       "role": "Papel",
       "manager": "Gestor",
-      "none": "Nenhum"
+      "none": "Nenhum",
+      "viewProgress": "Ver progresso",
+      "progressTitle": "Progresso de {{nome}}",
+      "startedAt": "Iniciado em",
+      "completedAt": "Concluído em"
     },
     "configuracoes": {
       "title": "Configurações",

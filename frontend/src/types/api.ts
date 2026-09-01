@@ -33,6 +33,15 @@ export interface CursoDetail extends CursoListItem {
   materiais: Material[];
 }
 
+export interface ProgressoCurso {
+  cursoId: string;
+  titulo: string;
+  status: CursoStatus;
+  prazoStatus: PrazoStatus;
+  iniciadoEm: string | null;
+  concluidoEm: string | null;
+}
+
 export interface TrilhaListItem {
   id: string;
   titulo: string;

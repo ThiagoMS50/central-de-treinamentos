@@ -145,7 +145,11 @@
       "email": "Email",
       "role": "Role",
       "manager": "Manager",
-      "none": "None"
+      "none": "None",
+      "viewProgress": "View progress",
+      "progressTitle": "{{nome}}'s progress",
+      "startedAt": "Started on",
+      "completedAt": "Completed on"
     },
     "configuracoes": {
       "title": "Settings",

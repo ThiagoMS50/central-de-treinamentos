@@ -1,3 +1,4 @@
+using LmsApi.Dtos;
 using LmsApi.Models;
 using LmsApi.Services.Supabase;
 
@@ -14,6 +15,36 @@ public class ProgressoService
     {
         _rest = rest;
         _gamificacao = gamificacao;
+    }
+
+    // Compartilhado com CursosController — mesma regra usada tanto para "meu progresso"
+    // quanto para o acompanhamento de um aluno pela Administração/Gestor.
+    public static (string status, string? prazoStatus, DateTimeOffset? prazoEm) CalcularStatus(CursoRow curso, MatriculaRow? matricula)
+    {
+        if (matricula is null) return ("nao_iniciado", null, null);
+        if (matricula.ConcluidoEm.HasValue) return ("concluido", null, null);
+
+        if (!curso.TemPrazo || curso.PrazoDias is null) return ("em_andamento", null, null);
+
+        var prazoEm = matricula.IniciadoEm.AddDays(curso.PrazoDias.Value);
+        var prazoStatus = DateTimeOffset.UtcNow > prazoEm ? "atrasado" : "em_dia";
+        return ("em_andamento", prazoStatus, prazoEm);
+    }
+
+    // Status de TODOS os cursos para um aluno específico — usado no acompanhamento de progresso
+    // (Administração/Gestor), diferente do "meus pontos" que só lista o que já foi concluído.
+    public async Task<List<ProgressoCursoDto>> ObterProgressoDeAlunoAsync(Guid alunoId)
+    {
+        var cursos = await _rest.SelectAsync<CursoRow>("cursos", order: "created_at.asc");
+        var matriculas = await _rest.SelectAsync<MatriculaRow>("matriculas", PostgrestFilter.Eq("aluno_id", alunoId));
+        var matriculasPorCurso = matriculas.ToDictionary(m => m.CursoId);
+
+        return cursos.Select(curso =>
+        {
+            var matricula = matriculasPorCurso.GetValueOrDefault(curso.Id);
+            var (status, prazoStatus, prazoEm) = CalcularStatus(curso, matricula);
+            return new ProgressoCursoDto(curso.Id, curso.Titulo, status, prazoStatus, matricula?.IniciadoEm, matricula?.ConcluidoEm);
+        }).ToList();
     }
 
     public async Task<MatriculaRow> GetOrCreateMatriculaAsync(Guid alunoId, Guid cursoId)

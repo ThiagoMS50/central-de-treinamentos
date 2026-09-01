@@ -10,12 +10,14 @@ public class GamificacaoController : ControllerBase
 {
     private readonly GamificacaoService _gamificacao;
     private readonly ConfiguracoesService _configuracoes;
+    private readonly VisibilidadeService _visibilidade;
     private readonly ICurrentUserService _currentUser;
 
-    public GamificacaoController(GamificacaoService gamificacao, ConfiguracoesService configuracoes, ICurrentUserService currentUser)
+    public GamificacaoController(GamificacaoService gamificacao, ConfiguracoesService configuracoes, VisibilidadeService visibilidade, ICurrentUserService currentUser)
     {
         _gamificacao = gamificacao;
         _configuracoes = configuracoes;
+        _visibilidade = visibilidade;
         _currentUser = currentUser;
     }
 
@@ -47,7 +49,7 @@ public class GamificacaoController : ControllerBase
     {
         if (await BloquearSeRankingDesativadoAsync() is { } bloqueado) return bloqueado;
 
-        if (!await _gamificacao.PodeVerDetalhesAsync(_currentUser.UserId, alunoId))
+        if (!await _visibilidade.PodeVerAsync(_currentUser.UserId, alunoId))
             return StatusCode(StatusCodes.Status403Forbidden, new { message = "Você não tem permissão para ver os detalhes desta pessoa." });
 
         var detalhe = await _gamificacao.ObterDetalheParticipanteAsync(alunoId);

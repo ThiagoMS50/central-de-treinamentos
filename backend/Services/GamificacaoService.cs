@@ -14,10 +14,12 @@ public class GamificacaoService
     private const int PontosPorTrilha = 50;
 
     private readonly ISupabaseRestClient _rest;
+    private readonly VisibilidadeService _visibilidade;
 
-    public GamificacaoService(ISupabaseRestClient rest)
+    public GamificacaoService(ISupabaseRestClient rest, VisibilidadeService visibilidade)
     {
         _rest = rest;
+        _visibilidade = visibilidade;
     }
 
     public async Task RegistrarConclusaoCursoAsync(Guid alunoId, Guid cursoId)
@@ -218,17 +220,11 @@ public class GamificacaoService
         var nomesPorId = profiles.ToDictionary(p => p.Id, p => p.Nome);
 
         // Visibilidade dos detalhes: aluno só o próprio, gestor o próprio + liderados, admin todos.
-        var chamador = await _rest.GetByIdAsync<ProfileRow>("profiles", chamadorId);
-        var idsLiderados = chamador?.Role == RoleNames.Gestor
-            ? (await _rest.SelectAsync<ProfileRow>("profiles", PostgrestFilter.Eq("manager_id", chamadorId))).Select(p => p.Id).ToHashSet()
-            : new HashSet<Guid>();
-
-        bool PodeVerDetalhes(Guid alunoId) =>
-            chamador?.Role == RoleNames.Admin || alunoId == chamadorId || idsLiderados.Contains(alunoId);
+        var podeVerDetalhes = await _visibilidade.ResolverAsync(chamadorId);
 
         var ranking = pontosPorAluno
             .OrderByDescending(kv => kv.Value)
-            .Select((kv, i) => new RankingItemDto(i + 1, kv.Key, nomesPorId.GetValueOrDefault(kv.Key, "?"), kv.Value, kv.Key == chamadorId, PodeVerDetalhes(kv.Key)))
+            .Select((kv, i) => new RankingItemDto(i + 1, kv.Key, nomesPorId.GetValueOrDefault(kv.Key, "?"), kv.Value, kv.Key == chamadorId, podeVerDetalhes(kv.Key)))
             .ToList();
 
         var topN = ranking.Take(top).ToList();
@@ -238,19 +234,5 @@ public class GamificacaoService
         var minhaLinha = ranking.FirstOrDefault(r => r.SouEu);
         if (minhaLinha is not null) topN.Add(minhaLinha);
         return topN;
-    }
-
-    // Mesma regra de visibilidade acima, usada pelo endpoint de detalhe do participante
-    // (aluno só o próprio, gestor o próprio + liderados, admin qualquer um).
-    public async Task<bool> PodeVerDetalhesAsync(Guid chamadorId, Guid alvoId)
-    {
-        if (chamadorId == alvoId) return true;
-
-        var chamador = await _rest.GetByIdAsync<ProfileRow>("profiles", chamadorId);
-        if (chamador?.Role == RoleNames.Admin) return true;
-        if (chamador?.Role != RoleNames.Gestor) return false;
-
-        var alvo = await _rest.GetByIdAsync<ProfileRow>("profiles", alvoId);
-        return alvo?.ManagerId == chamadorId;
     }
 }

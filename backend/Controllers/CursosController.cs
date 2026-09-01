@@ -25,21 +25,9 @@ public class CursosController : ControllerBase
         _progresso = progresso;
     }
 
-    private static (string status, string? prazoStatus, DateTimeOffset? prazoEm) CalcularStatus(CursoRow curso, MatriculaRow? matricula)
-    {
-        if (matricula is null) return ("nao_iniciado", null, null);
-        if (matricula.ConcluidoEm.HasValue) return ("concluido", null, null);
-
-        if (!curso.TemPrazo || curso.PrazoDias is null) return ("em_andamento", null, null);
-
-        var prazoEm = matricula.IniciadoEm.AddDays(curso.PrazoDias.Value);
-        var prazoStatus = DateTimeOffset.UtcNow > prazoEm ? "atrasado" : "em_dia";
-        return ("em_andamento", prazoStatus, prazoEm);
-    }
-
     private static CursoListItemDto ToListItemDto(CursoRow curso, MatriculaRow? matricula)
     {
-        var (status, prazoStatus, prazoEm) = CalcularStatus(curso, matricula);
+        var (status, prazoStatus, prazoEm) = ProgressoService.CalcularStatus(curso, matricula);
         return new CursoListItemDto(curso.Id, curso.Titulo, curso.Descricao, curso.CargaHorariaHoras,
             curso.TemPrazo, curso.PrazoDias, status, prazoStatus, prazoEm);
     }
@@ -61,7 +49,7 @@ public class CursosController : ControllerBase
         if (curso is null) return NotFound();
 
         var matricula = await _progresso.GetOrCreateMatriculaAsync(_currentUser.UserId, id);
-        var (status, prazoStatus, prazoEm) = CalcularStatus(curso, matricula);
+        var (status, prazoStatus, prazoEm) = ProgressoService.CalcularStatus(curso, matricula);
 
         var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.Eq("curso_id", id), order: "ordem.asc");
         var quizzes = await _rest.SelectAsync<QuizRow>("quizzes", PostgrestFilter.Eq("curso_id", id));
