@@ -53,10 +53,14 @@ export function DashboardPage() {
               <Link key={trilha.id} to={`/trilhas/${trilha.id}`} className="card card-link">
                 <h3>{trilha.titulo}</h3>
                 {trilha.descricao && <p className="card-description">{trilha.descricao}</p>}
-                <ProgressBar percent={trilha.progressoPercentual} />
-                <span className="card-meta">
-                  {trilha.cursosConcluidos}/{trilha.totalCursos}
-                </span>
+                {!ehAdmin && (
+                  <>
+                    <ProgressBar percent={trilha.progressoPercentual} />
+                    <span className="card-meta">
+                      {trilha.cursosConcluidos}/{trilha.totalCursos}
+                    </span>
+                  </>
+                )}
               </Link>
             ))}
           </div>
@@ -74,10 +78,12 @@ export function DashboardPage() {
               <Link key={curso.id} to={`/cursos/${curso.id}`} className="card card-link">
                 <h3>{curso.titulo}</h3>
                 {curso.descricao && <p className="card-description">{curso.descricao}</p>}
-                <div className="card-badges">
-                  <StatusBadge status={curso.status} />
-                  <PrazoBadge prazoStatus={curso.prazoStatus} />
-                </div>
+                {!ehAdmin && (
+                  <div className="card-badges">
+                    <StatusBadge status={curso.status} />
+                    <PrazoBadge prazoStatus={curso.prazoStatus} />
+                  </div>
+                )}
               </Link>
             ))}
           </div>
