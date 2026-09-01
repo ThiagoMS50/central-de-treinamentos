@@ -8,10 +8,12 @@ import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { StatusBadge, PrazoBadge } from '../../components/ui/Badge';
 import { QuizPratica } from '../../components/QuizPratica';
 import { formatDate } from '../../lib/format';
+import { useAuth } from '../../hooks/useAuth';
 
 export function CursoDetalhePage() {
   const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
+  const { profile } = useAuth();
 
   const cursoQuery = useCursoQuery(id);
   const quizQuery = useQuizQuery(id, !!cursoQuery.data?.temQuiz);
@@ -22,6 +24,9 @@ export function CursoDetalhePage() {
   if (!cursoQuery.data) return null;
 
   const curso = cursoQuery.data;
+  // Administrador está aqui pra revisar o conteúdo, não pra estudar — sem status/prazo pessoal
+  // nem ações de "concluir"/"certificado", pelos mesmos motivos do painel principal.
+  const ehAdmin = profile?.role === 'admin';
 
   return (
     <div className="page">
@@ -31,10 +36,12 @@ export function CursoDetalhePage() {
 
       <div className="page-header">
         <h1>{curso.titulo}</h1>
-        <div className="card-badges">
-          <StatusBadge status={curso.status} />
-          <PrazoBadge prazoStatus={curso.prazoStatus} />
-        </div>
+        {!ehAdmin && (
+          <div className="card-badges">
+            <StatusBadge status={curso.status} />
+            <PrazoBadge prazoStatus={curso.prazoStatus} />
+          </div>
+        )}
       </div>
 
       {curso.descricao && <p>{curso.descricao}</p>}
@@ -43,7 +50,7 @@ export function CursoDetalhePage() {
         <span>
           {t('curso.cargaHoraria')}: {curso.cargaHorariaHoras} {t('common.hours')}
         </span>
-        {curso.prazoEm && (
+        {!ehAdmin && curso.prazoEm && (
           <span>
             {t('curso.deadline')}: {formatDate(curso.prazoEm, i18n.language)}
           </span>
@@ -78,22 +85,24 @@ export function CursoDetalhePage() {
         </section>
       )}
 
-      <section className="curso-actions">
-        {curso.status !== 'concluido' ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={concluirMutation.isPending}
-            onClick={() => concluirMutation.mutate()}
-          >
-            {t('curso.markComplete')}
-          </button>
-        ) : (
-          <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
-            {t('curso.downloadCertificate')}
-          </button>
-        )}
-      </section>
+      {!ehAdmin && (
+        <section className="curso-actions">
+          {curso.status !== 'concluido' ? (
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={concluirMutation.isPending}
+              onClick={() => concluirMutation.mutate()}
+            >
+              {t('curso.markComplete')}
+            </button>
+          ) : (
+            <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
+              {t('curso.downloadCertificate')}
+            </button>
+          )}
+        </section>
+      )}
     </div>
   );
 }

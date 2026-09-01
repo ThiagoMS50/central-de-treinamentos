@@ -48,7 +48,9 @@ public class CursosController : ControllerBase
         var curso = await _rest.GetByIdAsync<CursoRow>("cursos", id);
         if (curso is null) return NotFound();
 
-        var matricula = await _progresso.GetOrCreateMatriculaAsync(_currentUser.UserId, id);
+        var matricula = _currentUser.IsAdmin
+            ? await _progresso.GetMatriculaAsync(_currentUser.UserId, id)
+            : await _progresso.GetOrCreateMatriculaAsync(_currentUser.UserId, id);
         var (status, prazoStatus, prazoEm) = ProgressoService.CalcularStatus(curso, matricula);
 
         var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.Eq("curso_id", id), order: "ordem.asc");

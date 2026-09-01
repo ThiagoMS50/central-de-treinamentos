@@ -47,6 +47,16 @@ public class ProgressoService
         }).ToList();
     }
 
+    // Só consulta, nunca cria — usado quando o Admin abre um curso pra revisar conteúdo, pra não
+    // gerar uma "matrícula" falsa dele (ele não é aluno daquele curso, só está gerenciando).
+    public async Task<MatriculaRow?> GetMatriculaAsync(Guid alunoId, Guid cursoId)
+    {
+        var existentes = await _rest.SelectAsync<MatriculaRow>(
+            "matriculas",
+            PostgrestFilter.And(PostgrestFilter.Eq("aluno_id", alunoId), PostgrestFilter.Eq("curso_id", cursoId)));
+        return existentes.FirstOrDefault();
+    }
+
     public async Task<MatriculaRow> GetOrCreateMatriculaAsync(Guid alunoId, Guid cursoId)
     {
         var existentes = await _rest.SelectAsync<MatriculaRow>(
