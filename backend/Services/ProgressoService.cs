@@ -97,9 +97,8 @@ public class ProgressoService
                 .Select(m => new MaterialDto(m.Id, m.Titulo, m.Ordem)).ToList())).ToList();
     }
 
-    // Marca uma aula como concluída pelo aluno; quando essa era a última aula pendente do curso,
-    // o curso inteiro é considerado concluído (matrícula, pontos/badges e trilhas em cadeia) —
-    // substitui o antigo botão único de "concluir curso".
+    // Marca uma aula como concluída pelo aluno e tenta fechar o curso em seguida — substitui o
+    // antigo botão único de "concluir curso".
     public async Task<ConcluirAulaResponse> MarcarAulaConcluidaAsync(Guid alunoId, Guid aulaId)
     {
         var aula = await _rest.GetByIdAsync<AulaRow>("aulas", aulaId);
@@ -112,17 +111,30 @@ public class ProgressoService
             new { aluno_id = alunoId, aula_id = aulaId },
             "aluno_id,aula_id");
 
-        var todasAulas = await _rest.SelectAsync<AulaRow>("aulas", PostgrestFilter.Eq("curso_id", aula.CursoId));
+        return await TentarConcluirCursoAsync(alunoId, aula.CursoId);
+    }
+
+    // Fecha o círculo da conclusão: todas as aulas concluídas E, se o curso tiver quiz, todas as
+    // perguntas respondidas corretamente (sem limite de tentativas, mas precisa acertar tudo pra
+    // liberar o certificado). Chamado tanto ao concluir uma aula quanto ao responder o quiz —
+    // o que "fechar o círculo" por último é quem efetivamente dispara a conclusão. Idempotente.
+    public async Task<ConcluirAulaResponse> TentarConcluirCursoAsync(Guid alunoId, Guid cursoId)
+    {
+        var matriculaAtual = await GetMatriculaAsync(alunoId, cursoId);
+        if (matriculaAtual?.ConcluidoEm is not null) return new ConcluirAulaResponse(true, new List<Guid>());
+
+        var todasAulas = await _rest.SelectAsync<AulaRow>("aulas", PostgrestFilter.Eq("curso_id", cursoId));
         var progresso = await _rest.SelectAsync<AulaProgressoRow>("aula_progresso", PostgrestFilter.Eq("aluno_id", alunoId));
         var concluidasIds = progresso.Select(p => p.AulaId).ToHashSet();
 
-        var todasConcluidas = todasAulas.Count > 0 && todasAulas.All(a => concluidasIds.Contains(a.Id));
-        if (!todasConcluidas) return new ConcluirAulaResponse(false, new List<Guid>());
+        var todasAulasConcluidas = todasAulas.Count > 0 && todasAulas.All(a => concluidasIds.Contains(a.Id));
+        if (!todasAulasConcluidas) return new ConcluirAulaResponse(false, new List<Guid>());
 
-        var matricula = await GetMatriculaAsync(alunoId, aula.CursoId);
-        if (matricula?.ConcluidoEm is not null) return new ConcluirAulaResponse(true, new List<Guid>());
+        var quiz = (await _rest.SelectAsync<QuizRow>("quizzes", PostgrestFilter.Eq("curso_id", cursoId))).FirstOrDefault();
+        if (quiz is not null && !await _gamificacao.QuizConcluidoComSucessoAsync(alunoId, quiz.Id))
+            return new ConcluirAulaResponse(false, new List<Guid>());
 
-        var trilhasCompletas = await ConcluirCursoInternoAsync(alunoId, aula.CursoId);
+        var trilhasCompletas = await ConcluirCursoInternoAsync(alunoId, cursoId);
         return new ConcluirAulaResponse(true, trilhasCompletas);
     }
 

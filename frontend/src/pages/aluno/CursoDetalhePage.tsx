@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { useCursoQuery } from '../../hooks/useCursos';
@@ -11,9 +11,23 @@ import { StatusBadge, PrazoBadge } from '../../components/ui/Badge';
 import { QuizPratica } from '../../components/QuizPratica';
 import { formatDate } from '../../lib/format';
 import { useAuth } from '../../hooks/useAuth';
-import type { Aula } from '../../types/api';
+import type { Aula, CursoDetail } from '../../types/api';
 
-type Step = { kind: 'intro' } | { kind: 'aula'; aula: Aula; numero: number };
+type Step =
+  | { kind: 'intro' }
+  | { kind: 'aula'; aula: Aula; numero: number }
+  | { kind: 'quiz' }
+  | { kind: 'certificado' };
+
+function montarSteps(curso: CursoDetail | undefined, ehAdmin: boolean): Step[] {
+  if (!curso) return [{ kind: 'intro' }];
+  return [
+    { kind: 'intro' },
+    ...curso.aulas.map((aula, i) => ({ kind: 'aula' as const, aula, numero: i + 1 })),
+    ...(curso.temQuiz ? [{ kind: 'quiz' as const }] : []),
+    ...(!ehAdmin && curso.status === 'concluido' ? [{ kind: 'certificado' as const }] : []),
+  ];
+}
 
 export function CursoDetalhePage() {
   const { t, i18n } = useTranslation();
@@ -21,21 +35,31 @@ export function CursoDetalhePage() {
   const { profile } = useAuth();
 
   const cursoQuery = useCursoQuery(id);
-  const quizQuery = useQuizQuery(id, !!cursoQuery.data?.temQuiz);
+  const curso = cursoQuery.data;
+  const ehAdmin = profile?.role === 'admin';
+
+  const quizQuery = useQuizQuery(id, !!curso?.temQuiz);
   const concluirAulaMutation = useConcluirAulaMutation(id!);
 
+  const steps = montarSteps(curso, ehAdmin);
   const [stepIndex, setStepIndex] = useState(0);
+  const statusAnteriorRef = useRef<string | undefined>(curso?.status);
+
+  // Quando o curso passa a "concluido" (por concluir a última aula ou acertar o quiz, o que
+  // fechar o círculo por último), pula automaticamente pro passo final de certificado.
+  useEffect(() => {
+    if (!curso) return;
+    if (statusAnteriorRef.current !== 'concluido' && curso.status === 'concluido') {
+      setStepIndex(montarSteps(curso, ehAdmin).length - 1);
+    }
+    statusAnteriorRef.current = curso.status;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curso?.status]);
 
   if (cursoQuery.isLoading) return <Spinner />;
   if (cursoQuery.isError) return <ErrorBanner onRetry={() => cursoQuery.refetch()} />;
-  if (!cursoQuery.data) return null;
+  if (!curso) return null;
 
-  const curso = cursoQuery.data;
-  // Administrador está aqui pra revisar o conteúdo, não pra estudar — sem status/prazo pessoal
-  // nem ações de "concluir aula"/certificado, pelos mesmos motivos do painel principal.
-  const ehAdmin = profile?.role === 'admin';
-
-  const steps: Step[] = [{ kind: 'intro' }, ...curso.aulas.map((aula, i) => ({ kind: 'aula' as const, aula, numero: i + 1 }))];
   const step = steps[Math.min(stepIndex, steps.length - 1)];
 
   return (
@@ -56,7 +80,7 @@ export function CursoDetalhePage() {
 
       <div className="wizard">
         <div className="wizard-content">
-          {step.kind === 'intro' ? (
+          {step.kind === 'intro' && (
             <div className="wizard-step">
               <h2>{t('curso.about')}</h2>
               {curso.descricao && <p>{curso.descricao}</p>}
@@ -72,7 +96,9 @@ export function CursoDetalhePage() {
               </div>
               {curso.aulas.length === 0 && <EmptyState message={t('curso.noAulas')} />}
             </div>
-          ) : (
+          )}
+
+          {step.kind === 'aula' && (
             <div className="wizard-step">
               <div className="aula-card-header">
                 <h2>
@@ -111,6 +137,23 @@ export function CursoDetalhePage() {
               )}
             </div>
           )}
+
+          {step.kind === 'quiz' && (
+            <div className="wizard-step">
+              {quizQuery.isLoading && <Spinner />}
+              {quizQuery.data && <QuizPratica cursoId={curso.id} quiz={quizQuery.data} />}
+            </div>
+          )}
+
+          {step.kind === 'certificado' && (
+            <div className="wizard-step">
+              <h2>{t('curso.completedTitle')}</h2>
+              <p>{t('curso.completedMessage')}</p>
+              <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
+                {t('curso.downloadCertificate')}
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="wizard-nav">
@@ -121,28 +164,13 @@ export function CursoDetalhePage() {
           <button
             type="button"
             className="btn btn-secondary"
-            disabled={stepIndex === steps.length - 1}
+            disabled={stepIndex >= steps.length - 1}
             onClick={() => setStepIndex((s) => s + 1)}
           >
             {t('curso.nextStep')} →
           </button>
         </div>
       </div>
-
-      {curso.temQuiz && (
-        <section>
-          {quizQuery.isLoading && <Spinner />}
-          {quizQuery.data && <QuizPratica cursoId={curso.id} quiz={quizQuery.data} />}
-        </section>
-      )}
-
-      {!ehAdmin && curso.status === 'concluido' && (
-        <section className="curso-actions">
-          <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
-            {t('curso.downloadCertificate')}
-          </button>
-        </section>
-      )}
     </div>
   );
 }

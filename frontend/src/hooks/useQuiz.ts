@@ -49,12 +49,15 @@ export function useResponderPerguntaMutation(cursoId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ perguntaId, alternativaId }: { perguntaId: string; alternativaId: string }) =>
-      apiFetch<{ correta: boolean; alternativaCorretaId: string }>(`/cursos/${cursoId}/quiz/responder/${perguntaId}`, {
-        method: 'POST',
-        body: { alternativaId },
-      }),
+      apiFetch<{ correta: boolean; alternativaCorretaId: string; cursoConcluido: boolean }>(
+        `/cursos/${cursoId}/quiz/responder/${perguntaId}`,
+        { method: 'POST', body: { alternativaId } },
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['quiz', cursoId] });
+      queryClient.invalidateQueries({ queryKey: ['cursos'] });
+      queryClient.invalidateQueries({ queryKey: ['cursos', cursoId] });
+      queryClient.invalidateQueries({ queryKey: ['trilhas'] });
       queryClient.invalidateQueries({ queryKey: ['gamificacao'] });
     },
   });

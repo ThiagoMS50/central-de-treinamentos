@@ -15,12 +15,14 @@ public class QuizController : ControllerBase
     private readonly ISupabaseRestClient _rest;
     private readonly ICurrentUserService _currentUser;
     private readonly GamificacaoService _gamificacao;
+    private readonly ProgressoService _progresso;
 
-    public QuizController(ISupabaseRestClient rest, ICurrentUserService currentUser, GamificacaoService gamificacao)
+    public QuizController(ISupabaseRestClient rest, ICurrentUserService currentUser, GamificacaoService gamificacao, ProgressoService progresso)
     {
         _rest = rest;
         _currentUser = currentUser;
         _gamificacao = gamificacao;
+        _progresso = progresso;
     }
 
     [HttpGet]
@@ -115,6 +117,8 @@ public class QuizController : ControllerBase
 
         await _gamificacao.RegistrarRespostaAsync(_currentUser.UserId, perguntaId, pergunta.QuizId, alternativa.Correta);
 
-        return new ResponderPerguntaResponse(alternativa.Correta, alternativaCorreta.Id);
+        var resultado = await _progresso.TentarConcluirCursoAsync(_currentUser.UserId, cursoId);
+
+        return new ResponderPerguntaResponse(alternativa.Correta, alternativaCorreta.Id, resultado.CursoConcluido);
     }
 }

@@ -89,27 +89,33 @@ public class GamificacaoService
             }
         }
 
-        await VerificarQuizPerfeitoAsync(alunoId, quizId);
+        if (await QuizConcluidoComSucessoAsync(alunoId, quizId))
+        {
+            var totalPerguntas = (await _rest.SelectAsync<PerguntaRow>("perguntas", PostgrestFilter.Eq("quiz_id", quizId))).Count;
+            if (totalPerguntas > 0) await ConcederBadgeAsync(alunoId, "quiz_perfeito");
+        }
     }
 
-    private async Task VerificarQuizPerfeitoAsync(Guid alunoId, Guid quizId)
+    // Pública: usada tanto pro badge "quiz perfeito" quanto pra liberar a conclusão do curso —
+    // quando o curso tem quiz, ele virou pré-requisito do certificado (ver ProgressoService).
+    // Um quiz sem nenhuma pergunta cadastrada não bloqueia nada (retorna true).
+    public async Task<bool> QuizConcluidoComSucessoAsync(Guid alunoId, Guid quizId)
     {
         var perguntas = await _rest.SelectAsync<PerguntaRow>("perguntas", PostgrestFilter.Eq("quiz_id", quizId));
-        if (perguntas.Count == 0) return;
+        if (perguntas.Count == 0) return true;
 
         var perguntaIds = perguntas.Select(p => p.Id).ToList();
         var respostas = await _rest.SelectAsync<RespostaQuizRow>("respostas_quiz", PostgrestFilter.And(
             PostgrestFilter.Eq("aluno_id", alunoId),
             PostgrestFilter.In("pergunta_id", perguntaIds.Cast<object>())));
 
-        if (respostas.Count < perguntas.Count) return;
+        if (respostas.Count < perguntas.Count) return false;
 
         var alternativas = await _rest.SelectAsync<AlternativaRow>("alternativas",
             PostgrestFilter.In("pergunta_id", perguntaIds.Cast<object>()));
         var corretasPorPergunta = alternativas.Where(a => a.Correta).ToDictionary(a => a.PerguntaId, a => a.Id);
 
-        var todasCorretas = respostas.All(r => corretasPorPergunta.TryGetValue(r.PerguntaId, out var altCorreta) && altCorreta == r.AlternativaId);
-        if (todasCorretas) await ConcederBadgeAsync(alunoId, "quiz_perfeito");
+        return respostas.All(r => corretasPorPergunta.TryGetValue(r.PerguntaId, out var altCorreta) && altCorreta == r.AlternativaId);
     }
 
     private async Task ConcederBadgeAsync(Guid alunoId, string codigoBadge)

@@ -98,6 +98,8 @@
     "downloadMaterial": "Baixar",
     "quiz": "Quiz de prática",
     "completed": "Concluído",
+    "completedTitle": "Curso concluído!",
+    "completedMessage": "Parabéns! Você concluiu este curso. Seu certificado já está disponível para download.",
     "downloadCertificate": "Baixar certificado",
     "deadline": "Prazo",
     "noMaterials": "Nenhum material cadastrado ainda.",

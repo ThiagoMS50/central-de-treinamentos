@@ -98,6 +98,8 @@
     "downloadMaterial": "Download",
     "quiz": "Practice quiz",
     "completed": "Completed",
+    "completedTitle": "Course completed!",
+    "completedMessage": "Congratulations! You've completed this course. Your certificate is ready to download.",
     "downloadCertificate": "Download certificate",
     "deadline": "Deadline",
     "noMaterials": "No materials added yet.",

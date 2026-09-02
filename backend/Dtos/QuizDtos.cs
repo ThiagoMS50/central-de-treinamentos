@@ -16,4 +16,5 @@ public record UpsertQuizRequest(string Titulo, List<UpsertPerguntaRequest> Pergu
 
 public record ResponderPerguntaRequest(Guid AlternativaId);
 
-public record ResponderPerguntaResponse(bool Correta, Guid AlternativaCorretaId);
+// CursoConcluido: true quando essa resposta fechou o curso (última pendência era o quiz).
+public record ResponderPerguntaResponse(bool Correta, Guid AlternativaCorretaId, bool CursoConcluido);

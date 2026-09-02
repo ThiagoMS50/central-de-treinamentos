@@ -23,7 +23,7 @@
 
 - **Tipos suportados nesta versão**:
   - Documentos e slides (PDFs, apresentações).
-  - Quizzes/avaliações — **sem** nota mínima de aprovação nem limite de tentativas; servem apenas como prática/fixação, não bloqueiam a conclusão do curso.
+  - Quizzes/avaliações — **sem** limite de tentativas (o aluno pode responder de novo quantas vezes quiser). Quando o curso tem quiz, ele é a última etapa: o curso só é considerado concluído (e o certificado só é emitido) depois de todas as aulas feitas **e** de todas as perguntas do quiz respondidas corretamente.
 - **Vídeo**: fora do escopo da v1, deliberadamente. Fica registrado como possível evolução futura.
 - **Estrutura de organização**: suporta tanto **cursos avulsos** (independentes) quanto **trilhas de aprendizagem** (sequência de cursos agrupados por tema/cargo, com progressão). Um mesmo curso pode pertencer a **mais de uma trilha** simultaneamente (relação N:N entre cursos e trilhas).
 - **Visibilidade**: nesta primeira versão **todos os colaboradores veem todos os cursos e trilhas** disponíveis na plataforma — não há segmentação por área, cargo ou equipe.
@@ -96,7 +96,7 @@
 - Suporte a vídeo como tipo de conteúdo.
 - App nativo (App Store/Google Play).
 - Integrações com sistemas de RH, calendário ou SSO corporativo.
-- Nota mínima/tentativas limitadas em quizzes.
+- Tentativas limitadas em quizzes.
 - Notificações in-app (além de e-mail).
 - Perfil dedicado de "Instrutor" separado do Administrador.
 - Regras de pontuação/badges configuráveis pelo Administrador (por ora são fixas no código — ver seção 8).
