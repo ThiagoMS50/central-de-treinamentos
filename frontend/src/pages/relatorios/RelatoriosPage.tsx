@@ -5,10 +5,9 @@ import { useRelatorioDashboardQuery, useResumoPorAlunoQuery, exportarRelatorioCs
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { AlunoProgressoModal } from '../../components/AlunoProgressoModal';
-import { formatDate } from '../../lib/format';
 
 export function RelatoriosPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const cursosQuery = useCursosQuery();
   const [filtro, setFiltro] = useState<RelatorioFiltro>({});
   const [alunoSelecionado, setAlunoSelecionado] = useState<{ id: string; nome: string } | null>(null);
@@ -81,7 +80,7 @@ export function RelatoriosPage() {
                   <thead>
                     <tr>
                       <th>{t('admin.usuarios.nome')}</th>
-                      <th>{t('relatorios.completionByCourse')}</th>
+                      <th>{t('ranking.coursesCompleted')}</th>
                       <th>%</th>
                       <th></th>
                     </tr>
@@ -105,64 +104,6 @@ export function RelatoriosPage() {
                             {t('admin.usuarios.viewProgress')}
                           </button>
                         </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-
-          <section>
-            <h2>{t('relatorios.completionByCourse')}</h2>
-            {dashboardQuery.data.conclusaoPorCurso.length === 0 ? (
-              <EmptyState message={t('relatorios.noData')} />
-            ) : (
-              <div className="table-wrap">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>{t('relatorios.course')}</th>
-                      <th>{t('status.concluido')}</th>
-                      <th>%</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dashboardQuery.data.conclusaoPorCurso.map((c) => (
-                      <tr key={c.cursoId}>
-                        <td>{c.titulo}</td>
-                        <td>
-                          {c.concluidos}/{c.totalMatriculados}
-                        </td>
-                        <td>{c.taxaConclusao.toFixed(1)}%</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-
-          <section>
-            <h2>{t('relatorios.overdue')}</h2>
-            {dashboardQuery.data.atrasados.length === 0 ? (
-              <EmptyState message={t('relatorios.noData')} />
-            ) : (
-              <div className="table-wrap">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>{t('relatorios.user')}</th>
-                      <th>{t('relatorios.course')}</th>
-                      <th>{t('curso.deadline')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dashboardQuery.data.atrasados.map((p) => (
-                      <tr key={`${p.alunoId}-${p.cursoId}`}>
-                        <td>{p.alunoNome}</td>
-                        <td>{p.cursoTitulo}</td>
-                        <td>{formatDate(p.prazoEm, i18n.language)}</td>
                       </tr>
                     ))}
                   </tbody>

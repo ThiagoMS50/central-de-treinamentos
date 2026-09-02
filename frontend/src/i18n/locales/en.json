@@ -172,8 +172,6 @@
     "completionRate": "Overall completion rate",
     "avgTime": "Average completion time (days)",
     "avgQuizScore": "Average quiz score",
-    "completionByCourse": "Completion by course",
-    "overdue": "Overdue",
     "teamProgress": "Progress by team",
     "noData": "No data for the selected filters.",
     "from": "From",

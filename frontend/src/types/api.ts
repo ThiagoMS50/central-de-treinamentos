@@ -97,22 +97,6 @@ export interface CertificadoListItem {
   codigoValidacao: string;
 }
 
-export interface CursoConclusao {
-  cursoId: string;
-  titulo: string;
-  totalMatriculados: number;
-  concluidos: number;
-  taxaConclusao: number;
-}
-
-export interface Pendencia {
-  alunoId: string;
-  alunoNome: string;
-  cursoId: string;
-  cursoTitulo: string;
-  prazoEm: string;
-}
-
 export interface EquipeProgresso {
   gestorId: string;
   gestorNome: string;
@@ -124,8 +108,6 @@ export interface RelatorioDashboard {
   taxaConclusaoGeral: number;
   tempoMedioConclusaoDias: number;
   notaMediaQuizPercentual: number;
-  conclusaoPorCurso: CursoConclusao[];
-  atrasados: Pendencia[];
   progressoPorEquipe: EquipeProgresso[];
 }
 

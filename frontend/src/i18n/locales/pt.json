@@ -172,8 +172,6 @@
     "completionRate": "Taxa de conclusão geral",
     "avgTime": "Tempo médio de conclusão (dias)",
     "avgQuizScore": "Nota média nos quizzes",
-    "completionByCourse": "Conclusão por curso",
-    "overdue": "Atrasados",
     "teamProgress": "Progresso por equipe",
     "noData": "Sem dados para os filtros selecionados.",
     "from": "De",

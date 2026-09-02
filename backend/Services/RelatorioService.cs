@@ -62,7 +62,6 @@ public class RelatorioService
     public async Task<RelatorioDashboardDto> GerarDashboardAsync(RelatorioFiltro filtro, List<Guid>? escopoAlunoIds)
     {
         var dados = await CarregarAsync(filtro, escopoAlunoIds);
-        var cursosPorId = dados.Cursos.ToDictionary(c => c.Id);
         var profilesPorId = dados.Profiles.ToDictionary(p => p.Id);
 
         var totalMatriculas = dados.Matriculas.Count;
@@ -73,38 +72,6 @@ public class RelatorioService
             .Select(m => (m.ConcluidoEm!.Value - m.IniciadoEm).TotalDays)
             .DefaultIfEmpty(0)
             .Average();
-
-        var conclusaoPorCurso = dados.Matriculas
-            .GroupBy(m => m.CursoId)
-            .Select(g =>
-            {
-                var concluidos = g.Count(m => m.ConcluidoEm.HasValue);
-                return new CursoConclusaoDto(
-                    g.Key,
-                    cursosPorId.TryGetValue(g.Key, out var curso) ? curso.Titulo : "?",
-                    g.Count(),
-                    concluidos,
-                    g.Count() == 0 ? 0 : (double)concluidos / g.Count() * 100);
-            })
-            .OrderBy(c => c.Titulo)
-            .ToList();
-
-        var agora = DateTimeOffset.UtcNow;
-        var atrasados = new List<PendenciaDto>();
-        foreach (var m in dados.Matriculas.Where(m => !m.ConcluidoEm.HasValue))
-        {
-            if (!cursosPorId.TryGetValue(m.CursoId, out var curso) || !curso.TemPrazo || curso.PrazoDias is null) continue;
-            var prazoEm = m.IniciadoEm.AddDays(curso.PrazoDias.Value);
-            if (prazoEm < agora)
-            {
-                atrasados.Add(new PendenciaDto(
-                    m.AlunoId,
-                    profilesPorId.TryGetValue(m.AlunoId, out var aluno) ? aluno.Nome : "?",
-                    m.CursoId,
-                    curso.Titulo,
-                    prazoEm));
-            }
-        }
 
         var alternativasPorId = dados.Alternativas.ToDictionary(a => a.Id);
         var respostasEscopo = escopoAlunoIds is null
@@ -131,8 +98,6 @@ public class RelatorioService
             Math.Round(taxaGeral, 1),
             Math.Round(tempoMedio, 1),
             Math.Round(notaMedia, 1),
-            conclusaoPorCurso,
-            atrasados.OrderBy(a => a.PrazoEm).ToList(),
             progressoPorEquipe.OrderByDescending(p => p.TotalAlunos).ToList());
     }
 
