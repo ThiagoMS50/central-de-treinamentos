@@ -87,6 +87,10 @@
     "atrasado": "Atrasado"
   },
   "curso": {
+    "about": "Sobre o curso",
+    "prevStep": "Anterior",
+    "nextStep": "Avançar",
+    "stepOf": "{{current}} de {{total}}",
     "aulas": "Aulas",
     "noAulas": "Nenhuma aula cadastrada ainda.",
     "aulaCompleted": "Concluída",

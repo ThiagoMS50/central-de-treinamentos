@@ -87,6 +87,10 @@
     "atrasado": "Overdue"
   },
   "curso": {
+    "about": "About this course",
+    "prevStep": "Previous",
+    "nextStep": "Next",
+    "stepOf": "{{current}} of {{total}}",
     "aulas": "Lessons",
     "noAulas": "No lessons added yet.",
     "aulaCompleted": "Completed",
