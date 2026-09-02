@@ -15,12 +15,32 @@ create table if not exists public.aulas (
 create index if not exists idx_aulas_curso on public.aulas(curso_id);
 alter table public.aulas enable row level security;
 
+create table if not exists public.aula_progresso (
+  aluno_id uuid not null references public.profiles(id) on delete cascade,
+  aula_id uuid not null references public.aulas(id) on delete cascade,
+  concluida_em timestamptz not null default now(),
+  primary key (aluno_id, aula_id)
+);
+
+create index if not exists idx_aula_progresso_aluno on public.aula_progresso(aluno_id);
+alter table public.aula_progresso enable row level security;
+
 -- Cria uma aula padrão ("Conteúdo") para cada curso que ainda não tem nenhuma aula, para que os
 -- materiais já cadastrados tenham onde ficar.
 insert into public.aulas (curso_id, titulo, ordem)
 select c.id, 'Conteúdo', 0
 from public.cursos c
 where not exists (select 1 from public.aulas a where a.curso_id = c.id);
+
+-- Para quem já tinha o curso marcado como concluído antes dessa mudança, marca a aula
+-- "Conteúdo" recém-criada como concluída também, pra não aparecer um "marcar como concluída"
+-- pendente num curso que o aluno já tinha terminado.
+insert into public.aula_progresso (aluno_id, aula_id, concluida_em)
+select m.aluno_id, a.id, m.concluido_em
+from public.matriculas m
+join public.aulas a on a.curso_id = m.curso_id
+where m.concluido_em is not null
+on conflict (aluno_id, aula_id) do nothing;
 
 -- Move os materiais da coluna antiga (curso_id) para a nova (aula_id), apontando pra aula
 -- padrão criada acima, e remove a coluna antiga. Só roda se a coluna antiga ainda existir
@@ -41,13 +61,3 @@ begin
 end $$;
 
 create index if not exists idx_materiais_aula on public.materiais(aula_id);
-
-create table if not exists public.aula_progresso (
-  aluno_id uuid not null references public.profiles(id) on delete cascade,
-  aula_id uuid not null references public.aulas(id) on delete cascade,
-  concluida_em timestamptz not null default now(),
-  primary key (aluno_id, aula_id)
-);
-
-create index if not exists idx_aula_progresso_aluno on public.aula_progresso(aluno_id);
-alter table public.aula_progresso enable row level security;
