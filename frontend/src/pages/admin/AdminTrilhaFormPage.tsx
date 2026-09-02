@@ -11,6 +11,8 @@ import {
 import { useCursosQuery } from '../../hooks/useCursos';
 import { apiFetch } from '../../lib/apiClient';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
+import { AdminTabs } from '../../components/admin/AdminTabs';
+import { useSavedFeedback } from '../../hooks/useSavedFeedback';
 
 interface SelecaoCurso {
   cursoId: string;
@@ -30,9 +32,11 @@ export function AdminTrilhaFormPage() {
   const criarMutation = useCriarTrilhaMutation();
   const atualizarMutation = useAtualizarTrilhaMutation(id ?? '');
   const queryClient = useQueryClient();
+  const { salvo, mostrar } = useSavedFeedback();
 
   const [valores, setValores] = useState<TrilhaFormValues>({ titulo: '', descricao: '' });
   const [selecao, setSelecao] = useState<SelecaoCurso[]>([]);
+  const [busca, setBusca] = useState('');
   const [salvandoCursos, setSalvandoCursos] = useState(false);
 
   useEffect(() => {
@@ -60,6 +64,29 @@ export function AdminTrilhaFormPage() {
     setSelecao((prev) => prev.map((s) => (s.cursoId === cursoId ? { ...s, ...patch } : s)));
   }
 
+  const incluidos = selecao.filter((s) => s.incluido).sort((a, b) => a.ordem - b.ordem);
+  const disponiveis = selecao
+    .filter((s) => !s.incluido)
+    .filter((s) => s.titulo.toLowerCase().includes(busca.toLowerCase()));
+
+  function adicionar(cursoId: string) {
+    atualizarSelecao(cursoId, { incluido: true, ordem: incluidos.length });
+  }
+
+  function remover(cursoId: string) {
+    atualizarSelecao(cursoId, { incluido: false });
+  }
+
+  function mover(cursoId: string, direcao: -1 | 1) {
+    const index = incluidos.findIndex((s) => s.cursoId === cursoId);
+    const alvoIndex = index + direcao;
+    if (index < 0 || alvoIndex < 0 || alvoIndex >= incluidos.length) return;
+    const atual = incluidos[index];
+    const alvo = incluidos[alvoIndex];
+    atualizarSelecao(atual.cursoId, { ordem: alvo.ordem });
+    atualizarSelecao(alvo.cursoId, { ordem: atual.ordem });
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -85,17 +112,19 @@ export function AdminTrilhaFormPage() {
     if (!editando && trilhaId) {
       navigate(`/admin/trilhas/${trilhaId}/editar`, { replace: true });
     }
+    mostrar();
   }
 
   return (
-    <div className="page">
+    <div className="page admin-form-page">
+      <AdminTabs />
       <Link to="/admin/trilhas" className="back-link">
         ← {t('common.back')}
       </Link>
 
       <h1>{editando ? t('admin.trilhas.edit') : t('admin.trilhas.new')}</h1>
 
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleSubmit} className="form" style={{ maxWidth: 'none' }}>
         <label>
           {t('admin.trilhas.titulo')}
           <input required value={valores.titulo} onChange={(e) => setValores({ ...valores, titulo: e.target.value })} />
@@ -105,41 +134,84 @@ export function AdminTrilhaFormPage() {
           <textarea value={valores.descricao} onChange={(e) => setValores({ ...valores, descricao: e.target.value })} />
         </label>
 
-        <h2>{t('admin.trilhas.availableCourses')}</h2>
+        <h2>{t('admin.trilhas.assignCourses')}</h2>
         {cursosQuery.isLoading && <Spinner />}
         {cursosQuery.data && (
-          <ul className="curso-selection-list">
-            {selecao.map((item) => (
-              <li key={item.cursoId}>
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={item.incluido}
-                    onChange={(e) => atualizarSelecao(item.cursoId, { incluido: e.target.checked })}
-                  />
-                  {item.titulo}
-                </label>
-                {item.incluido && (
-                  <input
-                    type="number"
-                    className="ordem-input"
-                    title={t('admin.trilhas.order')}
-                    value={item.ordem}
-                    onChange={(e) => atualizarSelecao(item.cursoId, { ordem: Number(e.target.value) })}
-                  />
-                )}
-              </li>
-            ))}
-          </ul>
+          <div className="trilha-picker">
+            <div className="trilha-picker-column">
+              <h3>
+                {t('admin.trilhas.availableCourses')} ({disponiveis.length})
+              </h3>
+              <input
+                className="search-input"
+                type="search"
+                placeholder={t('common.search')}
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+              />
+              <ul className="trilha-picker-list">
+                {disponiveis.length === 0 && <li className="trilha-picker-empty">{t('common.empty')}</li>}
+                {disponiveis.map((item) => (
+                  <li key={item.cursoId} className="trilha-picker-item">
+                    <span className="trilha-picker-item-label">{item.titulo}</span>
+                    <button type="button" className="btn-icon" onClick={() => adicionar(item.cursoId)} aria-label={t('admin.trilhas.addCourse')}>
+                      +
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="trilha-picker-column">
+              <h3>
+                {t('admin.trilhas.selectedCourses')} ({incluidos.length})
+              </h3>
+              <ul className="trilha-picker-list">
+                {incluidos.length === 0 && <li className="trilha-picker-empty">{t('common.empty')}</li>}
+                {incluidos.map((item, index) => (
+                  <li key={item.cursoId} className="trilha-picker-item">
+                    <span className="trilha-picker-order">{index + 1}.</span>
+                    <span className="trilha-picker-item-label">{item.titulo}</span>
+                    <div className="reorder-controls">
+                      <button
+                        type="button"
+                        className="btn-icon"
+                        disabled={index === 0}
+                        onClick={() => mover(item.cursoId, -1)}
+                        aria-label={t('common.moveUp')}
+                      >
+                        ↑
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-icon"
+                        disabled={index === incluidos.length - 1}
+                        onClick={() => mover(item.cursoId, 1)}
+                        aria-label={t('common.moveDown')}
+                      >
+                        ↓
+                      </button>
+                    </div>
+                    <button type="button" className="btn-icon" onClick={() => remover(item.cursoId)} aria-label={t('common.remove')}>
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         )}
 
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={criarMutation.isPending || atualizarMutation.isPending || salvandoCursos}
-        >
-          {t('common.save')}
-        </button>
+        <div className="form-inline">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={criarMutation.isPending || atualizarMutation.isPending || salvandoCursos}
+          >
+            {t('common.save')}
+          </button>
+          {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
+        </div>
       </form>
     </div>
   );

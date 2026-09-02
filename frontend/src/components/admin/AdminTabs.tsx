@@ -16,9 +16,9 @@ export function AdminTabs() {
       <NavLink to="/admin/usuarios" className={linkClass}>
         {t('admin.usuarios.title')}
       </NavLink>
-      {/*<NavLink to="/admin/configuracoes" className={linkClass}>
+      <NavLink to="/admin/configuracoes" className={linkClass}>
         {t('admin.configuracoes.title')}
-      </NavLink>*/}
+      </NavLink>
     </nav>
   );
 }

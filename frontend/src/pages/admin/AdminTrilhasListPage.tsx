@@ -1,13 +1,16 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useTrilhasQuery, useExcluirTrilhaMutation } from '../../hooks/useTrilhas';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { AdminTabs } from '../../components/admin/AdminTabs';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 
 export function AdminTrilhasListPage() {
   const { t } = useTranslation();
   const trilhasQuery = useTrilhasQuery();
   const excluirMutation = useExcluirTrilhaMutation();
+  const [paraExcluir, setParaExcluir] = useState<{ id: string; titulo: string } | null>(null);
 
   return (
     <div className="page">
@@ -29,6 +32,7 @@ export function AdminTrilhasListPage() {
             <thead>
               <tr>
                 <th>{t('admin.trilhas.titulo')}</th>
+                <th>{t('admin.trilhas.assignCourses')}</th>
                 <th>{t('common.actions')}</th>
               </tr>
             </thead>
@@ -36,6 +40,7 @@ export function AdminTrilhasListPage() {
               {trilhasQuery.data.map((trilha) => (
                 <tr key={trilha.id}>
                   <td>{trilha.titulo}</td>
+                  <td>{trilha.totalCursos}</td>
                   <td className="table-actions">
                     <Link to={`/admin/trilhas/${trilha.id}/editar`} className="btn btn-secondary">
                       {t('common.edit')}
@@ -43,9 +48,7 @@ export function AdminTrilhasListPage() {
                     <button
                       type="button"
                       className="btn btn-danger"
-                      onClick={() => {
-                        if (window.confirm(t('common.confirmDelete'))) excluirMutation.mutate(trilha.id);
-                      }}
+                      onClick={() => setParaExcluir({ id: trilha.id, titulo: trilha.titulo })}
                     >
                       {t('common.delete')}
                     </button>
@@ -55,6 +58,18 @@ export function AdminTrilhasListPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {paraExcluir && (
+        <ConfirmDialog
+          title={t('common.delete')}
+          message={t('common.confirmDeleteNamed', { nome: paraExcluir.titulo })}
+          onConfirm={() => {
+            excluirMutation.mutate(paraExcluir.id);
+            setParaExcluir(null);
+          }}
+          onCancel={() => setParaExcluir(null)}
+        />
       )}
     </div>
   );

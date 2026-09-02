@@ -1,13 +1,16 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useCursosQuery, useExcluirCursoMutation } from '../../hooks/useCursos';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { AdminTabs } from '../../components/admin/AdminTabs';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 
 export function AdminCursosListPage() {
   const { t } = useTranslation();
   const cursosQuery = useCursosQuery();
   const excluirMutation = useExcluirCursoMutation();
+  const [paraExcluir, setParaExcluir] = useState<{ id: string; titulo: string } | null>(null);
 
   return (
     <div className="page">
@@ -45,9 +48,7 @@ export function AdminCursosListPage() {
                     <button
                       type="button"
                       className="btn btn-danger"
-                      onClick={() => {
-                        if (window.confirm(t('common.confirmDelete'))) excluirMutation.mutate(curso.id);
-                      }}
+                      onClick={() => setParaExcluir({ id: curso.id, titulo: curso.titulo })}
                     >
                       {t('common.delete')}
                     </button>
@@ -57,6 +58,18 @@ export function AdminCursosListPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {paraExcluir && (
+        <ConfirmDialog
+          title={t('common.delete')}
+          message={t('common.confirmDeleteNamed', { nome: paraExcluir.titulo })}
+          onConfirm={() => {
+            excluirMutation.mutate(paraExcluir.id);
+            setParaExcluir(null);
+          }}
+          onCancel={() => setParaExcluir(null)}
+        />
       )}
     </div>
   );

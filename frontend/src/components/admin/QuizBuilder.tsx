@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuizQuery, useSalvarQuizMutation, type QuizFormPergunta } from '../../hooks/useQuiz';
 import { useSavedFeedback } from '../../hooks/useSavedFeedback';
+import { ConfirmDialog } from '../ui/ConfirmDialog';
 
 function novaPergunta(ordem: number): QuizFormPergunta {
   return {
@@ -22,6 +23,7 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
 
   const [titulo, setTitulo] = useState('Quiz de prática');
   const [perguntas, setPerguntas] = useState<QuizFormPergunta[]>([]);
+  const [perguntaParaExcluir, setPerguntaParaExcluir] = useState<number | null>(null);
 
   useEffect(() => {
     if (!quizQuery.data) return;
@@ -69,6 +71,19 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
     );
   }
 
+  function removerAlternativa(perguntaIndex: number, altIndex: number) {
+    setPerguntas((prev) =>
+      prev.map((p, i) => {
+        if (i !== perguntaIndex) return p;
+        const restantes = p.alternativas.filter((_, j) => j !== altIndex);
+        // se a alternativa correta era a removida, marca a primeira restante pra não ficar
+        // um quiz sem resposta certa nenhuma.
+        if (restantes.length > 0 && !restantes.some((a) => a.correta)) restantes[0] = { ...restantes[0], correta: true };
+        return { ...p, alternativas: restantes };
+      }),
+    );
+  }
+
   function removerPergunta(index: number) {
     setPerguntas((prev) => prev.filter((_, i) => i !== index));
   }
@@ -113,13 +128,23 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
                 value={alt.texto}
                 onChange={(e) => atualizarAlternativa(pIndex, aIndex, e.target.value)}
               />
+              {pergunta.alternativas.length > 2 && (
+                <button
+                  type="button"
+                  className="btn-icon"
+                  onClick={() => removerAlternativa(pIndex, aIndex)}
+                  aria-label={t('common.delete')}
+                >
+                  ×
+                </button>
+              )}
             </div>
           ))}
 
           <button type="button" className="btn btn-secondary" onClick={() => adicionarAlternativa(pIndex)}>
             {t('admin.cursos.addAlternative')}
           </button>
-          <button type="button" className="btn btn-danger" onClick={() => removerPergunta(pIndex)}>
+          <button type="button" className="btn btn-danger" onClick={() => setPerguntaParaExcluir(pIndex)}>
             {t('common.delete')}
           </button>
         </fieldset>
@@ -135,6 +160,18 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
         </button>
         {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
       </div>
+
+      {perguntaParaExcluir !== null && (
+        <ConfirmDialog
+          title={t('common.delete')}
+          message={t('common.confirmDelete')}
+          onConfirm={() => {
+            removerPergunta(perguntaParaExcluir);
+            setPerguntaParaExcluir(null);
+          }}
+          onCancel={() => setPerguntaParaExcluir(null)}
+        />
+      )}
     </div>
   );
 }

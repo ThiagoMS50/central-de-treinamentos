@@ -15,11 +15,15 @@
     "back": "Voltar",
     "hours": "horas",
     "confirmDelete": "Tem certeza que deseja excluir?",
+    "confirmDeleteNamed": "Tem certeza que deseja excluir \"{{nome}}\"?",
     "logout": "Sair",
     "savedSuccessfully": "Salvo com sucesso!",
     "search": "Buscar...",
     "showPassword": "Mostrar senha",
-    "hidePassword": "Ocultar senha"
+    "hidePassword": "Ocultar senha",
+    "moveUp": "Mover para cima",
+    "moveDown": "Mover para baixo",
+    "remove": "Remover"
   },
   "nav": {
     "cursos": "Cursos",
@@ -122,6 +126,8 @@
       "title": "Cursos",
       "new": "Novo curso",
       "edit": "Editar curso",
+      "infoTitle": "Informações do curso",
+      "saveFirstHint": "Salve as informações do curso primeiro para adicionar aulas e quiz.",
       "titulo": "Título",
       "descricao": "Descrição",
       "cargaHoraria": "Carga horária (horas)",
@@ -146,8 +152,9 @@
       "titulo": "Título",
       "descricao": "Descrição",
       "assignCourses": "Cursos desta trilha",
-      "order": "Ordem",
-      "availableCourses": "Cursos disponíveis"
+      "availableCourses": "Cursos disponíveis",
+      "selectedCourses": "Cursos incluídos",
+      "addCourse": "Adicionar curso"
     },
     "usuarios": {
       "title": "Usuários",

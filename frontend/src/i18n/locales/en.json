@@ -15,11 +15,15 @@
     "back": "Back",
     "hours": "hours",
     "confirmDelete": "Are you sure you want to delete this?",
+    "confirmDeleteNamed": "Are you sure you want to delete \"{{nome}}\"?",
     "logout": "Log out",
     "savedSuccessfully": "Saved successfully!",
     "search": "Search...",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "remove": "Remove"
   },
   "nav": {
     "cursos": "Courses",
@@ -122,6 +126,8 @@
       "title": "Courses",
       "new": "New course",
       "edit": "Edit course",
+      "infoTitle": "Course information",
+      "saveFirstHint": "Save the course information first to add lessons and a quiz.",
       "titulo": "Title",
       "descricao": "Description",
       "cargaHoraria": "Duration (hours)",
@@ -146,8 +152,9 @@
       "titulo": "Title",
       "descricao": "Description",
       "assignCourses": "Courses in this track",
-      "order": "Order",
-      "availableCourses": "Available courses"
+      "availableCourses": "Available courses",
+      "selectedCourses": "Included courses",
+      "addCourse": "Add course"
     },
     "usuarios": {
       "title": "Users",

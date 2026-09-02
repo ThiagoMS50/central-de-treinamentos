@@ -622,24 +622,187 @@ textarea {
   gap: 0.75rem;
 }
 
-.curso-selection-list {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  max-height: 320px;
-  overflow-y: auto;
+/* ---------- Seções expansíveis (formulário de curso no Admin) ---------- */
+
+.admin-form-page {
+  max-width: 760px;
 }
 
-.curso-selection-list li {
+.collapsible {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.collapsible-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
 }
 
-.ordem-input {
-  width: 70px;
+.collapsible-header:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-muted);
+}
+
+.collapsible-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.collapsible-count {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.collapsible-chevron {
+  display: inline-block;
+  color: var(--color-text-muted);
+  transition: transform 0.15s ease;
+}
+
+.collapsible-chevron-open {
+  transform: rotate(90deg);
+}
+
+.collapsible-hint {
+  margin: 0;
+  padding: 0 1.25rem 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.collapsible-body {
+  padding: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- Listas reordenáveis (aulas / cursos de uma trilha) ---------- */
+
+.reorder-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-icon {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.btn-icon:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-icon:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.aula-admin-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.aula-titulo-input {
+  flex: 1;
+  font-weight: 600;
+}
+
+/* ---------- Seletor de cursos de uma trilha (duas colunas) ---------- */
+
+.trilha-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 720px) {
+  .trilha-picker {
+    grid-template-columns: 1fr;
+  }
+}
+
+.trilha-picker-column h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.trilha-picker-column .search-input {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.trilha-picker-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-height: 340px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.trilha-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.trilha-picker-item:hover {
+  background: var(--color-bg);
+}
+
+.trilha-picker-item-label {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.trilha-picker-order {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+}
+
+.trilha-picker-empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 0.5rem;
 }
 
 /* ---------- Admin ---------- */
@@ -871,6 +1034,13 @@ textarea {
   background: var(--color-bg);
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .progresso-item {

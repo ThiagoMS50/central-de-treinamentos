@@ -23,7 +23,7 @@ export function AdminConfiguracoesPage() {
       {query.isError && <ErrorBanner onRetry={() => query.refetch()} />}
 
       {query.data && (
-        <div className="form">
+        <div className="form card admin-form-page">
           <label className="checkbox-label">
             <input
               type="checkbox"

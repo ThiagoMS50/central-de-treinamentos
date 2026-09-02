@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCursoQuery, useCriarCursoMutation, useAtualizarCursoMutation, type CursoFormValues } from '../../hooks/useCursos';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
+import { Collapsible } from '../../components/ui/Collapsible';
 import { AulasManager } from '../../components/admin/AulasManager';
 import { QuizBuilder } from '../../components/admin/QuizBuilder';
+import { AdminTabs } from '../../components/admin/AdminTabs';
 import { useSavedFeedback } from '../../hooks/useSavedFeedback';
 
 const VALORES_INICIAIS: CursoFormValues = {
@@ -65,72 +67,80 @@ export function AdminCursoFormPage() {
   }
 
   return (
-    <div className="page">
+    <div className="page admin-form-page">
+      <AdminTabs />
       <Link to="/admin/cursos" className="back-link">
         ← {t('common.back')}
       </Link>
 
       <h1>{editando ? t('admin.cursos.edit') : t('admin.cursos.new')}</h1>
 
-      <form onSubmit={handleSubmit} className="form">
-        <label>
-          {t('admin.cursos.titulo')}
-          <input required value={valores.titulo} onChange={(e) => setValores({ ...valores, titulo: e.target.value })} />
-        </label>
-        <label>
-          {t('admin.cursos.descricao')}
-          <textarea value={valores.descricao} onChange={(e) => setValores({ ...valores, descricao: e.target.value })} />
-        </label>
-        <label>
-          {t('admin.cursos.cargaHoraria')}
-          <input
-            type="number"
-            min={0}
-            step={0.5}
-            value={valores.cargaHorariaHoras}
-            onChange={(e) => setValores({ ...valores, cargaHorariaHoras: Number(e.target.value) })}
-          />
-        </label>
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={valores.temPrazo}
-            onChange={(e) => setValores({ ...valores, temPrazo: e.target.checked })}
-          />
-          {t('admin.cursos.temPrazo')}
-        </label>
-        {valores.temPrazo && (
+      <Collapsible title={t('admin.cursos.infoTitle')} defaultOpen>
+        <form onSubmit={handleSubmit} className="form" style={{ maxWidth: 'none' }}>
           <label>
-            {t('admin.cursos.prazoDias')}
+            {t('admin.cursos.titulo')}
+            <input required value={valores.titulo} onChange={(e) => setValores({ ...valores, titulo: e.target.value })} />
+          </label>
+          <label>
+            {t('admin.cursos.descricao')}
+            <textarea value={valores.descricao} onChange={(e) => setValores({ ...valores, descricao: e.target.value })} />
+          </label>
+          <label>
+            {t('admin.cursos.cargaHoraria')}
             <input
               type="number"
-              min={1}
-              value={valores.prazoDias ?? ''}
-              onChange={(e) => setValores({ ...valores, prazoDias: Number(e.target.value) })}
+              min={0}
+              step={0.5}
+              value={valores.cargaHorariaHoras}
+              onChange={(e) => setValores({ ...valores, cargaHorariaHoras: Number(e.target.value) })}
             />
           </label>
-        )}
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={valores.temPrazo}
+              onChange={(e) => setValores({ ...valores, temPrazo: e.target.checked })}
+            />
+            {t('admin.cursos.temPrazo')}
+          </label>
+          {valores.temPrazo && (
+            <label>
+              {t('admin.cursos.prazoDias')}
+              <input
+                type="number"
+                min={1}
+                value={valores.prazoDias ?? ''}
+                onChange={(e) => setValores({ ...valores, prazoDias: Number(e.target.value) })}
+              />
+            </label>
+          )}
 
-        <div className="form-inline">
-          <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending}>
-            {t('common.save')}
-          </button>
-          {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
-        </div>
-      </form>
+          <div className="form-inline">
+            <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending}>
+              {t('common.save')}
+            </button>
+            {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
+          </div>
+        </form>
+      </Collapsible>
 
-      {editando && cursoQuery.data && (
-        <>
-          <section>
-            <h2>{t('admin.cursos.aulas')}</h2>
-            <AulasManager cursoId={id!} aulas={cursoQuery.data.aulas} />
-          </section>
+      <Collapsible
+        title={t('admin.cursos.aulas')}
+        count={editando ? cursoQuery.data?.aulas.length : undefined}
+        disabled={!editando}
+        hint={!editando ? t('admin.cursos.saveFirstHint') : undefined}
+        defaultOpen
+      >
+        {editando && cursoQuery.data && <AulasManager cursoId={id!} aulas={cursoQuery.data.aulas} />}
+      </Collapsible>
 
-          <section>
-            <QuizBuilder cursoId={id!} />
-          </section>
-        </>
-      )}
+      <Collapsible
+        title={t('admin.cursos.quizBuilder')}
+        disabled={!editando}
+        hint={!editando ? t('admin.cursos.saveFirstHint') : undefined}
+      >
+        {editando && cursoQuery.data && <QuizBuilder cursoId={id!} />}
+      </Collapsible>
     </div>
   );
 }

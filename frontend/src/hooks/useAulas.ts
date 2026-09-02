@@ -11,6 +11,15 @@ export function useCriarAulaMutation(cursoId: string) {
   });
 }
 
+export function useAtualizarAulaMutation(cursoId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ aulaId, titulo, ordem }: { aulaId: string; titulo: string; ordem: number }) =>
+      apiFetch<Aula>(`/aulas/${aulaId}`, { method: 'PUT', body: { titulo, ordem } }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cursos', cursoId] }),
+  });
+}
+
 export function useExcluirAulaMutation(cursoId: string) {
   const queryClient = useQueryClient();
   return useMutation({
