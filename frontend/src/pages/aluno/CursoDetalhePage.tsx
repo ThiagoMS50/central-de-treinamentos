@@ -62,6 +62,26 @@ export function CursoDetalhePage() {
 
   const step = steps[Math.min(stepIndex, steps.length - 1)];
 
+  const noUltimoPasso = stepIndex >= steps.length - 1;
+  // Curso sem quiz: ao chegar na última aula, "Avançar" vira "Concluir" e a própria navegação
+  // marca a aula (e, com isso, o curso inteiro) como concluída — sem botão separado.
+  const eBotaoConcluirCurso = !ehAdmin && step.kind === 'aula' && !step.aula.concluida && noUltimoPasso && !curso.temQuiz;
+  const podeAvancar = !noUltimoPasso || eBotaoConcluirCurso;
+
+  function handleAvancar() {
+    if (!ehAdmin && step.kind === 'aula' && !step.aula.concluida) {
+      concluirAulaMutation.mutate(step.aula.id, {
+        // Se essa aula fechou o curso (última aula sem quiz, ou já com quiz respondido antes),
+        // o efeito que observa curso.status cuida de pular pro passo de certificado sozinho.
+        onSuccess: (res) => {
+          if (!res.cursoConcluido) setStepIndex((s) => s + 1);
+        },
+      });
+      return;
+    }
+    setStepIndex((s) => s + 1);
+  }
+
   return (
     <div className="page">
       <Link to="/cursos" className="back-link">
@@ -124,17 +144,6 @@ export function CursoDetalhePage() {
                   ))}
                 </ul>
               )}
-
-              {!ehAdmin && !step.aula.concluida && (
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  disabled={concluirAulaMutation.isPending}
-                  onClick={() => concluirAulaMutation.mutate(step.aula.id)}
-                >
-                  {t('curso.markAulaComplete')}
-                </button>
-              )}
             </div>
           )}
 
@@ -163,11 +172,11 @@ export function CursoDetalhePage() {
           <span className="wizard-progress">{t('curso.stepOf', { current: stepIndex + 1, total: steps.length })}</span>
           <button
             type="button"
-            className="btn btn-secondary"
-            disabled={stepIndex >= steps.length - 1}
-            onClick={() => setStepIndex((s) => s + 1)}
+            className={eBotaoConcluirCurso ? 'btn btn-primary' : 'btn btn-secondary'}
+            disabled={!podeAvancar || concluirAulaMutation.isPending}
+            onClick={handleAvancar}
           >
-            {t('curso.nextStep')} →
+            {eBotaoConcluirCurso ? t('curso.concluirCurso') : `${t('curso.nextStep')} →`}
           </button>
         </div>
       </div>
