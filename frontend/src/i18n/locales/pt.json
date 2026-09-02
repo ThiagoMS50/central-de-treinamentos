@@ -205,11 +205,11 @@
       },
       "curso": {
         "title": "Dentro de um curso",
-        "body": "Ao abrir um curso, você encontra os materiais para baixar e, quando houver, um quiz de prática — ele é só para fixar o conteúdo, não tem nota mínima nem limite de tentativas."
+        "body": "Ao abrir um curso, você navega pelas aulas com os botões Anterior/Avançar, baixando os materiais de cada uma. Quando o curso tem quiz, ele aparece como a última etapa — sem limite de tentativas, mas é preciso acertar todas as perguntas."
       },
       "certificado": {
         "title": "Concluir e emitir certificado",
-        "body": "Depois de estudar o conteúdo, clique em \"Marcar como concluído\". Um certificado em PDF fica disponível para download imediatamente, com um código de validação."
+        "body": "Ao concluir a última aula (ou acertar todas as perguntas do quiz, quando o curso tiver um), você é levado automaticamente para a tela do certificado — um PDF disponível para download na hora, com um código de validação."
       },
       "ranking": {
         "title": "Pontos, conquistas e ranking",
@@ -225,7 +225,7 @@
       },
       "admin": {
         "title": "Área de Administração",
-        "body": "Como Administrador, você também tem acesso a Administração: cadastre cursos, materiais, quizzes, trilhas, e gerencie o papel de cada usuário (aluno, gestor ou admin)."
+        "body": "Como Administrador, você também tem acesso a Administração: cadastre cursos, aulas, materiais, quizzes, trilhas, e gerencie o papel de cada usuário (aluno, gestor ou admin)."
       }
     }
   },

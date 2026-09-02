@@ -205,11 +205,11 @@
       },
       "curso": {
         "title": "Inside a course",
-        "body": "Opening a course shows its downloadable materials and, when available, a practice quiz — it's just for reinforcing the content, with no passing score or attempt limit."
+        "body": "Opening a course, you move through its lessons with the Previous/Next buttons, downloading each lesson's materials. When the course has a quiz, it shows up as the final step — no attempt limit, but every question needs to be answered correctly."
       },
       "certificado": {
         "title": "Complete and issue a certificate",
-        "body": "After going through the content, click \"Mark as completed\". A PDF certificate becomes available for download immediately, with a validation code."
+        "body": "Completing the last lesson (or, if the course has a quiz, answering every question correctly) automatically takes you to the certificate screen — a PDF ready to download right away, with a validation code."
       },
       "ranking": {
         "title": "Points, achievements and ranking",
@@ -225,7 +225,7 @@
       },
       "admin": {
         "title": "Administration area",
-        "body": "As an Administrator, you also have access to Administration: create courses, materials, quizzes, learning tracks, and manage each user's role (student, manager, or admin)."
+        "body": "As an Administrator, you also have access to Administration: create courses, lessons, materials, quizzes, learning tracks, and manage each user's role (student, manager, or admin)."
       }
     }
   },

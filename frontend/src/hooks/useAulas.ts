@@ -25,7 +25,11 @@ export function useConcluirAulaMutation(cursoId: string) {
     mutationFn: (aulaId: string) => apiFetch<ConcluirAulaResponse>(`/aulas/${aulaId}/concluir`, { method: 'POST' }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cursos'] });
-      queryClient.invalidateQueries({ queryKey: ['cursos', cursoId] });
+      // refetchQueries (em vez de só invalidate) força a busca imediata dessa querie especifica,
+      // sem esperar o próximo momento em que o React Query decidiria refazer sozinho — é o que
+      // atualiza curso.status logo após concluir a aula, disparando o avanço automático pro
+      // certificado quando essa era a última pendência.
+      queryClient.refetchQueries({ queryKey: ['cursos', cursoId] });
       queryClient.invalidateQueries({ queryKey: ['trilhas'] });
       queryClient.invalidateQueries({ queryKey: ['gamificacao'] });
     },

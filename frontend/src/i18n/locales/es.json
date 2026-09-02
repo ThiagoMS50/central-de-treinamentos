@@ -205,11 +205,11 @@
       },
       "curso": {
         "title": "Dentro de un curso",
-        "body": "Al abrir un curso encontrarás los materiales para descargar y, cuando exista, un cuestionario de práctica — es solo para reforzar el contenido, sin puntuación mínima ni límite de intentos."
+        "body": "Al abrir un curso, navegas por las clases con los botones Anterior/Siguiente, descargando los materiales de cada una. Cuando el curso tiene cuestionario, aparece como la última etapa — sin límite de intentos, pero hay que acertar todas las preguntas."
       },
       "certificado": {
         "title": "Completar y emitir el certificado",
-        "body": "Después de estudiar el contenido, haz clic en \"Marcar como completado\". Un certificado en PDF queda disponible para descargar de inmediato, con un código de validación."
+        "body": "Al completar la última clase (o, si el curso tiene cuestionario, al acertar todas las preguntas), pasas automáticamente a la pantalla del certificado — un PDF listo para descargar al instante, con un código de validación."
       },
       "ranking": {
         "title": "Puntos, logros y clasificación",
@@ -225,7 +225,7 @@
       },
       "admin": {
         "title": "Área de Administración",
-        "body": "Como Administrador, también tienes acceso a Administración: crea cursos, materiales, cuestionarios, rutas de aprendizaje y gestiona el rol de cada usuario (alumno, gestor o admin)."
+        "body": "Como Administrador, también tienes acceso a Administración: crea cursos, clases, materiales, cuestionarios, rutas de aprendizaje y gestiona el rol de cada usuario (alumno, gestor o admin)."
       }
     }
   },

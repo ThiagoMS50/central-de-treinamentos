@@ -56,7 +56,10 @@ export function useResponderPerguntaMutation(cursoId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['quiz', cursoId] });
       queryClient.invalidateQueries({ queryKey: ['cursos'] });
-      queryClient.invalidateQueries({ queryKey: ['cursos', cursoId] });
+      // refetchQueries força a busca imediata do curso (não só marca como desatualizado) — é o
+      // que atualiza curso.status assim que a última pergunta é respondida certa, disparando o
+      // avanço automático pro passo de certificado.
+      queryClient.refetchQueries({ queryKey: ['cursos', cursoId] });
       queryClient.invalidateQueries({ queryKey: ['trilhas'] });
       queryClient.invalidateQueries({ queryKey: ['gamificacao'] });
     },
