@@ -42,10 +42,20 @@ create table if not exists public.curso_trilhas (
   primary key (curso_id, trilha_id)
 );
 
--- 5. Materiais (documentos/slides) de um curso — arquivos ficam no Supabase Storage
-create table if not exists public.materiais (
+-- 5a. Aulas de um curso (unidade de conteúdo e de conclusão — um curso é concluído quando
+-- o aluno concluir todas as aulas dele)
+create table if not exists public.aulas (
   id uuid primary key default gen_random_uuid(),
   curso_id uuid not null references public.cursos(id) on delete cascade,
+  titulo text not null,
+  ordem integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- 5b. Materiais (documentos/slides) de uma aula — arquivos ficam no Supabase Storage
+create table if not exists public.materiais (
+  id uuid primary key default gen_random_uuid(),
+  aula_id uuid not null references public.aulas(id) on delete cascade,
   titulo text not null,
   storage_path text not null,
   ordem integer not null default 0,
@@ -82,6 +92,15 @@ create table if not exists public.matriculas (
   iniciado_em timestamptz not null default now(),
   concluido_em timestamptz,
   unique (aluno_id, curso_id)
+);
+
+-- 7a. Conclusão por aula — quando o aluno concluiu todas as aulas de um curso, a matrícula acima
+-- é marcada como concluída automaticamente (ver ProgressoService.MarcarAulaConcluidaAsync).
+create table if not exists public.aula_progresso (
+  aluno_id uuid not null references public.profiles(id) on delete cascade,
+  aula_id uuid not null references public.aulas(id) on delete cascade,
+  concluida_em timestamptz not null default now(),
+  primary key (aluno_id, aula_id)
 );
 
 -- 8. Respostas do quiz de prática (guarda só a última resposta de cada pergunta, sem bloquear conclusão)
@@ -131,6 +150,9 @@ create table if not exists public.aluno_badges (
 );
 
 -- Índices de apoio para os relatórios gerenciais e o ranking de gamificação
+create index if not exists idx_aulas_curso on public.aulas(curso_id);
+create index if not exists idx_materiais_aula on public.materiais(aula_id);
+create index if not exists idx_aula_progresso_aluno on public.aula_progresso(aluno_id);
 create index if not exists idx_matriculas_curso on public.matriculas(curso_id);
 create index if not exists idx_matriculas_aluno on public.matriculas(aluno_id);
 create index if not exists idx_profiles_manager on public.profiles(manager_id);
@@ -141,7 +163,9 @@ alter table public.profiles enable row level security;
 alter table public.trilhas enable row level security;
 alter table public.cursos enable row level security;
 alter table public.curso_trilhas enable row level security;
+alter table public.aulas enable row level security;
 alter table public.materiais enable row level security;
+alter table public.aula_progresso enable row level security;
 alter table public.quizzes enable row level security;
 alter table public.perguntas enable row level security;
 alter table public.alternativas enable row level security;

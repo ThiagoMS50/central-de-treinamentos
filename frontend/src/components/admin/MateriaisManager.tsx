@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import type { Material } from '../../types/api';
 import { useUploadMaterialMutation, useExcluirMaterialMutation, baixarMaterial } from '../../hooks/useMateriais';
 
-export function MateriaisManager({ cursoId, materiais }: { cursoId: string; materiais: Material[] }) {
+export function MateriaisManager({ cursoId, aulaId, materiais }: { cursoId: string; aulaId: string; materiais: Material[] }) {
   const { t } = useTranslation();
-  const uploadMutation = useUploadMaterialMutation(cursoId);
-  const excluirMutation = useExcluirMaterialMutation(cursoId);
+  const uploadMutation = useUploadMaterialMutation(cursoId, aulaId);
+  const excluirMutation = useExcluirMaterialMutation(cursoId, aulaId);
 
   const [titulo, setTitulo] = useState('');
   const [arquivo, setArquivo] = useState<File | null>(null);
@@ -31,7 +31,7 @@ export function MateriaisManager({ cursoId, materiais }: { cursoId: string; mate
         {materiais.map((material) => (
           <li key={material.id}>
             <span>{material.titulo}</span>
-            <button type="button" className="btn btn-secondary" onClick={() => baixarMaterial(cursoId, material.id)}>
+            <button type="button" className="btn btn-secondary" onClick={() => baixarMaterial(aulaId, material.id)}>
               {t('curso.downloadMaterial')}
             </button>
             <button type="button" className="btn btn-danger" onClick={() => excluirMutation.mutate(material.id)}>

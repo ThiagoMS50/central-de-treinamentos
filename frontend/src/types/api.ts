@@ -28,9 +28,22 @@ export interface Material {
   ordem: number;
 }
 
+export interface Aula {
+  id: string;
+  titulo: string;
+  ordem: number;
+  concluida: boolean;
+  materiais: Material[];
+}
+
 export interface CursoDetail extends CursoListItem {
   temQuiz: boolean;
-  materiais: Material[];
+  aulas: Aula[];
+}
+
+export interface ConcluirAulaResponse {
+  cursoConcluido: boolean;
+  trilhasCompletas: string[];
 }
 
 export interface ProgressoCurso {
@@ -82,11 +95,6 @@ export interface Quiz {
   quizId: string | null;
   titulo: string;
   perguntas: Pergunta[];
-}
-
-export interface ConcluirCursoResponse {
-  concluido: boolean;
-  trilhasCompletas: string[];
 }
 
 export interface CertificadoListItem {

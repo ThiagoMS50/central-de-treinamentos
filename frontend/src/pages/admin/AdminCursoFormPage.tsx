@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCursoQuery, useCriarCursoMutation, useAtualizarCursoMutation, type CursoFormValues } from '../../hooks/useCursos';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
-import { MateriaisManager } from '../../components/admin/MateriaisManager';
+import { AulasManager } from '../../components/admin/AulasManager';
 import { QuizBuilder } from '../../components/admin/QuizBuilder';
 import { useSavedFeedback } from '../../hooks/useSavedFeedback';
 
@@ -122,8 +122,8 @@ export function AdminCursoFormPage() {
       {editando && cursoQuery.data && (
         <>
           <section>
-            <h2>{t('admin.cursos.materiais')}</h2>
-            <MateriaisManager cursoId={id!} materiais={cursoQuery.data.materiais} />
+            <h2>{t('admin.cursos.aulas')}</h2>
+            <AulasManager cursoId={id!} aulas={cursoQuery.data.aulas} />
           </section>
 
           <section>

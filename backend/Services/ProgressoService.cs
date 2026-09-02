@@ -72,10 +72,62 @@ public class ProgressoService
             "aluno_id,curso_id");
     }
 
-    public async Task<List<Guid>> MarcarConcluidoAsync(Guid alunoId, Guid cursoId)
+    // Lista as aulas de um curso já com o status de conclusão do aluno informado e os materiais
+    // de cada uma — usada tanto no detalhe do curso (aluno) quanto no formulário de edição (admin).
+    public async Task<List<AulaDto>> ObterAulasComProgressoAsync(Guid cursoId, Guid alunoId)
     {
-        await GetOrCreateMatriculaAsync(alunoId, cursoId);
+        var aulas = await _rest.SelectAsync<AulaRow>("aulas", PostgrestFilter.Eq("curso_id", cursoId), order: "ordem.asc");
+        if (aulas.Count == 0) return new List<AulaDto>();
 
+        var aulaIds = aulas.Select(a => a.Id).Cast<object>().ToList();
+        var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.In("aula_id", aulaIds), order: "ordem.asc");
+        var materiaisPorAula = materiais.GroupBy(m => m.AulaId).ToDictionary(g => g.Key, g => g.ToList());
+
+        var progresso = await _rest.SelectAsync<AulaProgressoRow>(
+            "aula_progresso",
+            PostgrestFilter.And(PostgrestFilter.Eq("aluno_id", alunoId), PostgrestFilter.In("aula_id", aulaIds)));
+        var concluidasIds = progresso.Select(p => p.AulaId).ToHashSet();
+
+        return aulas.Select(a => new AulaDto(
+            a.Id,
+            a.Titulo,
+            a.Ordem,
+            concluidasIds.Contains(a.Id),
+            (materiaisPorAula.GetValueOrDefault(a.Id) ?? new List<MaterialRow>())
+                .Select(m => new MaterialDto(m.Id, m.Titulo, m.Ordem)).ToList())).ToList();
+    }
+
+    // Marca uma aula como concluída pelo aluno; quando essa era a última aula pendente do curso,
+    // o curso inteiro é considerado concluído (matrícula, pontos/badges e trilhas em cadeia) —
+    // substitui o antigo botão único de "concluir curso".
+    public async Task<ConcluirAulaResponse> MarcarAulaConcluidaAsync(Guid alunoId, Guid aulaId)
+    {
+        var aula = await _rest.GetByIdAsync<AulaRow>("aulas", aulaId);
+        if (aula is null) throw new KeyNotFoundException("Aula não encontrada.");
+
+        await GetOrCreateMatriculaAsync(alunoId, aula.CursoId);
+
+        await _rest.UpsertAsync<AulaProgressoRow>(
+            "aula_progresso",
+            new { aluno_id = alunoId, aula_id = aulaId },
+            "aluno_id,aula_id");
+
+        var todasAulas = await _rest.SelectAsync<AulaRow>("aulas", PostgrestFilter.Eq("curso_id", aula.CursoId));
+        var progresso = await _rest.SelectAsync<AulaProgressoRow>("aula_progresso", PostgrestFilter.Eq("aluno_id", alunoId));
+        var concluidasIds = progresso.Select(p => p.AulaId).ToHashSet();
+
+        var todasConcluidas = todasAulas.Count > 0 && todasAulas.All(a => concluidasIds.Contains(a.Id));
+        if (!todasConcluidas) return new ConcluirAulaResponse(false, new List<Guid>());
+
+        var matricula = await GetMatriculaAsync(alunoId, aula.CursoId);
+        if (matricula?.ConcluidoEm is not null) return new ConcluirAulaResponse(true, new List<Guid>());
+
+        var trilhasCompletas = await ConcluirCursoInternoAsync(alunoId, aula.CursoId);
+        return new ConcluirAulaResponse(true, trilhasCompletas);
+    }
+
+    private async Task<List<Guid>> ConcluirCursoInternoAsync(Guid alunoId, Guid cursoId)
+    {
         await _rest.UpdateAsync<MatriculaRow>(
             "matriculas",
             PostgrestFilter.And(PostgrestFilter.Eq("aluno_id", alunoId), PostgrestFilter.Eq("curso_id", cursoId)),

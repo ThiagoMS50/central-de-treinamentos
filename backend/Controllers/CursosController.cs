@@ -53,14 +53,14 @@ public class CursosController : ControllerBase
             : await _progresso.GetOrCreateMatriculaAsync(_currentUser.UserId, id);
         var (status, prazoStatus, prazoEm) = ProgressoService.CalcularStatus(curso, matricula);
 
-        var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.Eq("curso_id", id), order: "ordem.asc");
+        var aulas = await _progresso.ObterAulasComProgressoAsync(id, _currentUser.UserId);
         var quizzes = await _rest.SelectAsync<QuizRow>("quizzes", PostgrestFilter.Eq("curso_id", id));
 
         return new CursoDetailDto(
             curso.Id, curso.Titulo, curso.Descricao, curso.CargaHorariaHoras,
             curso.TemPrazo, curso.PrazoDias, status, prazoStatus, prazoEm,
             quizzes.Count > 0,
-            materiais.Select(m => new MaterialDto(m.Id, m.Titulo, m.Ordem)).ToList());
+            aulas);
     }
 
     [HttpPost]
@@ -100,24 +100,19 @@ public class CursosController : ControllerBase
     [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> Excluir(Guid id)
     {
-        var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.Eq("curso_id", id));
-        foreach (var material in materiais)
+        var aulas = await _rest.SelectAsync<AulaRow>("aulas", PostgrestFilter.Eq("curso_id", id));
+        if (aulas.Count > 0)
         {
-            try { await _storage.DeleteAsync("materiais-cursos", material.StoragePath); }
-            catch (SupabaseRestException) { /* melhor esforço — a linha do curso será apagada de qualquer forma */ }
+            var aulaIds = aulas.Select(a => a.Id).Cast<object>().ToList();
+            var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.In("aula_id", aulaIds));
+            foreach (var material in materiais)
+            {
+                try { await _storage.DeleteAsync("materiais-cursos", material.StoragePath); }
+                catch (SupabaseRestException) { /* melhor esforço — a linha do curso será apagada de qualquer forma */ }
+            }
         }
 
         await _rest.DeleteAsync("cursos", PostgrestFilter.Eq("id", id));
         return NoContent();
-    }
-
-    [HttpPost("{id:guid}/concluir")]
-    public async Task<ActionResult<ConcluirCursoResponse>> Concluir(Guid id)
-    {
-        var curso = await _rest.GetByIdAsync<CursoRow>("cursos", id);
-        if (curso is null) return NotFound();
-
-        var trilhasCompletas = await _progresso.MarcarConcluidoAsync(_currentUser.UserId, id);
-        return new ConcluirCursoResponse(true, trilhasCompletas);
     }
 }

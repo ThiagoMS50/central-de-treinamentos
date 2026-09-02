@@ -40,14 +40,30 @@ public class CursoTrilhaRow
     public int Ordem { get; set; }
 }
 
-public class MaterialRow
+public class AulaRow
 {
     public Guid Id { get; set; }
     public Guid CursoId { get; set; }
     public string Titulo { get; set; } = string.Empty;
+    public int Ordem { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+}
+
+public class MaterialRow
+{
+    public Guid Id { get; set; }
+    public Guid AulaId { get; set; }
+    public string Titulo { get; set; } = string.Empty;
     public string StoragePath { get; set; } = string.Empty;
     public int Ordem { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+}
+
+public class AulaProgressoRow
+{
+    public Guid AlunoId { get; set; }
+    public Guid AulaId { get; set; }
+    public DateTimeOffset ConcluidaEm { get; set; }
 }
 
 public class QuizRow

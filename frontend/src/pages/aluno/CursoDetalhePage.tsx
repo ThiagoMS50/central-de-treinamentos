@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { useCursoQuery, useConcluirCursoMutation } from '../../hooks/useCursos';
+import { useCursoQuery } from '../../hooks/useCursos';
+import { useConcluirAulaMutation } from '../../hooks/useAulas';
 import { useQuizQuery } from '../../hooks/useQuiz';
 import { baixarMaterial } from '../../hooks/useMateriais';
 import { baixarCertificadoCurso } from '../../hooks/useCertificados';
@@ -17,7 +18,7 @@ export function CursoDetalhePage() {
 
   const cursoQuery = useCursoQuery(id);
   const quizQuery = useQuizQuery(id, !!cursoQuery.data?.temQuiz);
-  const concluirMutation = useConcluirCursoMutation(id!);
+  const concluirAulaMutation = useConcluirAulaMutation(id!);
 
   if (cursoQuery.isLoading) return <Spinner />;
   if (cursoQuery.isError) return <ErrorBanner onRetry={() => cursoQuery.refetch()} />;
@@ -25,7 +26,7 @@ export function CursoDetalhePage() {
 
   const curso = cursoQuery.data;
   // Administrador está aqui pra revisar o conteúdo, não pra estudar — sem status/prazo pessoal
-  // nem ações de "concluir"/"certificado", pelos mesmos motivos do painel principal.
+  // nem ações de "concluir aula"/certificado, pelos mesmos motivos do painel principal.
   const ehAdmin = profile?.role === 'admin';
 
   return (
@@ -58,24 +59,47 @@ export function CursoDetalhePage() {
       </div>
 
       <section>
-        <h2>{t('curso.materiais')}</h2>
-        {curso.materiais.length === 0 && <EmptyState message={t('curso.noMaterials')} />}
-        {curso.materiais.length > 0 && (
-          <ul className="material-list">
-            {curso.materiais.map((material) => (
-              <li key={material.id}>
-                <span>{material.titulo}</span>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => baixarMaterial(curso.id, material.id)}
-                >
-                  {t('curso.downloadMaterial')}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+        <h2>{t('curso.aulas')}</h2>
+        {curso.aulas.length === 0 && <EmptyState message={t('curso.noAulas')} />}
+        {curso.aulas.map((aula, index) => (
+          <div key={aula.id} className="aula-card">
+            <div className="aula-card-header">
+              <h3>
+                {index + 1}. {aula.titulo}
+              </h3>
+              {!ehAdmin && aula.concluida && <span className="badge badge-success">{t('curso.aulaCompleted')}</span>}
+            </div>
+
+            {aula.materiais.length === 0 && <EmptyState message={t('curso.noMaterials')} />}
+            {aula.materiais.length > 0 && (
+              <ul className="material-list">
+                {aula.materiais.map((material) => (
+                  <li key={material.id}>
+                    <span>{material.titulo}</span>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => baixarMaterial(aula.id, material.id)}
+                    >
+                      {t('curso.downloadMaterial')}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {!ehAdmin && !aula.concluida && (
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={concluirAulaMutation.isPending}
+                onClick={() => concluirAulaMutation.mutate(aula.id)}
+              >
+                {t('curso.markAulaComplete')}
+              </button>
+            )}
+          </div>
+        ))}
       </section>
 
       {curso.temQuiz && (
@@ -85,22 +109,11 @@ export function CursoDetalhePage() {
         </section>
       )}
 
-      {!ehAdmin && (
+      {!ehAdmin && curso.status === 'concluido' && (
         <section className="curso-actions">
-          {curso.status !== 'concluido' ? (
-            <button
-              type="button"
-              className="btn btn-primary"
-              disabled={concluirMutation.isPending}
-              onClick={() => concluirMutation.mutate()}
-            >
-              {t('curso.markComplete')}
-            </button>
-          ) : (
-            <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
-              {t('curso.downloadCertificate')}
-            </button>
-          )}
+          <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
+            {t('curso.downloadCertificate')}
+          </button>
         </section>
       )}
     </div>

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LmsApi.Controllers;
 
 [ApiController]
-[Route("api/cursos/{cursoId:guid}/materiais")]
+[Route("api/aulas/{aulaId:guid}/materiais")]
 public class MateriaisController : ControllerBase
 {
     private const string Bucket = "materiais-cursos";
@@ -23,17 +23,17 @@ public class MateriaisController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<MaterialDto>>> Listar(Guid cursoId)
+    public async Task<ActionResult<List<MaterialDto>>> Listar(Guid aulaId)
     {
-        var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.Eq("curso_id", cursoId), order: "ordem.asc");
+        var materiais = await _rest.SelectAsync<MaterialRow>("materiais", PostgrestFilter.Eq("aula_id", aulaId), order: "ordem.asc");
         return materiais.Select(m => new MaterialDto(m.Id, m.Titulo, m.Ordem)).ToList();
     }
 
     [HttpGet("{materialId:guid}/download")]
-    public async Task<ActionResult<MaterialDownloadDto>> Download(Guid cursoId, Guid materialId)
+    public async Task<ActionResult<MaterialDownloadDto>> Download(Guid aulaId, Guid materialId)
     {
         var material = await _rest.GetByIdAsync<MaterialRow>("materiais", materialId);
-        if (material is null || material.CursoId != cursoId) return NotFound();
+        if (material is null || material.AulaId != aulaId) return NotFound();
 
         var url = await _storage.CreateSignedUrlAsync(Bucket, material.StoragePath, expiresInSeconds: 300);
         return new MaterialDownloadDto(url);
@@ -42,11 +42,11 @@ public class MateriaisController : ControllerBase
     [HttpPost]
     [Authorize(Roles = RoleNames.Admin)]
     [RequestSizeLimit(50_000_000)]
-    public async Task<ActionResult<MaterialDto>> Upload(Guid cursoId, [FromForm] string titulo, [FromForm] int ordem, [FromForm] IFormFile arquivo)
+    public async Task<ActionResult<MaterialDto>> Upload(Guid aulaId, [FromForm] string titulo, [FromForm] int ordem, [FromForm] IFormFile arquivo)
     {
         if (arquivo.Length == 0) return BadRequest(new { message = "Arquivo vazio." });
 
-        var caminho = $"{cursoId}/{Guid.NewGuid()}-{arquivo.FileName}";
+        var caminho = $"{aulaId}/{Guid.NewGuid()}-{arquivo.FileName}";
         await using (var stream = arquivo.OpenReadStream())
         {
             await _storage.UploadAsync(Bucket, caminho, stream, arquivo.ContentType);
@@ -54,7 +54,7 @@ public class MateriaisController : ControllerBase
 
         var criado = await _rest.InsertAsync<MaterialRow>("materiais", new
         {
-            curso_id = cursoId,
+            aula_id = aulaId,
             titulo,
             storage_path = caminho,
             ordem
@@ -65,7 +65,7 @@ public class MateriaisController : ControllerBase
 
     [HttpPut("{materialId:guid}")]
     [Authorize(Roles = RoleNames.Admin)]
-    public async Task<ActionResult<MaterialDto>> Atualizar(Guid cursoId, Guid materialId, [FromBody] AtualizarMaterialRequest request)
+    public async Task<ActionResult<MaterialDto>> Atualizar(Guid aulaId, Guid materialId, [FromBody] AtualizarMaterialRequest request)
     {
         var atualizado = await _rest.UpdateAsync<MaterialRow>("materiais", PostgrestFilter.Eq("id", materialId),
             new { titulo = request.Titulo, ordem = request.Ordem });
@@ -75,7 +75,7 @@ public class MateriaisController : ControllerBase
 
     [HttpDelete("{materialId:guid}")]
     [Authorize(Roles = RoleNames.Admin)]
-    public async Task<IActionResult> Excluir(Guid cursoId, Guid materialId)
+    public async Task<IActionResult> Excluir(Guid aulaId, Guid materialId)
     {
         var material = await _rest.GetByIdAsync<MaterialRow>("materiais", materialId);
         if (material is null) return NotFound();

@@ -15,6 +15,9 @@ public record CursoListItemDto(
 
 public record MaterialDto(Guid Id, string Titulo, int Ordem);
 
+// Concluida: se o aluno logado já concluiu essa aula específica.
+public record AulaDto(Guid Id, string Titulo, int Ordem, bool Concluida, List<MaterialDto> Materiais);
+
 public record CursoDetailDto(
     Guid Id,
     string Titulo,
@@ -26,7 +29,7 @@ public record CursoDetailDto(
     string? PrazoStatus,
     DateTimeOffset? PrazoEm,
     bool TemQuiz,
-    List<MaterialDto> Materiais);
+    List<AulaDto> Aulas);
 
 public record CreateOrUpdateCursoRequest(
     string Titulo,
@@ -34,6 +37,12 @@ public record CreateOrUpdateCursoRequest(
     decimal CargaHorariaHoras,
     bool TemPrazo,
     int? PrazoDias);
+
+public record CreateOrUpdateAulaRequest(string Titulo, int Ordem);
+
+// CursoConcluido: true quando essa era a última aula pendente do curso — o curso inteiro
+// acabou de ser concluído (e o certificado já pode ser emitido).
+public record ConcluirAulaResponse(bool CursoConcluido, List<Guid> TrilhasCompletas);
 
 public record MaterialDownloadDto(string Url);
 

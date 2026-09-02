@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '../lib/apiClient';
-import type { ConcluirCursoResponse, CursoDetail, CursoListItem } from '../types/api';
+import type { CursoDetail, CursoListItem } from '../types/api';
 
 export interface CursoFormValues {
   titulo: string;
@@ -46,18 +46,5 @@ export function useExcluirCursoMutation() {
   return useMutation({
     mutationFn: (id: string) => apiFetch<void>(`/cursos/${id}`, { method: 'DELETE' }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cursos'] }),
-  });
-}
-
-export function useConcluirCursoMutation(id: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: () => apiFetch<ConcluirCursoResponse>(`/cursos/${id}/concluir`, { method: 'POST' }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cursos'] });
-      queryClient.invalidateQueries({ queryKey: ['cursos', id] });
-      queryClient.invalidateQueries({ queryKey: ['trilhas'] });
-      queryClient.invalidateQueries({ queryKey: ['gamificacao'] });
-    },
   });
 }
