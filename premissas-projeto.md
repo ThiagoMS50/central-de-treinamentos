@@ -61,8 +61,10 @@
 - **Implementado**, seguindo o padrão comum de mercado em plataformas de treinamento (pontos por progresso + badges de marco + ranking geral):
   - **Pontos**: +10 por curso concluído, +2 por resposta correta em quiz de prática (só na primeira vez que aquela pergunta é acertada, pra evitar "farmar" pontos respondendo repetidamente), +50 de bônus ao concluir uma trilha inteira.
   - **Badges (conquistas)**: 5 selos fixos de marco — Primeiro Passo (1º curso concluído), Maratonista (5 cursos), Mestre em Aprendizado (10 cursos), Trilha Completa (1ª trilha concluída) e Nota Máxima (100% de acerto em um quiz).
-  - **Ranking**: lista geral de colaboradores ordenada por pontos, visível para todos (reforça o engajamento, no estilo Duolingo/plataformas de e-learning gamificadas).
-  - *(Pontuação e badges não são configuráveis pelo Administrador nesta versão — são regras fixas no código. Deixar administrável fica registrado como possível evolução futura.)*
+  - **Ranking**: lista geral de colaboradores ordenada por pontos, visível para todos (reforça o engajamento, no estilo Duolingo/plataformas de e-learning gamificadas). O Administrador não participa do ranking (ele gerencia conteúdo, não "estuda").
+  - **Detalhe por participante**: no ranking, dá pra abrir um pop-up com os cursos/trilhas concluídos, os pontos de cada um e os badges conquistados por uma pessoa — respeitando uma regra de visibilidade: o Aluno só vê o próprio detalhe, o Gestor vê o próprio e o dos seus liderados diretos, e o Administrador vê o de todo mundo.
+  - **Configurável pelo Administrador**: o ranking (pontos, badges e a própria página) pode ser inteiramente desativado em Administração → Configurações. Quando desativado, ele some do menu, do painel principal e do tour guiado — para todo mundo, não só pra quem desativou.
+  - *(Pontuação e badges continuam com regras fixas no código, não configuráveis pelo Administrador nesta versão — deixar administrável fica registrado como possível evolução futura.)*
 
 ## 9. Notificações
 
