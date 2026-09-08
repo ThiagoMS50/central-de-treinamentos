@@ -21,10 +21,11 @@
 
 ## 4. Conteúdo
 
-- **Tipos suportados nesta versão**:
-  - Documentos e slides (PDFs, apresentações).
-  - Quizzes/avaliações — **sem** limite de tentativas (o aluno pode responder de novo quantas vezes quiser). Quando o curso tem quiz, ele é a última etapa: o curso só é considerado concluído (e o certificado só é emitido) depois de todas as aulas feitas **e** de todas as perguntas do quiz respondidas corretamente.
-- **Vídeo**: fora do escopo da v1, deliberadamente. Fica registrado como possível evolução futura.
+- **Estrutura de um curso**: um curso é dividido em **aulas**, e o aluno navega aula por aula (passo a passo, com botões Anterior/Avançar). Cada aula pode ter:
+  - Documentos e slides (PDFs, apresentações) como materiais de apoio para baixar.
+  - Um **vídeo** (link do YouTube, Vimeo ou um arquivo de vídeo direto) — opcional, embutido na própria tela da aula. É só um link cadastrado pelo Administrador, sem upload de arquivo de vídeo.
+  - O curso é considerado concluído quando o aluno concluir todas as aulas dele.
+- **Quizzes/avaliações** — **sem** limite de tentativas (o aluno pode responder de novo quantas vezes quiser). Quando o curso tem quiz, ele é a última etapa: o curso só é considerado concluído (e o certificado só é emitido) depois de todas as aulas feitas **e** de todas as perguntas do quiz respondidas corretamente.
 - **Estrutura de organização**: suporta tanto **cursos avulsos** (independentes) quanto **trilhas de aprendizagem** (sequência de cursos agrupados por tema/cargo, com progressão). Um mesmo curso pode pertencer a **mais de uma trilha** simultaneamente (relação N:N entre cursos e trilhas).
 - **Visibilidade**: nesta primeira versão **todos os colaboradores veem todos os cursos e trilhas** disponíveis na plataforma — não há segmentação por área, cargo ou equipe.
 - **Prazos de conclusão**: variável por curso — alguns treinamentos podem ter prazo (com cobrança de pendências), outros são livres, sem data limite. A regra é definida curso a curso, não globalmente.
@@ -83,7 +84,7 @@
 - **Frontend**: React.
 - **Banco de dados**: PostgreSQL, gerenciado pelo **Supabase**.
 - **Autenticação**: Supabase Auth (login por e-mail/senha, alinhado com o modelo de autocadastro sem aprovação da seção 6).
-- **Armazenamento de arquivos**: Supabase Storage, para os documentos/slides dos cursos e os certificados (PDF) gerados.
+- **Armazenamento de arquivos**: Supabase Storage, para os documentos/slides das aulas e os certificados (PDF) gerados. O vídeo das aulas não usa Storage — é só um link (YouTube/Vimeo/arquivo direto), ver seção 4.
 - **UI/UX**: o produto deve ter um investimento real de design de interface e experiência do usuário (não é só uma tela funcional) — layout responsivo cuidado, states de carregamento/vazio/erro bem tratados, e consistência visual usando a identidade da empresa (ver seção 10).
 - **Hospedagem (ambiente de demonstração/MVP, gratuito)**:
   - Frontend e backend **unificados em um único serviço no Render.com**: o próprio ASP.NET Core serve os arquivos estáticos do build do React (mesma origem, sem CORS, uma URL só, uma única env de configuração).
@@ -93,7 +94,7 @@
 
 ## 13. Fora de escopo do MVP — registrado para revisão futura
 
-- Suporte a vídeo como tipo de conteúdo.
+- Upload de arquivo de vídeo (o vídeo suportado hoje é só por link — ver seção 4). Player com streaming adaptativo/qualidade ajustável.
 - App nativo (App Store/Google Play).
 - Integrações com sistemas de RH, calendário ou SSO corporativo.
 - Tentativas limitadas em quizzes.
