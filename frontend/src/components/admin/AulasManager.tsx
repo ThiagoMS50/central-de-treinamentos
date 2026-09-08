@@ -23,7 +23,13 @@ export function AulasManager({ cursoId, aulas }: { cursoId: string; aulas: Aula[
 
   function handleRenomear(aula: Aula, novoTitulo: string) {
     if (!novoTitulo || novoTitulo === aula.titulo) return;
-    atualizarMutation.mutate({ aulaId: aula.id, titulo: novoTitulo, ordem: aula.ordem });
+    atualizarMutation.mutate({ aulaId: aula.id, titulo: novoTitulo, ordem: aula.ordem, videoUrl: aula.videoUrl });
+  }
+
+  function handleVideoUrlChange(aula: Aula, novoValor: string) {
+    const novoVideoUrl = novoValor.trim() === '' ? null : novoValor.trim();
+    if (novoVideoUrl === aula.videoUrl) return;
+    atualizarMutation.mutate({ aulaId: aula.id, titulo: aula.titulo, ordem: aula.ordem, videoUrl: novoVideoUrl });
   }
 
   function mover(index: number, direcao: -1 | 1) {
@@ -31,8 +37,8 @@ export function AulasManager({ cursoId, aulas }: { cursoId: string; aulas: Aula[
     if (alvo < 0 || alvo >= aulas.length) return;
     const atual = aulas[index];
     const outra = aulas[alvo];
-    atualizarMutation.mutate({ aulaId: atual.id, titulo: atual.titulo, ordem: outra.ordem });
-    atualizarMutation.mutate({ aulaId: outra.id, titulo: outra.titulo, ordem: atual.ordem });
+    atualizarMutation.mutate({ aulaId: atual.id, titulo: atual.titulo, ordem: outra.ordem, videoUrl: atual.videoUrl });
+    atualizarMutation.mutate({ aulaId: outra.id, titulo: outra.titulo, ordem: atual.ordem, videoUrl: outra.videoUrl });
   }
 
   return (
@@ -72,6 +78,13 @@ export function AulasManager({ cursoId, aulas }: { cursoId: string; aulas: Aula[
               {t('common.delete')}
             </button>
           </div>
+          <input
+            key={aula.id + (aula.videoUrl ?? '')}
+            className="aula-video-input"
+            placeholder={t('admin.cursos.aulaVideoUrl')}
+            defaultValue={aula.videoUrl ?? ''}
+            onBlur={(e) => handleVideoUrlChange(aula, e.target.value)}
+          />
           <MateriaisManager cursoId={cursoId} aulaId={aula.id} materiais={aula.materiais} />
         </div>
       ))}

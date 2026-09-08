@@ -33,10 +33,11 @@ public class AulasController : ControllerBase
         {
             curso_id = cursoId,
             titulo = request.Titulo,
-            ordem = request.Ordem
+            ordem = request.Ordem,
+            video_url = request.VideoUrl
         });
 
-        return new AulaDto(criada.Id, criada.Titulo, criada.Ordem, false, new List<MaterialDto>());
+        return new AulaDto(criada.Id, criada.Titulo, criada.Ordem, criada.VideoUrl, false, new List<MaterialDto>());
     }
 
     // Renomear e/ou reordenar (usado pelos botões de mover pra cima/baixo no Admin).
@@ -45,9 +46,9 @@ public class AulasController : ControllerBase
     public async Task<ActionResult<AulaDto>> Atualizar(Guid aulaId, [FromBody] CreateOrUpdateAulaRequest request)
     {
         var atualizada = await _rest.UpdateAsync<AulaRow>("aulas", PostgrestFilter.Eq("id", aulaId),
-            new { titulo = request.Titulo, ordem = request.Ordem });
+            new { titulo = request.Titulo, ordem = request.Ordem, video_url = request.VideoUrl });
         if (atualizada is null) return NotFound();
-        return new AulaDto(atualizada.Id, atualizada.Titulo, atualizada.Ordem, false, new List<MaterialDto>());
+        return new AulaDto(atualizada.Id, atualizada.Titulo, atualizada.Ordem, atualizada.VideoUrl, false, new List<MaterialDto>());
     }
 
     [HttpDelete("aulas/{aulaId:guid}")]

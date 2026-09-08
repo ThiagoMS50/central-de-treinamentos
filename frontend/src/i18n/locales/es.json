@@ -135,6 +135,7 @@
       "prazoDias": "Plazo (días después del primer acceso)",
       "aulas": "Clases",
       "aulaTitulo": "Título de la clase",
+      "aulaVideoUrl": "Enlace del video (YouTube, Vimeo o archivo)",
       "addAula": "Agregar clase",
       "addMaterial": "Agregar material",
       "quizBuilder": "Cuestionario de práctica",

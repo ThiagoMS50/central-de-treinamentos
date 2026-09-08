@@ -16,7 +16,8 @@ public record CursoListItemDto(
 public record MaterialDto(Guid Id, string Titulo, int Ordem);
 
 // Concluida: se o aluno logado já concluiu essa aula específica.
-public record AulaDto(Guid Id, string Titulo, int Ordem, bool Concluida, List<MaterialDto> Materiais);
+// VideoUrl: link (YouTube/Vimeo/arquivo direto) — o player é resolvido no frontend, o backend só guarda a URL.
+public record AulaDto(Guid Id, string Titulo, int Ordem, string? VideoUrl, bool Concluida, List<MaterialDto> Materiais);
 
 public record CursoDetailDto(
     Guid Id,
@@ -38,7 +39,7 @@ public record CreateOrUpdateCursoRequest(
     bool TemPrazo,
     int? PrazoDias);
 
-public record CreateOrUpdateAulaRequest(string Titulo, int Ordem);
+public record CreateOrUpdateAulaRequest(string Titulo, int Ordem, string? VideoUrl);
 
 // CursoConcluido: true quando essa era a última aula pendente do curso — o curso inteiro
 // acabou de ser concluído (e o certificado já pode ser emitido).

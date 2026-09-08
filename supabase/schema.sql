@@ -49,6 +49,7 @@ create table if not exists public.aulas (
   curso_id uuid not null references public.cursos(id) on delete cascade,
   titulo text not null,
   ordem integer not null default 0,
+  video_url text,
   created_at timestamptz not null default now()
 );
 

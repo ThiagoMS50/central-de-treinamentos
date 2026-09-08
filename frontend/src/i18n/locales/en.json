@@ -135,6 +135,7 @@
       "prazoDias": "Deadline (days after first access)",
       "aulas": "Lessons",
       "aulaTitulo": "Lesson title",
+      "aulaVideoUrl": "Video link (YouTube, Vimeo, or file)",
       "addAula": "Add lesson",
       "addMaterial": "Add material",
       "quizBuilder": "Practice quiz",

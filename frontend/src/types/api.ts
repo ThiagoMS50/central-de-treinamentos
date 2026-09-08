@@ -32,6 +32,7 @@ export interface Aula {
   id: string;
   titulo: string;
   ordem: number;
+  videoUrl: string | null;
   concluida: boolean;
   materiais: Material[];
 }

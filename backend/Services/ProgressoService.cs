@@ -92,6 +92,7 @@ public class ProgressoService
             a.Id,
             a.Titulo,
             a.Ordem,
+            a.VideoUrl,
             concluidasIds.Contains(a.Id),
             (materiaisPorAula.GetValueOrDefault(a.Id) ?? new List<MaterialRow>())
                 .Select(m => new MaterialDto(m.Id, m.Titulo, m.Ordem)).ToList())).ToList();

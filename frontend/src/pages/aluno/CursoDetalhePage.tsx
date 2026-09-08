@@ -10,6 +10,7 @@ import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { StatusBadge, PrazoBadge } from '../../components/ui/Badge';
 import { QuizPratica } from '../../components/QuizPratica';
 import { formatDate } from '../../lib/format';
+import { resolveVideoEmbed } from '../../lib/video';
 import { useAuth } from '../../hooks/useAuth';
 import type { Aula, CursoDetail } from '../../types/api';
 
@@ -127,6 +128,8 @@ export function CursoDetalhePage() {
                 {!ehAdmin && step.aula.concluida && <span className="badge badge-success">{t('curso.aulaCompleted')}</span>}
               </div>
 
+              {step.aula.videoUrl && <AulaVideoPlayer videoUrl={step.aula.videoUrl} titulo={step.aula.titulo} />}
+
               {step.aula.materiais.length === 0 && <EmptyState message={t('curso.noMaterials')} />}
               {step.aula.materiais.length > 0 && (
                 <ul className="material-list">
@@ -180,6 +183,21 @@ export function CursoDetalhePage() {
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function AulaVideoPlayer({ videoUrl, titulo }: { videoUrl: string; titulo: string }) {
+  const embed = resolveVideoEmbed(videoUrl);
+  if (!embed) return null;
+
+  return (
+    <div className="aula-video-wrapper">
+      {embed.kind === 'file' ? (
+        <video controls src={embed.src} />
+      ) : (
+        <iframe src={embed.embedUrl} title={titulo} allowFullScreen />
+      )}
     </div>
   );
 }

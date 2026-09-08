@@ -534,6 +534,24 @@ textarea {
   margin: 0;
 }
 
+.aula-video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* proporção 16:9 */
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-secondary);
+}
+
+.aula-video-wrapper iframe,
+.aula-video-wrapper video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .material-list {
   list-style: none;
   padding: 0;
@@ -733,6 +751,12 @@ textarea {
 .aula-titulo-input {
   flex: 1;
   font-weight: 600;
+}
+
+.aula-video-input {
+  width: 100%;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
 }
 
 /* ---------- Seletor de cursos de uma trilha (duas colunas) ---------- */

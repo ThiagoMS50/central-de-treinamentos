@@ -46,6 +46,7 @@ public class AulaRow
     public Guid CursoId { get; set; }
     public string Titulo { get; set; } = string.Empty;
     public int Ordem { get; set; }
+    public string? VideoUrl { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 }
 
