@@ -26,3 +26,6 @@ docker.env.local
 
 # Graphify (mapa/grafo do código, gerado localmente — regenerável, não precisa versionar)
 graphify-out/
+
+# Materiais de apresentação (arquivos pessoais, não fazem parte do código do projeto)
+*.pptx
