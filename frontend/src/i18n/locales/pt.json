@@ -167,7 +167,9 @@
       "viewProgress": "Ver progresso",
       "progressTitle": "Progresso de {{nome}}",
       "startedAt": "Iniciado em",
-      "completedAt": "Concluído em"
+      "completedAt": "Concluído em",
+      "deleteTitle": "Excluir usuário",
+      "confirmDeleteUser": "Tem certeza que deseja excluir \"{{nome}}\"? Isso remove a conta e todo o progresso, pontos, certificados e respostas de quiz dessa pessoa — não pode ser desfeito."
     },
     "configuracoes": {
       "title": "Configurações",

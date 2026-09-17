@@ -34,7 +34,7 @@
 
 - **Aluno** (perfil base): todo colaborador cadastrado é automaticamente um Aluno, com acesso aos treinamentos disponíveis para ele. Não é preciso liberar acesso individualmente.
 - **Gestor de equipe**: acompanha o progresso dos seus liderados, mas não cria conteúdo.
-- **Administrador**: gerencia usuários, permissões e configurações gerais da plataforma.
+- **Administrador**: gerencia usuários, permissões e configurações gerais da plataforma — incluindo excluir um usuário por completo (a conta de login e todo o progresso, pontos, badges, certificados e respostas de quiz dessa pessoa são removidos juntos, sem deixar rastro; não é possível excluir a própria conta nem o último Administrador restante).
 - *(Não há, por ora, um perfil dedicado de "Instrutor/criador de conteúdo" — a criação de cursos fica a cargo do Administrador, a menos que isso seja revisto depois.)*
 
 ## 6. Cadastro de usuários

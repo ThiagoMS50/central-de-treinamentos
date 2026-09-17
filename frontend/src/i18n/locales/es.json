@@ -167,7 +167,9 @@
       "viewProgress": "Ver progreso",
       "progressTitle": "Progreso de {{nome}}",
       "startedAt": "Iniciado el",
-      "completedAt": "Completado el"
+      "completedAt": "Completado el",
+      "deleteTitle": "Eliminar usuario",
+      "confirmDeleteUser": "¿Seguro que quieres eliminar a \"{{nome}}\"? Esto elimina la cuenta y todo el progreso, puntos, certificados y respuestas de cuestionarios de esta persona — no se puede deshacer."
     },
     "configuracoes": {
       "title": "Configuración",

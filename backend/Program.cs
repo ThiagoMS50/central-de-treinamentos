@@ -65,6 +65,15 @@ builder.Services.AddHttpClient<ISupabaseAuthClient, SupabaseAuthClient>(client =
     client.DefaultRequestHeaders.Add("apikey", supabaseOptions.AnonKey);
 });
 
+// Admin API do GoTrue (excluir usuário) — precisa da service_role key, diferente do cliente
+// acima (que só faz a chamada pública de recuperação de senha com a anon key).
+builder.Services.AddHttpClient<ISupabaseAuthAdminClient, SupabaseAuthAdminClient>(client =>
+{
+    client.BaseAddress = new Uri($"{supabaseUrl}/auth/v1/admin/");
+    client.DefaultRequestHeaders.Add("apikey", supabaseOptions.ServiceRoleKey);
+    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseOptions.ServiceRoleKey}");
+});
+
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddSingleton<INotificationService, LogOnlyNotificationService>();
 builder.Services.AddScoped<VisibilidadeService>();

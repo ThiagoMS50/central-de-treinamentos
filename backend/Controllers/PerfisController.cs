@@ -18,6 +18,7 @@ public class PerfisController : ControllerBase
     private readonly SupabaseOptions _supabaseOptions;
     private readonly ProgressoService _progresso;
     private readonly VisibilidadeService _visibilidade;
+    private readonly ISupabaseAuthAdminClient _authAdmin;
 
     private static readonly string[] PapeisValidos = { RoleNames.Aluno, RoleNames.Gestor, RoleNames.Admin };
 
@@ -26,13 +27,15 @@ public class PerfisController : ControllerBase
         ICurrentUserService currentUser,
         IOptions<SupabaseOptions> supabaseOptions,
         ProgressoService progresso,
-        VisibilidadeService visibilidade)
+        VisibilidadeService visibilidade,
+        ISupabaseAuthAdminClient authAdmin)
     {
         _rest = rest;
         _currentUser = currentUser;
         _supabaseOptions = supabaseOptions.Value;
         _progresso = progresso;
         _visibilidade = visibilidade;
+        _authAdmin = authAdmin;
     }
 
     private static ProfileDto ToDto(ProfileRow row) => new(row.Id, row.Nome, row.Email, row.Role, row.ManagerId);
@@ -103,6 +106,30 @@ public class PerfisController : ControllerBase
 
         if (atualizado is null) return NotFound();
         return ToDto(atualizado);
+    }
+
+    // Exclui o usuário por completo: apaga primeiro no Supabase Auth, o que cascateia sozinho pra
+    // profiles e tudo que referencia profiles.id (matrículas, progresso de aulas, respostas de
+    // quiz, pontos, badges, certificados) — não sobra rastro nenhum do usuário.
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = RoleNames.Admin)]
+    public async Task<IActionResult> Excluir(Guid id)
+    {
+        if (id == _currentUser.UserId)
+            return BadRequest(new { message = "Você não pode excluir sua própria conta." });
+
+        var alvo = await _rest.GetByIdAsync<ProfileRow>("profiles", id);
+        if (alvo is null) return NotFound();
+
+        if (alvo.Role == RoleNames.Admin)
+        {
+            var admins = await _rest.SelectAsync<ProfileRow>("profiles", PostgrestFilter.Eq("role", RoleNames.Admin));
+            if (admins.Count <= 1)
+                return BadRequest(new { message = "Não é possível excluir o último administrador." });
+        }
+
+        await _authAdmin.DeleteUserAsync(id);
+        return NoContent();
     }
 
     // Acompanhamento de progresso: status de todos os cursos para um aluno específico (usado na

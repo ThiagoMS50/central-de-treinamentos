@@ -14,3 +14,11 @@ export function useAtualizarUsuarioMutation() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usuarios'] }),
   });
 }
+
+export function useExcluirUsuarioMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => apiFetch<void>(`/perfis/${id}`, { method: 'DELETE' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usuarios'] }),
+  });
+}

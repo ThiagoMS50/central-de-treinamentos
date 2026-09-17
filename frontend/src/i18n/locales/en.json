@@ -167,7 +167,9 @@
       "viewProgress": "View progress",
       "progressTitle": "{{nome}}'s progress",
       "startedAt": "Started on",
-      "completedAt": "Completed on"
+      "completedAt": "Completed on",
+      "deleteTitle": "Delete user",
+      "confirmDeleteUser": "Are you sure you want to delete \"{{nome}}\"? This removes the account and all of this person's progress, points, certificates, and quiz answers — it can't be undone."
     },
     "configuracoes": {
       "title": "Settings",
