@@ -41,17 +41,19 @@ export function AdminTrilhasListPage() {
                 <tr key={trilha.id}>
                   <td>{trilha.titulo}</td>
                   <td>{trilha.totalCursos}</td>
-                  <td className="table-actions">
-                    <Link to={`/admin/trilhas/${trilha.id}/editar`} className="btn btn-secondary">
-                      {t('common.edit')}
-                    </Link>
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => setParaExcluir({ id: trilha.id, titulo: trilha.titulo })}
-                    >
-                      {t('common.delete')}
-                    </button>
+                  <td>
+                    <div className="table-actions">
+                      <Link to={`/admin/trilhas/${trilha.id}/editar`} className="btn btn-secondary">
+                        {t('common.edit')}
+                      </Link>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => setParaExcluir({ id: trilha.id, titulo: trilha.titulo })}
+                      >
+                        {t('common.delete')}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

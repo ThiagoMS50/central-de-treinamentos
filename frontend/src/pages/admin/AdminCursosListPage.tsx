@@ -41,17 +41,19 @@ export function AdminCursosListPage() {
                 <tr key={curso.id}>
                   <td>{curso.titulo}</td>
                   <td>{curso.cargaHorariaHoras}</td>
-                  <td className="table-actions">
-                    <Link to={`/admin/cursos/${curso.id}/editar`} className="btn btn-secondary">
-                      {t('common.edit')}
-                    </Link>
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => setParaExcluir({ id: curso.id, titulo: curso.titulo })}
-                    >
-                      {t('common.delete')}
-                    </button>
+                  <td>
+                    <div className="table-actions">
+                      <Link to={`/admin/cursos/${curso.id}/editar`} className="btn btn-secondary">
+                        {t('common.edit')}
+                      </Link>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => setParaExcluir({ id: curso.id, titulo: curso.titulo })}
+                      >
+                        {t('common.delete')}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

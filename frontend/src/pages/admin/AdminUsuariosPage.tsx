@@ -85,23 +85,25 @@ export function AdminUsuariosPage() {
                       ))}
                   </select>
                 </td>
-                <td className="table-actions">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() => setAlunoSelecionado({ id: usuario.id, nome: usuario.nome })}
-                  >
-                    {t('admin.usuarios.viewProgress')}
-                  </button>
-                  {usuario.id !== profile?.id && (
+                <td>
+                  <div className="table-actions">
                     <button
                       type="button"
-                      className="btn btn-danger"
-                      onClick={() => setUsuarioParaExcluir({ id: usuario.id, nome: usuario.nome })}
+                      className="btn btn-secondary"
+                      onClick={() => setAlunoSelecionado({ id: usuario.id, nome: usuario.nome })}
                     >
-                      {t('common.delete')}
+                      {t('admin.usuarios.viewProgress')}
                     </button>
-                  )}
+                    {usuario.id !== profile?.id && (
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => setUsuarioParaExcluir({ id: usuario.id, nome: usuario.nome })}
+                      >
+                        {t('common.delete')}
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
