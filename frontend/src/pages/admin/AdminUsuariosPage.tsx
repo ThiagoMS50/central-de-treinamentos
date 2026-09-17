@@ -86,7 +86,7 @@ export function AdminUsuariosPage() {
                   </select>
                 </td>
                 <td>
-                  <div className="table-actions">
+                  <div>
                     <button
                       type="button"
                       className="btn btn-secondary"
