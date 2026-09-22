@@ -75,6 +75,7 @@
 
 - **Marca**: a plataforma deve refletir a identidade visual da empresa (logo e cores aplicados na interface). Por ora, a marca da PEEX Brasil (logo oficial + paleta rosa/laranja) foi aplicada apenas no **certificado em PDF**; a interface do app segue com o tema neutro provisório.
 - **Idiomas**: suporte multi-idioma desde o início — Português, Inglês e Espanhol.
+- **Tema claro/escuro**: o usuário pode escolher entre Sistema (segue a preferência do sistema operacional), Claro e Escuro, num seletor no cabeçalho ao lado do idioma. A escolha fica salva no navegador (localStorage) e persiste entre sessões.
 
 ## 11. Integrações
 

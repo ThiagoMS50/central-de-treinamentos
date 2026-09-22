@@ -23,7 +23,13 @@
     "hidePassword": "Hide password",
     "moveUp": "Move up",
     "moveDown": "Move down",
-    "remove": "Remove"
+    "remove": "Remove",
+    "theme": {
+      "label": "Theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "nav": {
     "cursos": "Courses",

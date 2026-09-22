@@ -3,6 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '../Logo';
 import { LanguageSwitcher } from '../LanguageSwitcher';
+import { ThemeSwitcher } from '../ThemeSwitcher';
 import { UserMenu } from './UserMenu';
 import { OnboardingTour } from '../OnboardingTour';
 import { TourProvider } from '../../contexts/TourContext';
@@ -58,6 +59,7 @@ export function AppLayout() {
           </nav>
 
           <div className="app-header-actions">
+            <ThemeSwitcher />
             <LanguageSwitcher />
             <UserMenu />
           </div>

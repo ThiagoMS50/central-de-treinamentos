@@ -284,7 +284,8 @@ textarea {
   min-width: 220px;
 }
 
-.language-switcher {
+.language-switcher,
+.theme-switcher {
   padding: 0.3rem 0.5rem;
 }
 
