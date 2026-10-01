@@ -25,4 +25,12 @@ i18n
     interpolation: { escapeValue: false },
   });
 
+// Mantém o lang do <html> igual ao idioma escolhido, pra o navegador não achar que a página
+// está em outro idioma e oferecer tradução automática.
+const syncHtmlLang = (lng: string) => {
+  document.documentElement.lang = lng === 'pt' ? 'pt-BR' : lng;
+};
+syncHtmlLang(i18n.resolvedLanguage ?? 'pt');
+i18n.on('languageChanged', syncHtmlLang);
+
 export default i18n;
