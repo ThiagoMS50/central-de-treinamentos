@@ -282,6 +282,13 @@
     "viewDetails": "View details",
     "detailTitle": "Details",
     "coursesCompleted": "Completed courses",
-    "tracksCompleted": "Completed tracks"
+    "tracksCompleted": "Completed tracks",
+    "statCourses": "Courses",
+    "statTracks": "Tracks",
+    "statBadges": "Badges",
+    "earnedOn": "Earned on {{data}}",
+    "noneCompleted": "No courses completed yet.",
+    "pointsShort": "pts",
+    "youLabel": "You"
   }
 }

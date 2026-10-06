@@ -5,6 +5,7 @@ import { useRankingQuery } from '../../hooks/useGamificacao';
 import { useConfiguracoesQuery } from '../../hooks/useConfiguracoes';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { ParticipanteDetalheModal } from '../../components/ParticipanteDetalheModal';
+import { Icon } from '../../components/ui/Icon';
 
 export function RankingPage() {
   const { t } = useTranslation();
@@ -32,36 +33,35 @@ export function RankingPage() {
       {query.data && query.data.length === 0 && <EmptyState message={t('ranking.empty')} />}
 
       {query.data && query.data.length > 0 && (
-        <div className="table-wrap">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>{t('ranking.position')}</th>
-                <th>{t('ranking.name')}</th>
-                <th>{t('ranking.points')}</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {query.data.map((item) => (
-                <tr key={item.posicao} className={item.souEu ? 'ranking-row-eu' : undefined}>
-                  <td>#{item.posicao}</td>
-                  <td>
-                    {item.nome} {item.souEu && <span className="hint-text">{t('ranking.you')}</span>}
-                  </td>
-                  <td>{item.pontos}</td>
-                  <td>
-                    {item.podeVerDetalhes && (
-                      <button type="button" className="btn btn-secondary" onClick={() => setParticipanteSelecionado(item.alunoId)}>
-                        {t('ranking.viewDetails')}
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ol className="ranking-lista" aria-label={t('ranking.title')}>
+          {query.data.map((item) => (
+            <li
+              key={item.alunoId}
+              className={`ranking-item${item.souEu ? ' ranking-item-eu' : ''}${item.posicao <= 3 ? ` ranking-top ranking-top-${item.posicao}` : ''}`}
+            >
+              <span className="ranking-posicao" aria-label={`${t('ranking.position')} ${item.posicao}`}>
+                {item.posicao <= 3 ? <Icon name="medal" size={20} /> : `#${item.posicao}`}
+              </span>
+              <span className="user-avatar" aria-hidden="true">
+                {item.nome.trim().charAt(0).toUpperCase()}
+              </span>
+              <span className="ranking-nome">
+                <span className="ranking-nome-texto">{item.nome}</span>
+                {item.souEu && <span className="badge badge-info">{t('ranking.youLabel')}</span>}
+              </span>
+              <span className="ranking-pontos">
+                {item.pontos} <small>{t('ranking.pointsShort')}</small>
+              </span>
+              {item.podeVerDetalhes ? (
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => setParticipanteSelecionado(item.alunoId)}>
+                  {t('ranking.viewDetails')}
+                </button>
+              ) : (
+                <span className="ranking-acao-vazia" />
+              )}
+            </li>
+          ))}
+        </ol>
       )}
 
       {participanteSelecionado && (

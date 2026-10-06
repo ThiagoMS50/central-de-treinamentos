@@ -282,6 +282,13 @@
     "viewDetails": "Ver detalles",
     "detailTitle": "Detalles",
     "coursesCompleted": "Cursos completados",
-    "tracksCompleted": "Rutas completadas"
+    "tracksCompleted": "Rutas completadas",
+    "statCourses": "Cursos",
+    "statTracks": "Rutas",
+    "statBadges": "Logros",
+    "earnedOn": "Obtenido el {{data}}",
+    "noneCompleted": "Ningún curso completado aún.",
+    "pointsShort": "pts",
+    "youLabel": "Tú"
   }
 }

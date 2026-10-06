@@ -12,6 +12,10 @@ const PATHS = {
   arrowRight: 'M5 12h14M13 6l6 6-6 6',
   route: 'M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM6 15V9a4 4 0 0 1 4-4h6M18 9v6a4 4 0 0 1-4 4H8',
   play: 'M8 5v14l11-7L8 5Z',
+  check: 'M5 12.5l4.5 4.5L19 7.5',
+  lock: 'M6 11h12v10H6V11Zm2 0V7a4 4 0 0 1 8 0v4',
+  close: 'M6 6l12 12M18 6 6 18',
+  medal: 'M8 3h8l-2 6h-4L8 3Zm4 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z',
 } as const;
 
 export type IconName = keyof typeof PATHS;
