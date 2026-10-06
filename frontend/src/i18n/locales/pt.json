@@ -87,7 +87,10 @@
     "trilhasTitleAdmin": "Trilhas",
     "cursosTitle": "Cursos",
     "emptyCursos": "Nenhum curso disponível ainda.",
-    "emptyTrilhas": "Nenhuma trilha disponível ainda."
+    "emptyTrilhas": "Nenhuma trilha disponível ainda.",
+    "filterAll": "Todos",
+    "filterLabel": "Filtrar cursos por status",
+    "emptyFiltro": "Nenhum curso nesta categoria."
   },
   "status": {
     "nao_iniciado": "Não iniciado",

@@ -87,7 +87,10 @@
     "trilhasTitleAdmin": "Learning tracks",
     "cursosTitle": "Courses",
     "emptyCursos": "No courses available yet.",
-    "emptyTrilhas": "No learning tracks available yet."
+    "emptyTrilhas": "No learning tracks available yet.",
+    "filterAll": "All",
+    "filterLabel": "Filter courses by status",
+    "emptyFiltro": "No courses in this category."
   },
   "status": {
     "nao_iniciado": "Not started",

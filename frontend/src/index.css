@@ -319,6 +319,21 @@ textarea {
   transform: translateY(-1px);
 }
 
+/* Título e descrição limitados a 2 linhas, e o rodapé (badges/progresso) empurrado para
+   baixo: assim os cards de uma mesma linha do grid ficam com o rodapé alinhado. */
+.card-link h3,
+.card-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.card-link h3 {
+  margin: 0;
+}
+
 .card-description {
   font-size: 0.85rem;
   margin: 0;
@@ -329,10 +344,68 @@ textarea {
   color: var(--color-text-muted);
 }
 
+.card-badges,
+.card-footer {
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
 .card-badges {
   display: flex;
   gap: 0.4rem;
   flex-wrap: wrap;
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* ---------- Cabeçalho de seção + filtros ---------- */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.filter-tab:hover {
+  color: var(--color-text);
+}
+
+.filter-tab.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.filter-tab-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.8;
 }
 
 /* ---------- Badges ---------- */

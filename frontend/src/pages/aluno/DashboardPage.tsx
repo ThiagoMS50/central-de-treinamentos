@@ -9,19 +9,35 @@ import { ProgressBar } from '../../components/ui/ProgressBar';
 import { GamificacaoWidget } from '../../components/GamificacaoWidget';
 import { useAuth } from '../../hooks/useAuth';
 import { useConfiguracoesQuery } from '../../hooks/useConfiguracoes';
+import type { CursoStatus } from '../../types/api';
+
+type FiltroStatus = 'todos' | CursoStatus;
+const FILTROS: FiltroStatus[] = ['todos', 'em_andamento', 'nao_iniciado', 'concluido'];
+
+// Ordem de exibição: o que exige ação do aluno vem primeiro (atrasados, depois em andamento),
+// concluídos por último.
+const ORDEM_STATUS: Record<CursoStatus, number> = { em_andamento: 0, nao_iniciado: 1, concluido: 2 };
 
 export function DashboardPage() {
   const { t } = useTranslation();
   const { profile } = useAuth();
   const configuracoesQuery = useConfiguracoesQuery();
   const [busca, setBusca] = useState('');
+  const [filtro, setFiltro] = useState<FiltroStatus>('todos');
 
   const cursosQuery = useCursosQuery();
   const trilhasQuery = useTrilhasQuery();
 
-  const cursosFiltrados = (cursosQuery.data ?? []).filter((c) =>
+  const cursosBuscados = (cursosQuery.data ?? []).filter((c) =>
     c.titulo.toLowerCase().includes(busca.toLowerCase()),
   );
+  const contagem = (f: FiltroStatus) =>
+    f === 'todos' ? cursosBuscados.length : cursosBuscados.filter((c) => c.status === f).length;
+  const atrasado = (c: (typeof cursosBuscados)[number]) =>
+    c.prazoStatus === 'atrasado' && c.status !== 'concluido' ? 0 : 1;
+  const cursosFiltrados = cursosBuscados
+    .filter((c) => filtro === 'todos' || c.status === filtro)
+    .sort((a, b) => atrasado(a) - atrasado(b) || ORDEM_STATUS[a.status] - ORDEM_STATUS[b.status]);
 
   // Administrador gerencia o conteúdo mas não "estuda" — o painel usa uma linguagem neutra
   // ("Treinamentos"/"Trilhas") em vez de possessiva ("Meus treinamentos"/"Minhas trilhas"),
@@ -54,12 +70,12 @@ export function DashboardPage() {
                 <h3>{trilha.titulo}</h3>
                 {trilha.descricao && <p className="card-description">{trilha.descricao}</p>}
                 {!ehAdmin && (
-                  <>
+                  <div className="card-footer">
                     <ProgressBar percent={trilha.progressoPercentual} />
                     <span className="card-meta">
                       {trilha.cursosConcluidos}/{trilha.totalCursos}
                     </span>
-                  </>
+                  </div>
                 )}
               </Link>
             ))}
@@ -68,10 +84,32 @@ export function DashboardPage() {
       </section>
 
       <section>
-        <h2>{t('dashboard.cursosTitle')}</h2>
+        <div className="section-header">
+          <h2>{t('dashboard.cursosTitle')}</h2>
+          {!ehAdmin && cursosBuscados.length > 0 && (
+            <div className="filter-tabs" role="group" aria-label={t('dashboard.filterLabel')}>
+              {FILTROS.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  className={`filter-tab${filtro === f ? ' active' : ''}`}
+                  aria-pressed={filtro === f}
+                  onClick={() => setFiltro(f)}
+                >
+                  {f === 'todos' ? t('dashboard.filterAll') : t(`status.${f}`)}
+                  <span className="filter-tab-count">{contagem(f)}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         {cursosQuery.isLoading && <Spinner />}
         {cursosQuery.isError && <ErrorBanner onRetry={() => cursosQuery.refetch()} />}
-        {cursosQuery.data && cursosFiltrados.length === 0 && <EmptyState message={t('dashboard.emptyCursos')} />}
+        {cursosQuery.data && cursosFiltrados.length === 0 && (
+          <EmptyState
+            message={cursosBuscados.length > 0 ? t('dashboard.emptyFiltro') : t('dashboard.emptyCursos')}
+          />
+        )}
         {cursosFiltrados.length > 0 && (
           <div className="card-grid">
             {cursosFiltrados.map((curso) => (

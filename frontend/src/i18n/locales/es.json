@@ -87,7 +87,10 @@
     "trilhasTitleAdmin": "Rutas de aprendizaje",
     "cursosTitle": "Cursos",
     "emptyCursos": "Aún no hay cursos disponibles.",
-    "emptyTrilhas": "Aún no hay rutas de aprendizaje disponibles."
+    "emptyTrilhas": "Aún no hay rutas de aprendizaje disponibles.",
+    "filterAll": "Todos",
+    "filterLabel": "Filtrar cursos por estado",
+    "emptyFiltro": "Ningún curso en esta categoría."
   },
   "status": {
     "nao_iniciado": "No iniciado",

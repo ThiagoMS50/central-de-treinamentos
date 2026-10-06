@@ -28,6 +28,7 @@
 - **Quizzes/avaliações** — **sem** limite de tentativas (o aluno pode responder de novo quantas vezes quiser). Quando o curso tem quiz, ele é a última etapa: o curso só é considerado concluído (e o certificado só é emitido) depois de todas as aulas feitas **e** de todas as perguntas do quiz respondidas corretamente.
 - **Estrutura de organização**: suporta tanto **cursos avulsos** (independentes) quanto **trilhas de aprendizagem** (sequência de cursos agrupados por tema/cargo, com progressão). Um mesmo curso pode pertencer a **mais de uma trilha** simultaneamente (relação N:N entre cursos e trilhas).
 - **Visibilidade**: nesta primeira versão **todos os colaboradores veem todos os cursos e trilhas** disponíveis na plataforma — não há segmentação por área, cargo ou equipe.
+  - No painel do aluno, os cursos podem ser filtrados por status (Todos / Em andamento / Não iniciado / Concluído, com a contagem de cada um) e aparecem ordenados pelo que pede ação: atrasados primeiro, depois em andamento, não iniciados e, por último, concluídos.
 - **Prazos de conclusão**: variável por curso — alguns treinamentos podem ter prazo (com cobrança de pendências), outros são livres, sem data limite. A regra é definida curso a curso, não globalmente.
 
 ## 5. Papéis e permissões
