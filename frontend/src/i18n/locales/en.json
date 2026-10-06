@@ -33,6 +33,9 @@
   },
   "nav": {
     "cursos": "Courses",
+    "sectionLearn": "Learn",
+    "sectionManage": "Management",
+    "preferences": "Preferences",
     "ranking": "Ranking",
     "relatorios": "Reports",
     "admin": "Administration"
@@ -90,7 +93,13 @@
     "emptyTrilhas": "No learning tracks available yet.",
     "filterAll": "All",
     "filterLabel": "Filter courses by status",
-    "emptyFiltro": "No courses in this category."
+    "emptyFiltro": "No courses in this category.",
+    "heroSuggested": "Suggested for you",
+    "heroContinue": "Pick up where you left off",
+    "heroLate": "Overdue — get back to it",
+    "startCourse": "Start course",
+    "resumeCourse": "Continue course",
+    "viewRanking": "View full ranking"
   },
   "status": {
     "nao_iniciado": "Not started",

@@ -33,6 +33,9 @@
   },
   "nav": {
     "cursos": "Cursos",
+    "sectionLearn": "Aprender",
+    "sectionManage": "Gestão",
+    "preferences": "Preferências",
     "ranking": "Ranking",
     "relatorios": "Relatórios",
     "admin": "Administração"
@@ -90,7 +93,13 @@
     "emptyTrilhas": "Nenhuma trilha disponível ainda.",
     "filterAll": "Todos",
     "filterLabel": "Filtrar cursos por status",
-    "emptyFiltro": "Nenhum curso nesta categoria."
+    "emptyFiltro": "Nenhum curso nesta categoria.",
+    "heroSuggested": "Sugerido para você",
+    "heroContinue": "Continue de onde parou",
+    "heroLate": "Prazo vencido — retome agora",
+    "startCourse": "Começar curso",
+    "resumeCourse": "Continuar curso",
+    "viewRanking": "Ver ranking completo"
   },
   "status": {
     "nao_iniciado": "Não iniciado",

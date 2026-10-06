@@ -74,9 +74,10 @@
 
 ## 10. Identidade visual e idiomas
 
-- **Marca**: a plataforma deve refletir a identidade visual da empresa (logo e cores aplicados na interface). Por ora, a marca da PEEX Brasil (logo oficial + paleta rosa/laranja) foi aplicada apenas no **certificado em PDF**; a interface do app segue com o tema neutro provisório.
+- **Marca**: a plataforma deve refletir a identidade visual da empresa (logo e cores aplicados na interface). A paleta rosa/laranja da PEEX Brasil é usada no **certificado em PDF** e na interface do app (degradê nos botões principais, item ativo do menu, barras de progresso, avatar e pontos). Na interface, o nome do sistema aparece como texto no degradê da marca enquanto não houver uma versão do logo com fundo transparente.
+- **Layout**: menu lateral fixo (seções Aprender / Gestão / Preferências), que no celular vira uma gaveta aberta pelo botão ☰. No painel do aluno: destaque no topo com o curso sugerido (o mais prioritário ainda não concluído: atrasado → em andamento → não iniciado), card de gamificação ao lado (pontos, posição e conquistas), trilhas em faixa com progresso e cursos em cards com miniatura. Os cursos não têm imagem própria: cada um ganha uma miniatura em degradê com a inicial do título. A tela de login (e as demais de autenticação) tem duas colunas: arte da marca à esquerda e formulário à direita.
 - **Idiomas**: suporte multi-idioma desde o início — Português, Inglês e Espanhol.
-- **Tema claro/escuro**: o usuário pode escolher entre Sistema (segue a preferência do sistema operacional), Claro e Escuro, num seletor no cabeçalho ao lado do idioma. A escolha fica salva no navegador (localStorage) e persiste entre sessões.
+- **Tema claro/escuro**: o usuário pode escolher entre Sistema (segue a preferência do sistema operacional), Claro e Escuro, num seletor na parte de baixo do menu lateral, junto com o idioma. **Escuro é o padrão** para quem ainda não escolheu. A escolha fica salva no navegador (localStorage) e persiste entre sessões.
 
 ## 11. Integrações
 

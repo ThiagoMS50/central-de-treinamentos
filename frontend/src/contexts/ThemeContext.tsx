@@ -4,6 +4,10 @@ export type ThemeMode = 'system' | 'light' | 'dark';
 
 const STORAGE_KEY = 'theme';
 
+// Escuro é o padrão para quem nunca escolheu um tema. "system" é guardado explicitamente
+// (senão não daria pra distinguir "segue o sistema" de "nunca escolheu").
+const DEFAULT_MODE: ThemeMode = 'dark';
+
 interface ThemeContextValue {
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
@@ -13,7 +17,7 @@ export const ThemeContext = createContext<ThemeContextValue | undefined>(undefin
 
 function readStoredMode(): ThemeMode {
   const stored = localStorage.getItem(STORAGE_KEY);
-  return stored === 'light' || stored === 'dark' ? stored : 'system';
+  return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : DEFAULT_MODE;
 }
 
 function applyMode(mode: ThemeMode) {
@@ -34,11 +38,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   function setMode(next: ThemeMode) {
     setModeState(next);
-    if (next === 'system') {
-      localStorage.removeItem(STORAGE_KEY);
-    } else {
-      localStorage.setItem(STORAGE_KEY, next);
-    }
+    localStorage.setItem(STORAGE_KEY, next);
   }
 
   return <ThemeContext.Provider value={{ mode, setMode }}>{children}</ThemeContext.Provider>;

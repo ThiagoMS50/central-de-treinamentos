@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { useTour } from '../../hooks/useTour';
+import { Icon } from '../ui/Icon';
 
 export function UserMenu() {
   const { profile, signOut } = useAuth();
@@ -11,13 +12,26 @@ export function UserMenu() {
 
   return (
     <div className="user-menu">
-      <span className="user-menu-name">{profile.nome}</span>
-      <span className="badge badge-neutral">{t(`roles.${profile.role}`)}</span>
-      <button type="button" className="btn btn-secondary" onClick={start} title={t('tour.replay')}>
-        ?
+      <button type="button" className="icon-button" onClick={start} title={t('tour.replay')} aria-label={t('tour.replay')}>
+        <Icon name="help" />
       </button>
-      <button type="button" className="btn btn-secondary" onClick={() => signOut()}>
-        {t('common.logout')}
+      <div className="user-chip">
+        <span className="user-avatar" aria-hidden="true">
+          {profile.nome.trim().charAt(0).toUpperCase()}
+        </span>
+        <span className="user-chip-text">
+          <span className="user-menu-name">{profile.nome}</span>
+          <span className="user-menu-role">{t(`roles.${profile.role}`)}</span>
+        </span>
+      </div>
+      <button
+        type="button"
+        className="icon-button"
+        onClick={() => signOut()}
+        title={t('common.logout')}
+        aria-label={t('common.logout')}
+      >
+        <Icon name="logout" />
       </button>
     </div>
   );

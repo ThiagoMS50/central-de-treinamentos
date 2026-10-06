@@ -6,6 +6,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 import { UserMenu } from './UserMenu';
 import { OnboardingTour } from '../OnboardingTour';
+import { Icon } from '../ui/Icon';
 import { TourProvider } from '../../contexts/TourContext';
 import { useAuth } from '../../hooks/useAuth';
 import { useConfiguracoesQuery } from '../../hooks/useConfiguracoes';
@@ -16,58 +17,78 @@ export function AppLayout() {
   const [menuAberto, setMenuAberto] = useState(false);
   const configuracoesQuery = useConfiguracoesQuery();
   const rankingHabilitado = configuracoesQuery.data?.rankingHabilitado ?? true;
+  const podeVerRelatorios = profile?.role === 'gestor' || profile?.role === 'admin';
+  const ehAdmin = profile?.role === 'admin';
 
   const linkClass = ({ isActive }: { isActive: boolean }) => `nav-link${isActive ? ' nav-link-active' : ''}`;
 
   return (
     <TourProvider>
       <div className="app-shell">
-        <header className="app-header">
-          <div className="app-header-brand">
+        {/* No celular o menu lateral vira uma gaveta; o fundo escurecido fecha ao tocar fora. */}
+        {menuAberto && <div className="sidebar-backdrop" onClick={() => setMenuAberto(false)} />}
+
+        <aside className={`sidebar${menuAberto ? ' sidebar-open' : ''}`}>
+          <div className="sidebar-brand">
             <Logo />
           </div>
 
-          <button
-            type="button"
-            className="nav-toggle"
-            aria-label="menu"
-            aria-expanded={menuAberto}
-            onClick={() => setMenuAberto((v) => !v)}
-          >
-            ☰
-          </button>
-
-          <nav className={`app-nav${menuAberto ? ' app-nav-open' : ''}`} onClick={() => setMenuAberto(false)}>
+          <nav className="sidebar-nav" onClick={() => setMenuAberto(false)}>
+            <span className="sidebar-section">{t('nav.sectionLearn')}</span>
             <NavLink to="/cursos" className={linkClass}>
+              <Icon name="compass" />
               {t('nav.cursos')}
             </NavLink>
             {rankingHabilitado && (
               <NavLink to="/ranking" className={linkClass}>
+                <Icon name="trophy" />
                 {t('nav.ranking')}
               </NavLink>
             )}
-            {profile && (profile.role === 'gestor' || profile.role === 'admin') && (
+
+            {(podeVerRelatorios || ehAdmin) && <span className="sidebar-section">{t('nav.sectionManage')}</span>}
+            {podeVerRelatorios && (
               <NavLink to="/relatorios" className={linkClass}>
+                <Icon name="chart" />
                 {t('nav.relatorios')}
               </NavLink>
             )}
-            {profile?.role === 'admin' && (
+            {ehAdmin && (
               <NavLink to="/admin/cursos" className={linkClass}>
+                <Icon name="settings" />
                 {t('nav.admin')}
               </NavLink>
             )}
           </nav>
 
-          <div className="app-header-actions">
+          <div className="sidebar-footer">
+            <span className="sidebar-section">{t('nav.preferences')}</span>
             <ThemeSwitcher />
             <LanguageSwitcher />
-            <UserMenu />
           </div>
-        </header>
+        </aside>
 
-        <main className="app-content">
-          <Outlet />
-        </main>
+        <div className="app-main">
+          <header className="topbar">
+            <button
+              type="button"
+              className="nav-toggle"
+              aria-label="menu"
+              aria-expanded={menuAberto}
+              onClick={() => setMenuAberto((v) => !v)}
+            >
+              <Icon name="menu" size={20} />
+            </button>
+            <div className="topbar-brand">
+              <Logo />
+            </div>
+            <UserMenu />
+          </header>
+
+          <main className="app-content">
+            <Outlet />
+          </main>
+        </div>
 
         <OnboardingTour />
       </div>
