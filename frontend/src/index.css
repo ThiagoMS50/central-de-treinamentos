@@ -143,21 +143,6 @@ a {
   background: var(--gradient-brand-soft);
 }
 
-.sidebar-footer {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.sidebar-footer .sidebar-section {
-  padding: 0 0.25rem;
-}
-
-.sidebar-footer select {
-  width: 100%;
-}
-
 .app-main {
   flex: 1;
   min-width: 0;
@@ -177,8 +162,11 @@ a {
   backdrop-filter: blur(8px);
 }
 
-.topbar .user-menu {
+.topbar-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .topbar-brand,
@@ -1183,21 +1171,188 @@ textarea {
 
 /* ---------- Usuário logado ---------- */
 
-.user-menu {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .user-chip {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.3rem 0.85rem 0.3rem 0.3rem;
+  padding: 0.3rem 0.7rem 0.3rem 0.3rem;
   border-radius: 999px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   min-width: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.user-chip:hover,
+.user-chip[aria-expanded='true'] {
+  border-color: var(--color-primary);
+}
+
+.user-chip-chevron {
+  display: inline-flex;
+  color: var(--color-text-muted);
+  transition: transform 0.15s ease;
+}
+
+.user-chip[aria-expanded='true'] .user-chip-chevron {
+  transform: rotate(180deg);
+}
+
+/* Botão "pílula" (ícone + texto curto), usado no seletor de idioma. */
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 36px;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pill-button .icon {
+  color: var(--color-text-muted);
+}
+
+.pill-button:hover,
+.pill-button[aria-expanded='true'],
+.icon-button[aria-expanded='true'] {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ---------- Menu suspenso ---------- */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  z-index: 80;
+  min-width: 200px;
+  padding: 0.35rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  animation: dropdown-in 0.12s ease-out;
+}
+
+.dropdown-menu-right {
+  right: 0;
+}
+
+.dropdown-menu-left {
+  left: 0;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus-visible {
+  background: var(--color-surface-2);
+  outline: none;
+}
+
+.dropdown-item-icon {
+  display: inline-flex;
+  color: var(--color-text-muted);
+  min-width: 18px;
+}
+
+.dropdown-item-label {
+  flex: 1;
+}
+
+.dropdown-item-code {
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.dropdown-item-selected {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.dropdown-item-selected .dropdown-item-icon,
+.dropdown-item-check {
+  color: var(--color-primary);
+}
+
+.dropdown-item-danger,
+.dropdown-item-danger .dropdown-item-icon {
+  color: var(--color-danger);
+}
+
+.dropdown-header {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.65rem 0.6rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-border);
+  min-width: 0;
+}
+
+.dropdown-header-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-header-email {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-divider {
+  height: 1px;
+  margin: 0.25rem 0;
+  background: var(--color-border);
+}
+
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
 }
 
 .user-avatar,
@@ -1259,6 +1414,14 @@ textarea {
 }
 
 @media (max-width: 560px) {
+  .user-chip-chevron {
+    display: none;
+  }
+
+  .topbar-actions {
+    gap: 0.35rem;
+  }
+
   .page-header .search-input {
     flex: 1;
     min-width: 0;
@@ -2078,6 +2241,9 @@ textarea {
 
 .auth-logo {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 

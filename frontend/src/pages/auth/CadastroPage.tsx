@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { Logo } from '../../components/Logo';
+import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 
 export function CadastroPage() {
   const { t } = useTranslation();
@@ -47,6 +48,7 @@ export function CadastroPage() {
         <div className="auth-card">
           <div className="auth-logo">
             <Logo />
+            <LanguageSwitcher />
           </div>
           <p>{t('auth.cadastro.checkEmail')}</p>
         </div>
@@ -59,6 +61,7 @@ export function CadastroPage() {
       <div className="auth-card">
         <div className="auth-logo">
           <Logo />
+          <LanguageSwitcher />
         </div>
         <h1>{t('auth.cadastro.title')}</h1>
 

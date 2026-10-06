@@ -14,6 +14,7 @@ interface AuthContextValue {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (nome: string, email: string, password: string) => Promise<{ needsEmailConfirmation: boolean }>;
   signOut: () => Promise<void>;
+  updateNome: (nome: string) => Promise<void>;
   retry: () => void;
 }
 
@@ -93,6 +94,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus('unauthenticated');
   }
 
+  // O próprio usuário altera o nome; o perfil em memória é trocado pelo que o backend devolveu.
+  async function updateNome(nome: string) {
+    const atualizado = await apiFetch<Profile>('/perfis/me', { method: 'PUT', body: { nome } });
+    setProfile(atualizado);
+  }
+
   function retry() {
     setStatus('loading');
     setError(null);
@@ -100,7 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ status, session, profile, error, signIn, signUp, signOut, retry }}>
+    <AuthContext.Provider value={{ status, session, profile, error, signIn, signUp, signOut, updateNome, retry }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, type Location } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { Logo } from '../../components/Logo';
+import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 import { PasswordInput } from '../../components/ui/PasswordInput';
 
 export function LoginPage() {
@@ -38,6 +39,7 @@ export function LoginPage() {
       <div className="auth-card">
         <div className="auth-logo">
           <Logo />
+          <LanguageSwitcher />
         </div>
         <h1>{t('auth.login.title')}</h1>
 

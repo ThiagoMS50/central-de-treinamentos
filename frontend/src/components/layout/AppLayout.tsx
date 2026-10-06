@@ -60,12 +60,6 @@ export function AppLayout() {
               </NavLink>
             )}
           </nav>
-
-          <div className="sidebar-footer">
-            <span className="sidebar-section">{t('nav.preferences')}</span>
-            <ThemeSwitcher />
-            <LanguageSwitcher />
-          </div>
         </aside>
 
         <div className="app-main">
@@ -82,7 +76,11 @@ export function AppLayout() {
             <div className="topbar-brand">
               <Logo />
             </div>
-            <UserMenu />
+            <div className="topbar-actions">
+              <LanguageSwitcher />
+              <ThemeSwitcher />
+              <UserMenu />
+            </div>
           </header>
 
           <main className="app-content">

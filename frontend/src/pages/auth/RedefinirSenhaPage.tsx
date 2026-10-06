@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabaseClient';
 import { Logo } from '../../components/Logo';
+import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
 import { PasswordInput } from '../../components/ui/PasswordInput';
 
@@ -61,6 +62,7 @@ export function RedefinirSenhaPage() {
         <div className="auth-card">
           <div className="auth-logo">
             <Logo />
+            <LanguageSwitcher />
           </div>
           <div className="error-banner">{t('auth.redefinirSenha.invalidLink')}</div>
           <p className="auth-switch">
@@ -76,6 +78,7 @@ export function RedefinirSenhaPage() {
       <div className="auth-card">
         <div className="auth-logo">
           <Logo />
+          <LanguageSwitcher />
         </div>
         <h1>{t('auth.redefinirSenha.title')}</h1>
 

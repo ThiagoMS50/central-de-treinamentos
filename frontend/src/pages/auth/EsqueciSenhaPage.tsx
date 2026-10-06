@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '../../components/Logo';
+import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 import { apiFetch, ApiError } from '../../lib/apiClient';
 
 export function EsqueciSenhaPage() {
@@ -39,6 +40,7 @@ export function EsqueciSenhaPage() {
         <div className="auth-card">
           <div className="auth-logo">
             <Logo />
+            <LanguageSwitcher />
           </div>
           <div className="success-banner">{t('auth.esqueciSenha.success')}</div>
           <p className="auth-switch">
@@ -54,6 +56,7 @@ export function EsqueciSenhaPage() {
       <div className="auth-card">
         <div className="auth-logo">
           <Logo />
+          <LanguageSwitcher />
         </div>
         <h1>{t('auth.esqueciSenha.title')}</h1>
         <p className="hint-text">{t('auth.esqueciSenha.instructions')}</p>

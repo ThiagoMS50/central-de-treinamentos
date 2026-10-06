@@ -42,6 +42,7 @@
 
 - Modelo: **autocadastro sem aprovação** nesta primeira versão. O colaborador se cadastra sozinho (provavelmente usando e-mail corporativo) e já tem acesso imediato como Aluno, sem depender de aprovação de um Administrador. *(Pode ser revisto para exigir aprovação ou validação de domínio de e-mail em uma fase futura, se necessário.)*
 - **Autenticação**: login próprio (e-mail/senha) gerenciado dentro do próprio LMS — sem SSO corporativo nesta versão.
+- **Alterar o próprio nome**: qualquer usuário (Aluno, Gestor ou Administrador) pode alterar o próprio nome pelo menu que abre ao clicar no seu nome, no topo da tela ("Alterar meu nome"). Só o nome: o papel e o gestor continuam sendo definidos apenas pelo Administrador. O novo nome passa a valer no ranking e também nos certificados, inclusive nos já emitidos (o PDF é gerado na hora com o nome atual).
 
 ## 7. Acompanhamento e relatórios
 
@@ -76,9 +77,9 @@
 ## 10. Identidade visual e idiomas
 
 - **Marca**: a plataforma deve refletir a identidade visual da empresa (logo e cores aplicados na interface). A paleta rosa/laranja da PEEX Brasil é usada no **certificado em PDF** e na interface do app (degradê nos botões principais, item ativo do menu, barras de progresso, avatar e pontos). Na interface, o nome do sistema aparece como texto no degradê da marca enquanto não houver uma versão do logo com fundo transparente.
-- **Layout**: menu lateral fixo (seções Aprender / Gestão / Preferências), que no celular vira uma gaveta aberta pelo botão ☰. No painel do aluno: destaque no topo com o curso sugerido (o mais prioritário ainda não concluído: atrasado → em andamento → não iniciado), card de gamificação ao lado (pontos, posição e conquistas), trilhas em faixa com progresso e cursos em cards com miniatura. Os cursos não têm imagem própria: cada um ganha uma miniatura em degradê com a inicial do título. A tela de login (e as demais de autenticação) tem duas colunas: arte da marca à esquerda e formulário à direita.
+- **Layout**: menu lateral fixo (seções Aprender / Gestão), que no celular vira uma gaveta aberta pelo botão ☰. No painel do aluno: destaque no topo com o curso sugerido (o mais prioritário ainda não concluído: atrasado → em andamento → não iniciado), card de gamificação ao lado (pontos, posição e conquistas), trilhas em faixa com progresso e cursos em cards com miniatura. Os cursos não têm imagem própria: cada um ganha uma miniatura em degradê com a inicial do título. A tela de login (e as demais de autenticação) tem duas colunas: arte da marca à esquerda e formulário à direita.
 - **Idiomas**: suporte multi-idioma desde o início — Português, Inglês e Espanhol.
-- **Tema claro/escuro**: o usuário pode escolher entre Sistema (segue a preferência do sistema operacional), Claro e Escuro, num seletor na parte de baixo do menu lateral, junto com o idioma. **Escuro é o padrão** para quem ainda não escolheu. A escolha fica salva no navegador (localStorage) e persiste entre sessões.
+- **Tema claro/escuro**: o usuário pode escolher entre Sistema (segue a preferência do sistema operacional), Claro e Escuro, num menu com ícone no topo da tela (☾ / ☀ / monitor), ao lado do seletor de idioma (🌐 PT/EN/ES). O idioma também pode ser trocado nas telas de login, cadastro e recuperação de senha. **Escuro é o padrão** para quem ainda não escolheu. A escolha fica salva no navegador (localStorage) e persiste entre sessões.
 
 ## 11. Integrações
 

@@ -35,10 +35,17 @@
     "cursos": "Courses",
     "sectionLearn": "Learn",
     "sectionManage": "Management",
-    "preferences": "Preferences",
     "ranking": "Ranking",
     "relatorios": "Reports",
     "admin": "Administration"
+  },
+  "userMenu": {
+    "open": "Open user menu",
+    "editName": "Change my name",
+    "editNameTitle": "Change my name",
+    "nameLabel": "Name",
+    "nameHint": "This is how you appear in the ranking and on certificates.",
+    "nameRequired": "Please enter your name."
   },
   "auth": {
     "login": {

@@ -21,6 +21,7 @@ public class PerfisController : ControllerBase
     private readonly ISupabaseAuthAdminClient _authAdmin;
 
     private static readonly string[] PapeisValidos = { RoleNames.Aluno, RoleNames.Gestor, RoleNames.Admin };
+    private const int NomeMaxLength = 120;
 
     public PerfisController(
         ISupabaseRestClient rest,
@@ -46,6 +47,26 @@ public class PerfisController : ControllerBase
         var profile = await _rest.GetByIdAsync<ProfileRow>("profiles", _currentUser.UserId);
         if (profile is null) return NotFound();
         return ToDto(profile);
+    }
+
+    // Cada usuário (qualquer papel) pode alterar o próprio nome — e só o nome: papel e gestor
+    // continuam exclusivos do Administrador (PUT /api/perfis/{id}).
+    [HttpPut("me")]
+    public async Task<ActionResult<ProfileDto>> AtualizarMeuNome([FromBody] UpdateMeuNomeRequest request)
+    {
+        var nome = request.Nome?.Trim();
+        if (string.IsNullOrWhiteSpace(nome))
+            return BadRequest(new { message = "Informe seu nome." });
+        if (nome.Length > NomeMaxLength)
+            return BadRequest(new { message = $"O nome pode ter no máximo {NomeMaxLength} caracteres." });
+
+        var atualizado = await _rest.UpdateAsync<ProfileRow>(
+            "profiles",
+            PostgrestFilter.Eq("id", _currentUser.UserId),
+            new { nome });
+
+        if (atualizado is null) return NotFound();
+        return ToDto(atualizado);
     }
 
     [HttpPost("ensure")]
