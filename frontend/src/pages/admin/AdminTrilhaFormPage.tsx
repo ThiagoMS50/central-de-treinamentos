@@ -13,6 +13,7 @@ import { apiFetch } from '../../lib/apiClient';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
 import { AdminTabs } from '../../components/admin/AdminTabs';
 import { useSavedFeedback } from '../../hooks/useSavedFeedback';
+import { Icon } from '../../components/ui/Icon';
 
 interface SelecaoCurso {
   cursoId: string;
@@ -122,87 +123,111 @@ export function AdminTrilhaFormPage() {
         ← {t('common.back')}
       </Link>
 
-      <h1>{editando ? t('admin.trilhas.edit') : t('admin.trilhas.new')}</h1>
+      <h1>{editando ? valores.titulo || t('admin.trilhas.edit') : t('admin.trilhas.new')}</h1>
 
-      <form onSubmit={handleSubmit} className="form" style={{ maxWidth: 'none' }}>
-        <label>
-          {t('admin.trilhas.titulo')}
-          <input required value={valores.titulo} onChange={(e) => setValores({ ...valores, titulo: e.target.value })} />
-        </label>
-        <label>
-          {t('admin.trilhas.descricao')}
-          <textarea value={valores.descricao} onChange={(e) => setValores({ ...valores, descricao: e.target.value })} />
-        </label>
-
-        <h2>{t('admin.trilhas.assignCourses')}</h2>
-        {cursosQuery.isLoading && <Spinner />}
-        {cursosQuery.data && (
-          <div className="trilha-picker">
-            <div className="trilha-picker-column">
-              <h3>
-                {t('admin.trilhas.availableCourses')} ({disponiveis.length})
-              </h3>
+      <form onSubmit={handleSubmit} className="form-stack">
+        <section className="form-card">
+          <h2 className="form-card-titulo">{t('admin.trilhas.infoTitle')}</h2>
+          <div className="form-grid">
+            <label className="form-grid-full">
+              {t('admin.trilhas.titulo')}
               <input
-                className="search-input"
-                type="search"
-                placeholder={t('common.search')}
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
+                required
+                autoFocus={!editando}
+                value={valores.titulo}
+                onChange={(e) => setValores({ ...valores, titulo: e.target.value })}
               />
-              <ul className="trilha-picker-list">
-                {disponiveis.length === 0 && <li className="trilha-picker-empty">{t('common.empty')}</li>}
-                {disponiveis.map((item) => (
-                  <li key={item.cursoId} className="trilha-picker-item">
-                    <span className="trilha-picker-item-label">{item.titulo}</span>
-                    <button type="button" className="btn-icon" onClick={() => adicionar(item.cursoId)} aria-label={t('admin.trilhas.addCourse')}>
-                      +
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="trilha-picker-column">
-              <h3>
-                {t('admin.trilhas.selectedCourses')} ({incluidos.length})
-              </h3>
-              <ul className="trilha-picker-list">
-                {incluidos.length === 0 && <li className="trilha-picker-empty">{t('common.empty')}</li>}
-                {incluidos.map((item, index) => (
-                  <li key={item.cursoId} className="trilha-picker-item">
-                    <span className="trilha-picker-order">{index + 1}.</span>
-                    <span className="trilha-picker-item-label">{item.titulo}</span>
-                    <div className="reorder-controls">
-                      <button
-                        type="button"
-                        className="btn-icon"
-                        disabled={index === 0}
-                        onClick={() => mover(item.cursoId, -1)}
-                        aria-label={t('common.moveUp')}
-                      >
-                        ↑
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-icon"
-                        disabled={index === incluidos.length - 1}
-                        onClick={() => mover(item.cursoId, 1)}
-                        aria-label={t('common.moveDown')}
-                      >
-                        ↓
-                      </button>
-                    </div>
-                    <button type="button" className="btn-icon" onClick={() => remover(item.cursoId)} aria-label={t('common.remove')}>
-                      ×
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            </label>
+            <label className="form-grid-full">
+              {t('admin.trilhas.descricao')}
+              <textarea rows={3} value={valores.descricao} onChange={(e) => setValores({ ...valores, descricao: e.target.value })} />
+            </label>
           </div>
-        )}
+        </section>
 
-        <div className="form-inline">
+        <section className="form-card">
+          <h2 className="form-card-titulo">{t('admin.trilhas.assignCourses')}</h2>
+          <p className="hint-text">{t('admin.trilhas.coursesHint')}</p>
+          {cursosQuery.isLoading && <Spinner />}
+          {cursosQuery.data && (
+            <div className="trilha-picker">
+              <div className="trilha-picker-column">
+                <h3>
+                  {t('admin.trilhas.availableCourses')} <span className="form-step-count">{disponiveis.length}</span>
+                </h3>
+                <input
+                  className="search-input"
+                  type="search"
+                  placeholder={t('common.search')}
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                />
+                <ul className="trilha-picker-list">
+                  {disponiveis.length === 0 && <li className="trilha-picker-empty">{t('admin.trilhas.emptyAvailable')}</li>}
+                  {disponiveis.map((item) => (
+                    <li key={item.cursoId}>
+                      <button type="button" className="trilha-picker-item trilha-picker-add" onClick={() => adicionar(item.cursoId)}>
+                        <span className="trilha-picker-item-label">{item.titulo}</span>
+                        <span className="trilha-picker-plus" aria-label={t('admin.trilhas.addCourse')}>
+                          <Icon name="plus" size={15} />
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="trilha-picker-column">
+                <h3>
+                  {t('admin.trilhas.selectedCourses')} <span className="form-step-count">{incluidos.length}</span>
+                </h3>
+                <ul className="trilha-picker-list trilha-picker-list-selecionados">
+                  {incluidos.length === 0 && <li className="trilha-picker-empty">{t('admin.trilhas.emptySelected')}</li>}
+                  {incluidos.map((item, index) => (
+                    <li key={item.cursoId} className="trilha-picker-item">
+                      <span className="trilha-picker-order">{index + 1}</span>
+                      <span className="trilha-picker-item-label">{item.titulo}</span>
+                      <div className="icon-actions">
+                        <button
+                          type="button"
+                          className="icon-button"
+                          disabled={index === 0}
+                          onClick={() => mover(item.cursoId, -1)}
+                          aria-label={t('common.moveUp')}
+                          title={t('common.moveUp')}
+                        >
+                          <Icon name="arrowUp" size={15} />
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-button"
+                          disabled={index === incluidos.length - 1}
+                          onClick={() => mover(item.cursoId, 1)}
+                          aria-label={t('common.moveDown')}
+                          title={t('common.moveDown')}
+                        >
+                          <Icon name="arrowDown" size={15} />
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-button icon-button-danger"
+                          onClick={() => remover(item.cursoId)}
+                          aria-label={t('common.remove')}
+                          title={t('common.remove')}
+                        >
+                          <Icon name="close" size={15} />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </section>
+
+        <div className="form-card-footer form-card-footer-solto">
+          {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
           <button
             type="submit"
             className="btn btn-primary"
@@ -210,7 +235,6 @@ export function AdminTrilhaFormPage() {
           >
             {t('common.save')}
           </button>
-          {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
         </div>
       </form>
     </div>

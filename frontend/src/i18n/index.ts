@@ -27,8 +27,10 @@ i18n
 
 // Mantém o lang do <html> igual ao idioma escolhido, pra o navegador não achar que a página
 // está em outro idioma e oferecer tradução automática.
+// O título da aba (nome do sistema) também acompanha o idioma.
 const syncHtmlLang = (lng: string) => {
   document.documentElement.lang = lng === 'pt' ? 'pt-BR' : lng;
+  document.title = i18n.t('app.name');
 };
 syncHtmlLang(i18n.resolvedLanguage ?? 'pt');
 i18n.on('languageChanged', syncHtmlLang);

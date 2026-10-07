@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "Central de Treinamentos"
+  },
   "common": {
     "loading": "Carregando...",
     "error": "Ocorreu um erro.",
@@ -133,7 +136,16 @@
     "deadline": "Prazo",
     "noMaterials": "Nenhum material cadastrado ainda.",
     "noQuiz": "Este curso não tem quiz de prática.",
-    "cargaHoraria": "Carga horária"
+    "cargaHoraria": "Carga horária",
+    "content": "Conteúdo do curso",
+    "intro": "Apresentação",
+    "lessonsProgress": "{{done}} de {{total}} aulas concluídas",
+    "lessons_one": "{{count}} aula",
+    "lessons_other": "{{count}} aulas",
+    "certificate": "Certificado",
+    "lockedStep": "Conclua as etapas anteriores para liberar",
+    "materials": "Materiais de apoio",
+    "currentStep": "Etapa atual"
   },
   "quiz": {
     "correct": "Correto!",
@@ -144,7 +156,15 @@
     "progress": "Progresso",
     "coursesInTrack": "Cursos desta trilha",
     "completeAll": "Complete todos os cursos para emitir o certificado da trilha.",
-    "downloadCertificate": "Baixar certificado da trilha"
+    "downloadCertificate": "Baixar certificado da trilha",
+    "courses_one": "{{count}} curso",
+    "courses_other": "{{count}} cursos",
+    "percentDone": "{{percent}}% concluído",
+    "startCourse": "Começar",
+    "continueCourse": "Continuar",
+    "reviewCourse": "Revisar",
+    "openCourse": "Abrir",
+    "certificateReady": "Trilha concluída! Seu certificado já está disponível."
   },
   "admin": {
     "cursos": {
@@ -169,7 +189,23 @@
       "correctAnswer": "Correta",
       "alternative": "Alternativa",
       "addAlternative": "Adicionar alternativa",
-      "saveQuiz": "Salvar quiz"
+      "saveQuiz": "Salvar quiz",
+      "stepInfo": "Informações",
+      "stepAulas": "Aulas e materiais",
+      "stepQuiz": "Quiz",
+      "viewAsStudent": "Ver como aluno",
+      "autoSaveHint": "Aulas e materiais são salvos automaticamente ao sair de cada campo.",
+      "descricaoHint": "Aparece na apresentação do curso para o aluno.",
+      "prazoHint": "O prazo começa a contar a partir do primeiro acesso do aluno ao curso.",
+      "lessonN": "Aula {{n}}",
+      "materiais": "Materiais",
+      "materialTitulo": "Título do material",
+      "chooseFile": "Escolher arquivo",
+      "noFile": "Nenhum arquivo escolhido",
+      "markCorrectHint": "Clique no círculo para marcar a alternativa correta.",
+      "quizTitle": "Título do quiz",
+      "noQuestions": "Nenhuma pergunta ainda. Adicione a primeira abaixo.",
+      "unsavedQuiz": "Lembre-se de salvar o quiz depois de editar as perguntas."
     },
     "trilhas": {
       "title": "Trilhas",
@@ -180,7 +216,11 @@
       "assignCourses": "Cursos desta trilha",
       "availableCourses": "Cursos disponíveis",
       "selectedCourses": "Cursos incluídos",
-      "addCourse": "Adicionar curso"
+      "addCourse": "Adicionar curso",
+      "infoTitle": "Informações da trilha",
+      "coursesHint": "Clique em + para incluir um curso e use as setas para definir a ordem em que o aluno deve fazê-los.",
+      "emptySelected": "Nenhum curso incluído ainda.",
+      "emptyAvailable": "Nenhum curso disponível."
     },
     "usuarios": {
       "title": "Usuários",
@@ -252,7 +292,7 @@
       },
       "idioma": {
         "title": "Idioma e sua conta",
-        "body": "No topo da tela você pode trocar o idioma (Português, English, Español) e, no menu do seu nome, sair da conta."
+        "body": "No topo da tela você troca o idioma (Português, English, Español) e o tema (escuro, claro ou do sistema). Clicando no seu nome, você pode alterar seu nome, rever este tour ou sair da conta."
       },
       "relatorios": {
         "title": "Relatórios da equipe",

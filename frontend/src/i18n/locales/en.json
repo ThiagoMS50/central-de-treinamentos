@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "Training Hub"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong.",
@@ -133,7 +136,16 @@
     "deadline": "Deadline",
     "noMaterials": "No materials added yet.",
     "noQuiz": "This course has no practice quiz.",
-    "cargaHoraria": "Duration"
+    "cargaHoraria": "Duration",
+    "content": "Course content",
+    "intro": "Overview",
+    "lessonsProgress": "{{done}} of {{total}} lessons completed",
+    "lessons_one": "{{count}} lesson",
+    "lessons_other": "{{count}} lessons",
+    "certificate": "Certificate",
+    "lockedStep": "Complete the previous steps to unlock",
+    "materials": "Learning materials",
+    "currentStep": "Current step"
   },
   "quiz": {
     "correct": "Correct!",
@@ -144,7 +156,15 @@
     "progress": "Progress",
     "coursesInTrack": "Courses in this track",
     "completeAll": "Complete all courses to issue the track certificate.",
-    "downloadCertificate": "Download track certificate"
+    "downloadCertificate": "Download track certificate",
+    "courses_one": "{{count}} course",
+    "courses_other": "{{count}} courses",
+    "percentDone": "{{percent}}% complete",
+    "startCourse": "Start",
+    "continueCourse": "Continue",
+    "reviewCourse": "Review",
+    "openCourse": "Open",
+    "certificateReady": "Track completed! Your certificate is ready."
   },
   "admin": {
     "cursos": {
@@ -169,7 +189,23 @@
       "correctAnswer": "Correct",
       "alternative": "Option",
       "addAlternative": "Add option",
-      "saveQuiz": "Save quiz"
+      "saveQuiz": "Save quiz",
+      "stepInfo": "Details",
+      "stepAulas": "Lessons & materials",
+      "stepQuiz": "Quiz",
+      "viewAsStudent": "View as student",
+      "autoSaveHint": "Lessons and materials are saved automatically when you leave each field.",
+      "descricaoHint": "Shown to students on the course overview.",
+      "prazoHint": "The deadline starts counting from the student’s first access to the course.",
+      "lessonN": "Lesson {{n}}",
+      "materiais": "Materials",
+      "materialTitulo": "Material title",
+      "chooseFile": "Choose file",
+      "noFile": "No file chosen",
+      "markCorrectHint": "Click the circle to mark the correct answer.",
+      "quizTitle": "Quiz title",
+      "noQuestions": "No questions yet. Add the first one below.",
+      "unsavedQuiz": "Remember to save the quiz after editing the questions."
     },
     "trilhas": {
       "title": "Learning tracks",
@@ -180,7 +216,11 @@
       "assignCourses": "Courses in this track",
       "availableCourses": "Available courses",
       "selectedCourses": "Included courses",
-      "addCourse": "Add course"
+      "addCourse": "Add course",
+      "infoTitle": "Track details",
+      "coursesHint": "Click + to include a course and use the arrows to set the order students should follow.",
+      "emptySelected": "No courses included yet.",
+      "emptyAvailable": "No courses available."
     },
     "usuarios": {
       "title": "Users",
@@ -252,7 +292,7 @@
       },
       "idioma": {
         "title": "Language and your account",
-        "body": "At the top of the screen you can switch language (Português, English, Español) and, from your name's menu, sign out."
+        "body": "At the top of the screen you can switch language (Português, English, Español) and theme (dark, light or system). Click your name to change it, replay this tour or sign out."
       },
       "relatorios": {
         "title": "Team reports",

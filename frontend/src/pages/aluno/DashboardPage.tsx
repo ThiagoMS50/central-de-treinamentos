@@ -92,7 +92,7 @@ export function DashboardPage() {
               <div className="hero-art" aria-hidden="true">
                 <span className="hero-art-deco hero-art-deco-1" />
                 <span className="hero-art-deco hero-art-deco-2" />
-                <CourseThumb id={sugerido.id} titulo={sugerido.titulo} size="lg" />
+                <CourseThumb id={sugerido.id} titulo={sugerido.titulo} size="lg" variant="brand" />
               </div>
             </section>
           )}

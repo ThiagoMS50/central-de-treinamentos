@@ -5,6 +5,7 @@ import { useCriarAulaMutation, useExcluirAulaMutation, useAtualizarAulaMutation 
 import { MateriaisManager } from './MateriaisManager';
 import { EmptyState } from '../ui/Feedback';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
+import { Icon } from '../ui/Icon';
 
 export function AulasManager({ cursoId, aulas }: { cursoId: string; aulas: Aula[] }) {
   const { t } = useTranslation();
@@ -46,52 +47,73 @@ export function AulasManager({ cursoId, aulas }: { cursoId: string; aulas: Aula[
       {aulas.length === 0 && <EmptyState message={t('curso.noAulas')} />}
 
       {aulas.map((aula, index) => (
-        <div key={aula.id} className="aula-card">
-          <div className="aula-admin-row">
-            <div className="reorder-controls">
-              <button
-                type="button"
-                className="btn-icon"
-                disabled={index === 0}
-                onClick={() => mover(index, -1)}
-                aria-label={t('common.moveUp')}
-              >
-                ↑
-              </button>
-              <button
-                type="button"
-                className="btn-icon"
-                disabled={index === aulas.length - 1}
-                onClick={() => mover(index, 1)}
-                aria-label={t('common.moveDown')}
-              >
-                ↓
-              </button>
-            </div>
+        <section key={aula.id} className="aula-editor">
+          <div className="aula-editor-header">
+            <span className="aula-editor-numero">{index + 1}</span>
             <input
               key={aula.id + aula.titulo}
               className="aula-titulo-input"
+              aria-label={t('admin.cursos.lessonN', { n: index + 1 })}
               defaultValue={aula.titulo}
               onBlur={(e) => handleRenomear(aula, e.target.value)}
             />
-            <button type="button" className="btn btn-danger" onClick={() => setAulaParaExcluir(aula)}>
-              {t('common.delete')}
-            </button>
+            <div className="icon-actions">
+              <button
+                type="button"
+                className="icon-button"
+                disabled={index === 0}
+                onClick={() => mover(index, -1)}
+                aria-label={t('common.moveUp')}
+                title={t('common.moveUp')}
+              >
+                <Icon name="arrowUp" size={16} />
+              </button>
+              <button
+                type="button"
+                className="icon-button"
+                disabled={index === aulas.length - 1}
+                onClick={() => mover(index, 1)}
+                aria-label={t('common.moveDown')}
+                title={t('common.moveDown')}
+              >
+                <Icon name="arrowDown" size={16} />
+              </button>
+              <button
+                type="button"
+                className="icon-button icon-button-danger"
+                onClick={() => setAulaParaExcluir(aula)}
+                aria-label={t('common.delete')}
+                title={t('common.delete')}
+              >
+                <Icon name="trash" size={16} />
+              </button>
+            </div>
           </div>
-          <input
-            key={aula.id + (aula.videoUrl ?? '')}
-            className="aula-video-input"
-            placeholder={t('admin.cursos.aulaVideoUrl')}
-            defaultValue={aula.videoUrl ?? ''}
-            onBlur={(e) => handleVideoUrlChange(aula, e.target.value)}
-          />
-          <MateriaisManager cursoId={cursoId} aulaId={aula.id} materiais={aula.materiais} />
-        </div>
+
+          <div className="aula-editor-body">
+            <label className="campo">
+              <span className="campo-label">
+                <Icon name="play" size={14} />
+                {t('admin.cursos.aulaVideoUrl')}
+              </span>
+              <input
+                key={aula.id + (aula.videoUrl ?? '')}
+                type="url"
+                placeholder="https://"
+                defaultValue={aula.videoUrl ?? ''}
+                onBlur={(e) => handleVideoUrlChange(aula, e.target.value)}
+              />
+            </label>
+
+            <MateriaisManager cursoId={cursoId} aulaId={aula.id} materiais={aula.materiais} />
+          </div>
+        </section>
       ))}
 
-      <form onSubmit={handleCriar} className="form-inline">
+      <form onSubmit={handleCriar} className="add-row">
         <input placeholder={t('admin.cursos.aulaTitulo')} value={titulo} onChange={(e) => setTitulo(e.target.value)} />
-        <button type="submit" className="btn btn-secondary" disabled={criarMutation.isPending}>
+        <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || !titulo.trim()}>
+          <Icon name="plus" size={16} />
           {t('admin.cursos.addAula')}
         </button>
       </form>
@@ -99,7 +121,7 @@ export function AulasManager({ cursoId, aulas }: { cursoId: string; aulas: Aula[
       {aulaParaExcluir && (
         <ConfirmDialog
           title={t('common.delete')}
-          message={t('common.confirmDelete')}
+          message={t('common.confirmDeleteNamed', { nome: aulaParaExcluir.titulo })}
           onConfirm={() => {
             excluirMutation.mutate(aulaParaExcluir.id);
             setAulaParaExcluir(null);

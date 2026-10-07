@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "Central de Capacitaciones"
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Ocurrió un error.",
@@ -133,7 +136,16 @@
     "deadline": "Plazo",
     "noMaterials": "Aún no hay materiales agregados.",
     "noQuiz": "Este curso no tiene cuestionario de práctica.",
-    "cargaHoraria": "Duración"
+    "cargaHoraria": "Duración",
+    "content": "Contenido del curso",
+    "intro": "Presentación",
+    "lessonsProgress": "{{done}} de {{total}} clases completadas",
+    "lessons_one": "{{count}} clase",
+    "lessons_other": "{{count}} clases",
+    "certificate": "Certificado",
+    "lockedStep": "Completa las etapas anteriores para desbloquear",
+    "materials": "Materiales de apoyo",
+    "currentStep": "Etapa actual"
   },
   "quiz": {
     "correct": "¡Correcto!",
@@ -144,7 +156,15 @@
     "progress": "Progreso",
     "coursesInTrack": "Cursos de esta ruta",
     "completeAll": "Completa todos los cursos para emitir el certificado de la ruta.",
-    "downloadCertificate": "Descargar certificado de la ruta"
+    "downloadCertificate": "Descargar certificado de la ruta",
+    "courses_one": "{{count}} curso",
+    "courses_other": "{{count}} cursos",
+    "percentDone": "{{percent}}% completado",
+    "startCourse": "Empezar",
+    "continueCourse": "Continuar",
+    "reviewCourse": "Revisar",
+    "openCourse": "Abrir",
+    "certificateReady": "¡Ruta completada! Tu certificado ya está disponible."
   },
   "admin": {
     "cursos": {
@@ -169,7 +189,23 @@
       "correctAnswer": "Correcta",
       "alternative": "Opción",
       "addAlternative": "Agregar opción",
-      "saveQuiz": "Guardar cuestionario"
+      "saveQuiz": "Guardar cuestionario",
+      "stepInfo": "Información",
+      "stepAulas": "Clases y materiales",
+      "stepQuiz": "Quiz",
+      "viewAsStudent": "Ver como alumno",
+      "autoSaveHint": "Las clases y los materiales se guardan automáticamente al salir de cada campo.",
+      "descricaoHint": "Aparece en la presentación del curso para el alumno.",
+      "prazoHint": "El plazo empieza a contar desde el primer acceso del alumno al curso.",
+      "lessonN": "Clase {{n}}",
+      "materiais": "Materiales",
+      "materialTitulo": "Título del material",
+      "chooseFile": "Elegir archivo",
+      "noFile": "Ningún archivo elegido",
+      "markCorrectHint": "Haz clic en el círculo para marcar la alternativa correcta.",
+      "quizTitle": "Título del quiz",
+      "noQuestions": "Aún no hay preguntas. Agrega la primera abajo.",
+      "unsavedQuiz": "Recuerda guardar el quiz después de editar las preguntas."
     },
     "trilhas": {
       "title": "Rutas de aprendizaje",
@@ -180,7 +216,11 @@
       "assignCourses": "Cursos de esta ruta",
       "availableCourses": "Cursos disponibles",
       "selectedCourses": "Cursos incluidos",
-      "addCourse": "Agregar curso"
+      "addCourse": "Agregar curso",
+      "infoTitle": "Información de la ruta",
+      "coursesHint": "Haz clic en + para incluir un curso y usa las flechas para definir el orden que el alumno debe seguir.",
+      "emptySelected": "Aún no hay cursos incluidos.",
+      "emptyAvailable": "No hay cursos disponibles."
     },
     "usuarios": {
       "title": "Usuarios",
@@ -252,7 +292,7 @@
       },
       "idioma": {
         "title": "Idioma y tu cuenta",
-        "body": "En la parte superior puedes cambiar el idioma (Português, English, Español) y, en el menú de tu nombre, cerrar sesión."
+        "body": "En la parte superior cambias el idioma (Português, English, Español) y el tema (oscuro, claro o del sistema). Haciendo clic en tu nombre puedes cambiarlo, ver este tour de nuevo o cerrar sesión."
       },
       "relatorios": {
         "title": "Informes del equipo",

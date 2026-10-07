@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuizQuery, useSalvarQuizMutation, type QuizFormPergunta } from '../../hooks/useQuiz';
 import { useSavedFeedback } from '../../hooks/useSavedFeedback';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
+import { Icon } from '../ui/Icon';
 
 function novaPergunta(ordem: number): QuizFormPergunta {
   return {
@@ -98,67 +99,94 @@ export function QuizBuilder({ cursoId }: { cursoId: string }) {
 
   return (
     <div className="quiz-builder">
-      <label>
-        {t('admin.cursos.quizBuilder')}
+      <label className="campo">
+        <span className="campo-label">{t('admin.cursos.quizTitle')}</span>
         <input value={titulo} onChange={(e) => setTitulo(e.target.value)} />
       </label>
 
+      {perguntas.length === 0 ? (
+        <p className="hint-text">{t('admin.cursos.noQuestions')}</p>
+      ) : (
+        <p className="hint-text">{t('admin.cursos.markCorrectHint')}</p>
+      )}
+
       {perguntas.map((pergunta, pIndex) => (
-        <fieldset key={pIndex} className="quiz-question-editor">
-          <legend>
-            {t('admin.cursos.question')} {pIndex + 1}
-          </legend>
-          <input
+        <section key={pIndex} className="pergunta-editor">
+          <div className="pergunta-editor-header">
+            <span className="pergunta-editor-titulo">
+              {t('admin.cursos.question')} {pIndex + 1}
+            </span>
+            <button
+              type="button"
+              className="icon-button icon-button-danger"
+              onClick={() => setPerguntaParaExcluir(pIndex)}
+              aria-label={t('common.delete')}
+              title={t('common.delete')}
+            >
+              <Icon name="trash" size={16} />
+            </button>
+          </div>
+
+          <textarea
+            rows={2}
             placeholder={t('admin.cursos.question')}
             value={pergunta.enunciado}
             onChange={(e) => atualizarPergunta(pIndex, { enunciado: e.target.value })}
           />
 
-          {pergunta.alternativas.map((alt, aIndex) => (
-            <div key={aIndex} className="quiz-option-editor">
-              <input
-                type="radio"
-                name={`correta-${pIndex}`}
-                checked={alt.correta}
-                onChange={() => marcarCorreta(pIndex, aIndex)}
-                title={t('admin.cursos.correctAnswer')}
-              />
-              <input
-                placeholder={`${t('admin.cursos.alternative')} ${aIndex + 1}`}
-                value={alt.texto}
-                onChange={(e) => atualizarAlternativa(pIndex, aIndex, e.target.value)}
-              />
-              {pergunta.alternativas.length > 2 && (
+          <div className="alternativas-editor">
+            {pergunta.alternativas.map((alt, aIndex) => (
+              <div key={aIndex} className={`alternativa-editor${alt.correta ? ' alternativa-correta' : ''}`}>
                 <button
                   type="button"
-                  className="btn-icon"
-                  onClick={() => removerAlternativa(pIndex, aIndex)}
-                  aria-label={t('common.delete')}
+                  role="radio"
+                  aria-checked={alt.correta}
+                  className="alternativa-marcador"
+                  onClick={() => marcarCorreta(pIndex, aIndex)}
+                  aria-label={t('admin.cursos.correctAnswer')}
+                  title={t('admin.cursos.correctAnswer')}
                 >
-                  ×
+                  {alt.correta && <Icon name="check" size={13} />}
                 </button>
-              )}
-            </div>
-          ))}
+                <input
+                  placeholder={`${t('admin.cursos.alternative')} ${aIndex + 1}`}
+                  value={alt.texto}
+                  onChange={(e) => atualizarAlternativa(pIndex, aIndex, e.target.value)}
+                />
+                {alt.correta && <span className="badge badge-success">{t('admin.cursos.correctAnswer')}</span>}
+                {pergunta.alternativas.length > 2 && (
+                  <button
+                    type="button"
+                    className="icon-button"
+                    onClick={() => removerAlternativa(pIndex, aIndex)}
+                    aria-label={t('common.remove')}
+                    title={t('common.remove')}
+                  >
+                    <Icon name="close" size={14} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
 
-          <button type="button" className="btn btn-secondary" onClick={() => adicionarAlternativa(pIndex)}>
+          <button type="button" className="btn-ghost" onClick={() => adicionarAlternativa(pIndex)}>
+            <Icon name="plus" size={15} />
             {t('admin.cursos.addAlternative')}
           </button>
-          <button type="button" className="btn btn-danger" onClick={() => setPerguntaParaExcluir(pIndex)}>
-            {t('common.delete')}
-          </button>
-        </fieldset>
+        </section>
       ))}
 
-      <button type="button" className="btn btn-secondary" onClick={adicionarPergunta}>
+      <button type="button" className="add-dashed" onClick={adicionarPergunta}>
+        <Icon name="plus" size={16} />
         {t('admin.cursos.addQuestion')}
       </button>
 
-      <div className="form-inline">
+      <div className="form-card-footer form-card-footer-solto">
+        <span className="hint-text">{t('admin.cursos.unsavedQuiz')}</span>
+        {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
         <button type="button" className="btn btn-primary" disabled={salvarMutation.isPending} onClick={handleSalvar}>
           {t('admin.cursos.saveQuiz')}
         </button>
-        {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
       </div>
 
       {perguntaParaExcluir !== null && (

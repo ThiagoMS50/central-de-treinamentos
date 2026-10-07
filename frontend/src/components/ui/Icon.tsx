@@ -22,6 +22,17 @@ const PATHS = {
   user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0',
   edit: 'M4 20h4L19 9l-4-4L4 16v4ZM14 6l4 4',
   chevronDown: 'M6 9l6 6 6-6',
+  file: 'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Zm0 0v5h5',
+  download: 'M12 4v11M7 10l5 5 5-5M5 20h14',
+  book: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Zm0 16a2 2 0 0 1 2-2h13',
+  calendar: 'M4 6h16v14H4V6Zm0 4h16M8 3v4M16 3v4',
+  quiz: 'M9 11l2 2 4-4M5 4h14v16H5V4Z',
+  certificate: 'M5 4h14v11H5V4Zm4 15 3-2 3 2v-4H9v4Zm-1-11h8M8 11h5',
+  info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-11v6m0-9h.01',
+  plus: 'M12 5v14M5 12h14',
+  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+  arrowUp: 'M12 19V5M6 11l6-6 6 6',
+  arrowDown: 'M12 5v14M6 13l6 6 6-6',
   medal:'M8 3h8l-2 6h-4L8 3Zm4 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z',
 } as const;
 

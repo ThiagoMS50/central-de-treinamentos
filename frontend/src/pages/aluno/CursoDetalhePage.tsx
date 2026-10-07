@@ -8,6 +8,8 @@ import { baixarMaterial } from '../../hooks/useMateriais';
 import { baixarCertificadoCurso } from '../../hooks/useCertificados';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { StatusBadge, PrazoBadge } from '../../components/ui/Badge';
+import { ProgressBar } from '../../components/ui/ProgressBar';
+import { Icon, type IconName } from '../../components/ui/Icon';
 import { QuizPratica } from '../../components/QuizPratica';
 import { formatDate } from '../../lib/format';
 import { resolveVideoEmbed } from '../../lib/video';
@@ -29,6 +31,21 @@ function montarSteps(curso: CursoDetail | undefined, ehAdmin: boolean): Step[] {
     ...(!ehAdmin && curso.status === 'concluido' ? [{ kind: 'certificado' as const }] : []),
   ];
 }
+
+// Até onde o aluno pode navegar pelo índice lateral: até a primeira aula ainda não concluída
+// (as aulas são concluídas em ordem, pelo botão Avançar). O Admin revisa e navega livremente.
+function ultimoPassoLiberado(steps: Step[], ehAdmin: boolean) {
+  if (ehAdmin) return steps.length - 1;
+  const primeiraPendente = steps.findIndex((s) => s.kind === 'aula' && !s.aula.concluida);
+  return primeiraPendente === -1 ? steps.length - 1 : primeiraPendente;
+}
+
+const STEP_ICON: Record<Step['kind'], IconName> = {
+  intro: 'info',
+  aula: 'play',
+  quiz: 'quiz',
+  certificado: 'certificate',
+};
 
 export function CursoDetalhePage() {
   const { t, i18n } = useTranslation();
@@ -61,9 +78,13 @@ export function CursoDetalhePage() {
   if (cursoQuery.isError) return <ErrorBanner onRetry={() => cursoQuery.refetch()} />;
   if (!curso) return null;
 
-  const step = steps[Math.min(stepIndex, steps.length - 1)];
+  const indiceAtual = Math.min(stepIndex, steps.length - 1);
+  const step = steps[indiceAtual];
+  const liberadoAte = ultimoPassoLiberado(steps, ehAdmin);
+  const aulasConcluidas = curso.aulas.filter((a) => a.concluida).length;
+  const percentAulas = curso.aulas.length ? Math.round((aulasConcluidas / curso.aulas.length) * 100) : 0;
 
-  const noUltimoPasso = stepIndex >= steps.length - 1;
+  const noUltimoPasso = indiceAtual >= steps.length - 1;
   // Curso sem quiz: ao chegar na última aula, "Avançar" vira "Concluir" e a própria navegação
   // marca a aula (e, com isso, o curso inteiro) como concluída — sem botão separado.
   const eBotaoConcluirCurso = !ehAdmin && step.kind === 'aula' && !step.aula.concluida && noUltimoPasso && !curso.temQuiz;
@@ -75,12 +96,19 @@ export function CursoDetalhePage() {
         // Se essa aula fechou o curso (última aula sem quiz, ou já com quiz respondido antes),
         // o efeito que observa curso.status cuida de pular pro passo de certificado sozinho.
         onSuccess: (res) => {
-          if (!res.cursoConcluido) setStepIndex((s) => s + 1);
+          if (!res.cursoConcluido) setStepIndex(indiceAtual + 1);
         },
       });
       return;
     }
-    setStepIndex((s) => s + 1);
+    setStepIndex(indiceAtual + 1);
+  }
+
+  function rotuloStep(s: Step) {
+    if (s.kind === 'intro') return t('curso.intro');
+    if (s.kind === 'aula') return `${s.numero}. ${s.aula.titulo}`;
+    if (s.kind === 'quiz') return t('curso.quiz');
+    return t('curso.certificate');
   }
 
   return (
@@ -89,98 +117,152 @@ export function CursoDetalhePage() {
         ← {t('common.back')}
       </Link>
 
-      <div className="page-header">
-        <h1>{curso.titulo}</h1>
-        {!ehAdmin && (
-          <div className="card-badges">
-            <StatusBadge status={curso.status} />
-            <PrazoBadge prazoStatus={curso.prazoStatus} />
+      <header className="detalhe-header">
+        <div className="detalhe-header-texto">
+          <h1>{curso.titulo}</h1>
+          <div className="meta-chips">
+            <span className="meta-chip">
+              <Icon name="clock" size={15} />
+              {curso.cargaHorariaHoras} {t('common.hours')}
+            </span>
+            <span className="meta-chip">
+              <Icon name="book" size={15} />
+              {t('curso.lessons', { count: curso.aulas.length })}
+            </span>
+            {!ehAdmin && curso.prazoEm && (
+              <span className="meta-chip">
+                <Icon name="calendar" size={15} />
+                {t('curso.deadline')}: {formatDate(curso.prazoEm, i18n.language)}
+              </span>
+            )}
+            {!ehAdmin && <StatusBadge status={curso.status} />}
+            {!ehAdmin && <PrazoBadge prazoStatus={curso.prazoStatus} />}
+          </div>
+        </div>
+        {!ehAdmin && curso.aulas.length > 0 && (
+          <div className="detalhe-progresso">
+            <span className="detalhe-progresso-label">
+              {t('curso.lessonsProgress', { done: aulasConcluidas, total: curso.aulas.length })}
+            </span>
+            <ProgressBar percent={percentAulas} />
           </div>
         )}
-      </div>
+      </header>
 
-      <div className="wizard">
-        <div className="wizard-content">
-          {step.kind === 'intro' && (
-            <div className="wizard-step">
-              <h2>{t('curso.about')}</h2>
-              {curso.descricao && <p>{curso.descricao}</p>}
-              <div className="curso-meta">
-                <span>
-                  {t('curso.cargaHoraria')}: {curso.cargaHorariaHoras} {t('common.hours')}
-                </span>
-                {!ehAdmin && curso.prazoEm && (
-                  <span>
-                    {t('curso.deadline')}: {formatDate(curso.prazoEm, i18n.language)}
-                  </span>
+      <div className="curso-layout">
+        <aside className="curso-indice" aria-label={t('curso.content')}>
+          <h2 className="curso-indice-titulo">{t('curso.content')}</h2>
+          <ol className="step-list">
+            {steps.map((s, i) => {
+              const bloqueado = i > liberadoAte;
+              const concluido =
+                !ehAdmin &&
+                ((s.kind === 'aula' && s.aula.concluida) ||
+                  (s.kind === 'quiz' && curso.status === 'concluido') ||
+                  (s.kind === 'intro' && i < liberadoAte));
+              return (
+                <li key={i}>
+                  <button
+                    type="button"
+                    className={`step-item${i === indiceAtual ? ' step-item-atual' : ''}${concluido ? ' step-item-ok' : ''}`}
+                    disabled={bloqueado}
+                    aria-current={i === indiceAtual ? 'step' : undefined}
+                    title={bloqueado ? t('curso.lockedStep') : undefined}
+                    onClick={() => setStepIndex(i)}
+                  >
+                    <span className="step-indicador" aria-hidden="true">
+                      <Icon name={bloqueado ? 'lock' : concluido ? 'check' : STEP_ICON[s.kind]} size={14} />
+                    </span>
+                    <span className="step-rotulo">{rotuloStep(s)}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </aside>
+
+        <div className="wizard">
+          <div className="wizard-content">
+            {step.kind === 'intro' && (
+              <div className="wizard-step">
+                <h2>{t('curso.about')}</h2>
+                {curso.descricao ? <p className="curso-descricao">{curso.descricao}</p> : null}
+                {curso.aulas.length === 0 && <EmptyState message={t('curso.noAulas')} />}
+              </div>
+            )}
+
+            {step.kind === 'aula' && (
+              <div className="wizard-step">
+                <div className="aula-card-header">
+                  <h2>
+                    {step.numero}. {step.aula.titulo}
+                  </h2>
+                  {!ehAdmin && step.aula.concluida && <span className="badge badge-success">{t('curso.aulaCompleted')}</span>}
+                </div>
+
+                {step.aula.videoUrl && <AulaVideoPlayer videoUrl={step.aula.videoUrl} titulo={step.aula.titulo} />}
+
+                <h3 className="wizard-subtitulo">{t('curso.materials')}</h3>
+                {step.aula.materiais.length === 0 && <EmptyState message={t('curso.noMaterials')} />}
+                {step.aula.materiais.length > 0 && (
+                  <ul className="material-list">
+                    {step.aula.materiais.map((material) => (
+                      <li key={material.id}>
+                        <span className="material-icone" aria-hidden="true">
+                          <Icon name="file" size={18} />
+                        </span>
+                        <span className="material-titulo">{material.titulo}</span>
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => baixarMaterial(step.aula.id, material.id)}
+                        >
+                          <Icon name="download" size={14} />
+                          {t('curso.downloadMaterial')}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
-              {curso.aulas.length === 0 && <EmptyState message={t('curso.noAulas')} />}
-            </div>
-          )}
+            )}
 
-          {step.kind === 'aula' && (
-            <div className="wizard-step">
-              <div className="aula-card-header">
-                <h2>
-                  {step.numero}. {step.aula.titulo}
-                </h2>
-                {!ehAdmin && step.aula.concluida && <span className="badge badge-success">{t('curso.aulaCompleted')}</span>}
+            {step.kind === 'quiz' && (
+              <div className="wizard-step">
+                {quizQuery.isLoading && <Spinner />}
+                {quizQuery.data && <QuizPratica cursoId={curso.id} quiz={quizQuery.data} />}
               </div>
+            )}
 
-              {step.aula.videoUrl && <AulaVideoPlayer videoUrl={step.aula.videoUrl} titulo={step.aula.titulo} />}
+            {step.kind === 'certificado' && (
+              <div className="wizard-step certificado-step">
+                <span className="certificado-icone" aria-hidden="true">
+                  <Icon name="certificate" size={32} />
+                </span>
+                <h2>{t('curso.completedTitle')}</h2>
+                <p>{t('curso.completedMessage')}</p>
+                <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
+                  <Icon name="download" size={16} />
+                  {t('curso.downloadCertificate')}
+                </button>
+              </div>
+            )}
+          </div>
 
-              {step.aula.materiais.length === 0 && <EmptyState message={t('curso.noMaterials')} />}
-              {step.aula.materiais.length > 0 && (
-                <ul className="material-list">
-                  {step.aula.materiais.map((material) => (
-                    <li key={material.id}>
-                      <span>{material.titulo}</span>
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={() => baixarMaterial(step.aula.id, material.id)}
-                      >
-                        {t('curso.downloadMaterial')}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
-
-          {step.kind === 'quiz' && (
-            <div className="wizard-step">
-              {quizQuery.isLoading && <Spinner />}
-              {quizQuery.data && <QuizPratica cursoId={curso.id} quiz={quizQuery.data} />}
-            </div>
-          )}
-
-          {step.kind === 'certificado' && (
-            <div className="wizard-step">
-              <h2>{t('curso.completedTitle')}</h2>
-              <p>{t('curso.completedMessage')}</p>
-              <button type="button" className="btn btn-primary" onClick={() => baixarCertificadoCurso(curso.id, curso.titulo)}>
-                {t('curso.downloadCertificate')}
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="wizard-nav">
-          <button type="button" className="btn btn-secondary" disabled={stepIndex === 0} onClick={() => setStepIndex((s) => s - 1)}>
-            ← {t('curso.prevStep')}
-          </button>
-          <span className="wizard-progress">{t('curso.stepOf', { current: stepIndex + 1, total: steps.length })}</span>
-          <button
-            type="button"
-            className={eBotaoConcluirCurso ? 'btn btn-primary' : 'btn btn-secondary'}
-            disabled={!podeAvancar || concluirAulaMutation.isPending}
-            onClick={handleAvancar}
-          >
-            {eBotaoConcluirCurso ? t('curso.concluirCurso') : `${t('curso.nextStep')} →`}
-          </button>
+          <div className="wizard-nav">
+            <button type="button" className="btn btn-secondary" disabled={indiceAtual === 0} onClick={() => setStepIndex(indiceAtual - 1)}>
+              ← {t('curso.prevStep')}
+            </button>
+            <span className="wizard-progress">{t('curso.stepOf', { current: indiceAtual + 1, total: steps.length })}</span>
+            <button
+              type="button"
+              className={eBotaoConcluirCurso || (!noUltimoPasso && !ehAdmin) ? 'btn btn-primary' : 'btn btn-secondary'}
+              disabled={!podeAvancar || concluirAulaMutation.isPending}
+              onClick={handleAvancar}
+            >
+              {eBotaoConcluirCurso ? t('curso.concluirCurso') : `${t('curso.nextStep')} →`}
+            </button>
+          </div>
         </div>
       </div>
     </div>
