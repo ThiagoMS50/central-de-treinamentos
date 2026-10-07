@@ -48,7 +48,7 @@ export function LoginPage() {
         <form onSubmit={handleSubmit} className="form">
           <label>
             {t('auth.login.email')}
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type="email" autoFocus autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
           <label>
             {t('auth.login.password')}

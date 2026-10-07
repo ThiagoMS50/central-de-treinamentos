@@ -68,7 +68,7 @@ export function CadastroPage() {
         <form onSubmit={handleSubmit} className="form">
           <label>
             {t('auth.cadastro.nome')}
-            <input required value={nome} onChange={(e) => setNome(e.target.value)} />
+            <input autoFocus autoComplete="name" required value={nome} onChange={(e) => setNome(e.target.value)} />
           </label>
           <label>
             {t('auth.cadastro.email')}

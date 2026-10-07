@@ -2163,11 +2163,12 @@ textarea {
 
 /* ---------- Autenticação ---------- */
 
-/* Duas colunas: arte da marca à esquerda (some no celular) e o formulário à direita. */
+/* Duas colunas: formulário à esquerda (onde o olhar começa, então a tarefa vem primeiro) e a
+   arte da marca à direita, que some no celular. */
 .auth-page {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
+  grid-template-columns: minmax(360px, 520px) minmax(0, 1fr);
   background: var(--color-bg);
 }
 
@@ -2181,6 +2182,8 @@ textarea {
 
 .auth-page::before {
   content: '';
+  grid-column: 2;
+  grid-row: 1;
   background:
     var(--auth-art) center / min(70%, 520px) no-repeat,
     radial-gradient(circle at 25% 30%, rgba(255, 255, 255, 0.28), transparent 35%),
@@ -2213,6 +2216,8 @@ textarea {
 }
 
 .auth-card {
+  grid-column: 1;
+  grid-row: 1;
   align-self: center;
   justify-self: center;
   width: 100%;

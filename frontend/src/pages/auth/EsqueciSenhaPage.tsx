@@ -64,7 +64,7 @@ export function EsqueciSenhaPage() {
         <form onSubmit={handleSubmit} className="form">
           <label>
             {t('auth.esqueciSenha.email')}
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type="email" autoFocus autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
 
           {error && <div className="error-banner">{error}</div>}
