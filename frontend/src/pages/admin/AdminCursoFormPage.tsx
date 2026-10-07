@@ -52,14 +52,16 @@ export function AdminCursoFormPage() {
 
   // Ao criar um curso novo, a página navega direto pra tela de edição — mostramos a confirmação
   // e já abrimos a aba de aulas (o próximo passo natural), usando um sinal passado pelo navigate().
+  // Depende de location.key (e não só da montagem): "novo" e "editar" usam o mesmo componente, e o
+  // React o reaproveita ao navegar de um para o outro — sem isso, a tela não mudava de aba.
   useEffect(() => {
     if ((location.state as { criadoAgora?: boolean } | null)?.criadoAgora) {
       mostrar();
       setAba('aulas');
-      window.history.replaceState({}, '');
+      navigate(location.pathname, { replace: true, state: null });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location.key]);
 
   if (editando && cursoQuery.isLoading) return <Spinner />;
   if (editando && cursoQuery.isError) return <ErrorBanner onRetry={() => cursoQuery.refetch()} />;
