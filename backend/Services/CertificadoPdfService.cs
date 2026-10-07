@@ -122,10 +122,20 @@ public class CertificadoPdfService
         {
             var x = MargemConteudo + i * (larguraCartao + espaco);
             gfx.DrawRoundedRectangle(new XPen(Borda, 1), new XSolidBrush(Superficie), x, y, larguraCartao, 56, 12, 12);
+            // Rótulo e valor centralizados no cartão; o valor diminui se não couber com folga
+            // (ex.: "Central de Treinamentos"), para nunca encostar nas bordas.
+            var centro = new XStringFormat { Alignment = XStringAlignment.Center, LineAlignment = XLineAlignment.Near };
             gfx.DrawString(cartoes[i].Rotulo, new XFont("Jakarta SemiBold", 7.5), new XSolidBrush(TextoSuave),
-                new XPoint(x + 14, y + 13), XStringFormats.TopLeft);
-            gfx.DrawString(cartoes[i].Valor, new XFont("Jakarta", 12, XFontStyle.Bold), new XSolidBrush(Texto),
-                new XPoint(x + 14, y + 29), XStringFormats.TopLeft);
+                new XRect(x, y + 13, larguraCartao, 12), centro);
+            var tamanhoValor = 12.0;
+            var fonteValor = new XFont("Jakarta", tamanhoValor, XFontStyle.Bold);
+            while (gfx.MeasureString(cartoes[i].Valor, fonteValor).Width > larguraCartao - 28 && tamanhoValor > 9)
+            {
+                tamanhoValor -= 0.5;
+                fonteValor = new XFont("Jakarta", tamanhoValor, XFontStyle.Bold);
+            }
+            gfx.DrawString(cartoes[i].Valor, fonteValor, new XSolidBrush(Texto),
+                new XRect(x, y + 29, larguraCartao, 16), centro);
         }
 
         // ---------- Rodapé: assinatura + validação ----------
