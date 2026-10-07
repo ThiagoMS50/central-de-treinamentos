@@ -3585,6 +3585,101 @@ button.missao:hover {
   }
 }
 
+/* Validação pública de certificado (mesmo layout das telas de acesso). */
+.validar-intro {
+  margin: -0.5rem 0 1.25rem;
+  font-size: 0.9rem;
+}
+
+.validar-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.validar-form input {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.validar-resultado {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  animation: tutorial-entrada 0.25s ease-out;
+}
+
+.validar-resultado-topo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.validar-resultado-topo div {
+  display: flex;
+  flex-direction: column;
+}
+
+.validar-resultado-topo span:not(.validar-selo) {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.validar-selo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.validar-ok {
+  border-color: color-mix(in srgb, var(--color-success) 45%, var(--color-border));
+}
+
+.validar-ok .validar-selo {
+  background: var(--color-success);
+}
+
+.validar-falha {
+  border-color: color-mix(in srgb, var(--color-danger) 45%, var(--color-border));
+}
+
+.validar-falha .validar-selo {
+  background: var(--color-danger);
+}
+
+.validar-dados {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem 1rem;
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.88rem;
+}
+
+.validar-dados dt {
+  color: var(--color-text-muted);
+}
+
+.validar-dados dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.validar-codigo {
+  color: var(--color-primary);
+  letter-spacing: 0.04em;
+}
+
 .auth-switch {
   margin-top: 1.5rem;
   font-size: 0.9rem;

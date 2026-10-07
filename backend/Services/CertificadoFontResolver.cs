@@ -5,8 +5,10 @@ namespace LmsApi.Services;
 // PdfSharpCore só consegue usar fontes do sistema operacional (GDI) no Windows. Em produção
 // (container Linux, no Render) não existe nenhuma fonte instalada, então gerar qualquer PDF sem
 // um IFontResolver explícito falha com 500 — mesmo funcionando normalmente no Windows do
-// desenvolvedor. Por isso embarcamos a Liberation Sans (SIL Open Font License, compatível em
-// métrica com a Arial) em Assets/Fonts, para não depender do que estiver instalado no container.
+// desenvolvedor. Por isso as fontes ficam embarcadas em Assets/Fonts (todas SIL Open Font License):
+// - Plus Jakarta Sans: a mesma fonte da interface, usada no certificado (famílias "Jakarta",
+//   "Jakarta Medium", "Jakarta SemiBold", "Jakarta ExtraBold"; "Jakarta" + negrito = Bold).
+// - Liberation Sans (métrica compatível com Arial): reserva para qualquer outro nome de fonte.
 public class CertificadoFontResolver : IFontResolver
 {
     private static readonly string FontsDir = Path.Combine(AppContext.BaseDirectory, "Assets", "Fonts");
@@ -17,12 +19,19 @@ public class CertificadoFontResolver : IFontResolver
 
     public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
     {
-        var faceName = (isBold, isItalic) switch
+        var faceName = familyName switch
         {
-            (true, true) => "LiberationSans-BoldItalic",
-            (true, false) => "LiberationSans-Bold",
-            (false, true) => "LiberationSans-Italic",
-            (false, false) => "LiberationSans-Regular",
+            "Jakarta" => isBold ? "PlusJakartaSans-Bold" : "PlusJakartaSans-Regular",
+            "Jakarta Medium" => "PlusJakartaSans-Medium",
+            "Jakarta SemiBold" => "PlusJakartaSans-SemiBold",
+            "Jakarta ExtraBold" => "PlusJakartaSans-ExtraBold",
+            _ => (isBold, isItalic) switch
+            {
+                (true, true) => "LiberationSans-BoldItalic",
+                (true, false) => "LiberationSans-Bold",
+                (false, true) => "LiberationSans-Italic",
+                (false, false) => "LiberationSans-Regular",
+            },
         };
         return new FontResolverInfo(faceName);
     }

@@ -24,6 +24,24 @@ public class CertificadosController : ControllerBase
         _pdf = pdf;
     }
 
+    // Endereço público da página de validação (vira o QR code do certificado). Usa a origem de quem
+    // pediu o PDF (Referer = a tela do sistema) — em desenvolvimento é o Vite (localhost:5173), em
+    // produção o próprio domínio; sem Referer, cai no host da requisição (respeitando o proxy).
+    private string UrlValidacao(string codigo)
+    {
+        string origem;
+        if (Uri.TryCreate(Request.Headers.Referer.ToString(), UriKind.Absolute, out var referer))
+        {
+            origem = referer.GetLeftPart(UriPartial.Authority);
+        }
+        else
+        {
+            var esquema = Request.Headers["X-Forwarded-Proto"].FirstOrDefault() ?? Request.Scheme;
+            origem = $"{esquema}://{Request.Host}";
+        }
+        return $"{origem}/validar/{Uri.EscapeDataString(codigo)}";
+    }
+
     private static string GerarCodigo() =>
         Convert.ToBase64String(Guid.NewGuid().ToByteArray())
             .ToUpperInvariant()
@@ -59,7 +77,8 @@ public class CertificadosController : ControllerBase
             Titulo = curso.Titulo,
             CargaHorariaHoras = curso.CargaHorariaHoras,
             DataConclusao = matricula.ConcluidoEm.Value,
-            CodigoValidacao = certificado.CodigoValidacao
+            CodigoValidacao = certificado.CodigoValidacao,
+            UrlValidacao = UrlValidacao(certificado.CodigoValidacao)
         });
 
         return File(pdfBytes, "application/pdf", $"certificado-{curso.Titulo}.pdf");
@@ -105,7 +124,8 @@ public class CertificadosController : ControllerBase
             Titulo = trilha.Titulo,
             CargaHorariaHoras = cargaHorariaTotal,
             DataConclusao = dataConclusao,
-            CodigoValidacao = certificado.CodigoValidacao
+            CodigoValidacao = certificado.CodigoValidacao,
+            UrlValidacao = UrlValidacao(certificado.CodigoValidacao)
         });
 
         return File(pdfBytes, "application/pdf", $"certificado-{trilha.Titulo}.pdf");
@@ -155,7 +175,8 @@ public class CertificadosController : ControllerBase
                 Titulo = curso.Titulo,
                 CargaHorariaHoras = curso.CargaHorariaHoras,
                 DataConclusao = matricula?.ConcluidoEm ?? certificado.EmitidoEm,
-                CodigoValidacao = certificado.CodigoValidacao
+                CodigoValidacao = certificado.CodigoValidacao,
+                UrlValidacao = UrlValidacao(certificado.CodigoValidacao)
             });
             return File(pdfBytes, "application/pdf", $"certificado-{curso.Titulo}.pdf");
         }
@@ -174,7 +195,8 @@ public class CertificadosController : ControllerBase
                 Titulo = trilha.Titulo,
                 CargaHorariaHoras = cursos.Sum(c => c.CargaHorariaHoras),
                 DataConclusao = certificado.EmitidoEm,
-                CodigoValidacao = certificado.CodigoValidacao
+                CodigoValidacao = certificado.CodigoValidacao,
+                UrlValidacao = UrlValidacao(certificado.CodigoValidacao)
             });
             return File(pdfBytes, "application/pdf", $"certificado-{trilha.Titulo}.pdf");
         }

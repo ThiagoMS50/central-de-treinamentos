@@ -444,5 +444,20 @@
         "hint": "Acompanhe o progresso de todos"
       }
     }
+  },
+  "validar": {
+    "title": "Validar certificado",
+    "intro": "Confira se um certificado emitido pela Central de Treinamentos é autêntico. O código fica no rodapé do certificado, ao lado do QR code.",
+    "codeLabel": "Código de validação",
+    "submit": "Validar",
+    "validTitle": "Certificado válido",
+    "validBody": "Este certificado foi emitido pela plataforma.",
+    "holder": "Concedido a",
+    "course": "Curso",
+    "track": "Trilha",
+    "issuedAt": "Emitido em",
+    "code": "Código",
+    "invalidTitle": "Certificado não encontrado",
+    "invalidBody": "Confira se o código foi digitado exatamente como aparece no certificado."
   }
 }

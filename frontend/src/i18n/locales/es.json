@@ -444,5 +444,20 @@
         "hint": "Sigue el progreso de todos"
       }
     }
+  },
+  "validar": {
+    "title": "Validar certificado",
+    "intro": "Verifica si un certificado emitido por la Central de Capacitaciones es auténtico. El código está en el pie del certificado, junto al código QR.",
+    "codeLabel": "Código de validación",
+    "submit": "Validar",
+    "validTitle": "Certificado válido",
+    "validBody": "Este certificado fue emitido por la plataforma.",
+    "holder": "Otorgado a",
+    "course": "Curso",
+    "track": "Ruta",
+    "issuedAt": "Emitido el",
+    "code": "Código",
+    "invalidTitle": "Certificado no encontrado",
+    "invalidBody": "Verifica que el código se haya escrito exactamente como aparece en el certificado."
   }
 }

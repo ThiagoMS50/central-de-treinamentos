@@ -444,5 +444,20 @@
         "hint": "Follow everyone's progress"
       }
     }
+  },
+  "validar": {
+    "title": "Validate certificate",
+    "intro": "Check whether a certificate issued by the Training Hub is authentic. The code is in the certificate footer, next to the QR code.",
+    "codeLabel": "Validation code",
+    "submit": "Validate",
+    "validTitle": "Valid certificate",
+    "validBody": "This certificate was issued by the platform.",
+    "holder": "Awarded to",
+    "course": "Course",
+    "track": "Track",
+    "issuedAt": "Issued on",
+    "code": "Code",
+    "invalidTitle": "Certificate not found",
+    "invalidBody": "Make sure the code was typed exactly as it appears on the certificate."
   }
 }

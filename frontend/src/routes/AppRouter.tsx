@@ -20,6 +20,7 @@ import { RelatoriosPage } from '../pages/relatorios/RelatoriosPage';
 import { RankingPage } from '../pages/ranking/RankingPage';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
+import { ValidarCertificadoPage } from '../pages/ValidarCertificadoPage';
 
 export function AppRouter() {
   return (
@@ -34,6 +35,10 @@ export function AppRouter() {
           já deixa o usuário "autenticado", então RedirectIfAuthenticated o mandaria pra /cursos
           antes de trocar a senha, e RequireAuth o mandaria pro /login se o link já tiver expirado. */}
       <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
+
+      {/* Pública, com ou sem login: aberta pelo QR code do certificado. */}
+      <Route path="/validar" element={<ValidarCertificadoPage />} />
+      <Route path="/validar/:codigo" element={<ValidarCertificadoPage />} />
 
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
