@@ -27,6 +27,7 @@
 5. Em **Storage**, crie o bucket `materiais-cursos` (documentos/slides dos cursos) — **deixe como privado** (não marcar "Public bucket"). Os certificados são gerados na hora pelo backend, não precisam de bucket próprio.
    - O bucket `capas` (imagens de capa de cursos e trilhas, **público**) já é criado pelo próprio `schema.sql` — não precisa criar à mão.
 6. **Projeto que já estava rodando antes das capas?** Rode também, no SQL Editor, o conteúdo de [supabase/migration_006_capas.sql](supabase/migration_006_capas.sql) — adiciona a coluna da capa em cursos/trilhas e cria o bucket `capas`. Sem isso, o envio de capa no Admin falha (o resto do sistema continua funcionando, só sem capas).
+7. **Galeria de capas prontas**: em **Storage → capas**, crie a pasta `galeria` e envie para ela as imagens de [supabase/galeria-capas/](supabase/galeria-capas/). Elas aparecem no Admin em "Escolher da galeria". Para acrescentar novas opções no futuro, basta enviar mais imagens (JPG, PNG ou WebP) para essa pasta — não precisa mudar código.
 
 ## 2. Rodar o projeto localmente
 

@@ -52,6 +52,11 @@ public record MaterialDownloadDto(string Url);
 // Resposta do envio/remoção de capa (curso ou trilha). CapaUrl null = sem capa (usa a ilustração padrão).
 public record CapaDto(string? CapaUrl);
 
+// Imagem da galeria de capas prontas: Nome = arquivo (ex.: "seguranca.webp").
+public record CapaGaleriaDto(string Nome, string Url);
+
+public record EscolherCapaGaleriaRequest(string? Nome);
+
 // Status de um curso para um aluno específico — usado no acompanhamento de progresso
 // (Administração/Gestor), com as mesmas convenções de Status/PrazoStatus acima.
 public record ProgressoCursoDto(

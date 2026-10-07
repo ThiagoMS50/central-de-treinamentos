@@ -104,11 +104,11 @@ export function AdminTrilhaFormPage() {
       trilhaId = criada.id;
       // Capa escolhida antes de salvar: envia agora que a trilha existe (se falhar, dá pra
       // reenviar na edição).
-      if (capaPendente.imagem) {
+      if (capaPendente.temEscolha) {
         try {
-          await capa.enviar.mutateAsync({ id: criada.id, arquivo: capaPendente.imagem });
+          await capaPendente.aplicar(criada.id, capa);
         } catch {
-          /* segue */
+          /* dá pra escolher de novo na edição */
         }
       }
     }
@@ -149,9 +149,12 @@ export function AdminTrilhaFormPage() {
                   tipo="trilha"
                   id={id!}
                   capaUrl={trilhaQuery.data?.capaUrl ?? null}
-                  ocupado={capa.enviar.isPending || capa.remover.isPending}
+                  ocupado={capa.ocupado}
                   onArquivo={async (imagem) => {
                     await capa.enviar.mutateAsync({ id: id!, arquivo: imagem });
+                  }}
+                  onGaleria={async (item) => {
+                    await capa.escolherGaleria.mutateAsync({ id: id!, nome: item.nome });
                   }}
                   onRemover={async () => {
                     await capa.remover.mutateAsync(id!);
@@ -162,9 +165,10 @@ export function AdminTrilhaFormPage() {
                   tipo="trilha"
                   id="nova"
                   capaUrl={capaPendente.previa}
-                  onArquivo={capaPendente.definir}
+                  onArquivo={capaPendente.definirArquivo}
+                  onGaleria={capaPendente.definirGaleria}
                   onRemover={capaPendente.limpar}
-                  aviso={capaPendente.imagem ? t('admin.capa.pending') : undefined}
+                  aviso={capaPendente.temEscolha ? t('admin.capa.pending') : undefined}
                 />
               )}
             </div>

@@ -1,3 +1,4 @@
+using LmsApi.Dtos;
 using LmsApi.Services.Supabase;
 
 namespace LmsApi.Services;
@@ -7,6 +8,8 @@ public class CapaService
 {
     public const string Bucket = "capas";
     public const long TamanhoMaximoBytes = 5 * 1024 * 1024;
+    // Ilustrações prontas, compartilhadas entre cursos/trilhas — nunca são apagadas ao trocar a capa.
+    public const string PastaGaleria = "galeria";
 
     private static readonly Dictionary<string, string> ExtensaoPorTipo = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -43,9 +46,29 @@ public class CapaService
         return caminho;
     }
 
+    // Imagens disponíveis na galeria (nome do arquivo + URL pública).
+    public async Task<List<CapaGaleriaDto>> ListarGaleriaAsync()
+    {
+        var nomes = await _storage.ListAsync(Bucket, PastaGaleria);
+        return nomes
+            .Where(n => ExtensaoPorTipo.Values.Any(ext => n.EndsWith("." + ext, StringComparison.OrdinalIgnoreCase)))
+            .Select(n => new CapaGaleriaDto(n, _storage.GetPublicUrl(Bucket, $"{PastaGaleria}/{n}")))
+            .ToList();
+    }
+
+    // Caminho da imagem da galeria, ou null se o nome não existir lá (evita apontar para qualquer
+    // arquivo do bucket a partir de um nome enviado pelo cliente).
+    public async Task<string?> CaminhoDaGaleriaAsync(string? nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome)) return null;
+        var existe = (await _storage.ListAsync(Bucket, PastaGaleria)).Contains(nome);
+        return existe ? $"{PastaGaleria}/{nome}" : null;
+    }
+
     public async Task RemoverAsync(string? capaPath)
     {
         if (string.IsNullOrEmpty(capaPath)) return;
+        if (capaPath.StartsWith(PastaGaleria + "/", StringComparison.Ordinal)) return;
         try { await _storage.DeleteAsync(Bucket, capaPath); }
         catch (SupabaseRestException) { /* melhor esforço — um arquivo órfão não quebra nada */ }
     }

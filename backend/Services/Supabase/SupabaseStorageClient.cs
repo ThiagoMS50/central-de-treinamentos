@@ -60,6 +60,35 @@ public class SupabaseStorageClient : ISupabaseStorageClient
     public string GetPublicUrl(string bucket, string path) =>
         $"{_supabaseUrl}/storage/v1/object/public/{bucket}/{path}";
 
+    public async Task<List<string>> ListAsync(string bucket, string prefix)
+    {
+        var payload = JsonSerializer.Serialize(new
+        {
+            prefix,
+            limit = 1000,
+            offset = 0,
+            sortBy = new { column = "name", order = "asc" }
+        });
+        var request = new HttpRequestMessage(HttpMethod.Post, $"object/list/{bucket}")
+        {
+            Content = new StringContent(payload, Encoding.UTF8, "application/json")
+        };
+
+        var response = await _http.SendAsync(request);
+        var body = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new SupabaseRestException((int)response.StatusCode, body);
+        }
+
+        using var doc = JsonDocument.Parse(body);
+        return doc.RootElement.EnumerateArray()
+            .Select(e => e.GetProperty("name").GetString())
+            .Where(n => !string.IsNullOrEmpty(n) && n != ".emptyFolderPlaceholder")
+            .Select(n => n!)
+            .ToList();
+    }
+
     public async Task DeleteAsync(string bucket, string path)
     {
         var response = await _http.DeleteAsync($"object/{bucket}/{path}");

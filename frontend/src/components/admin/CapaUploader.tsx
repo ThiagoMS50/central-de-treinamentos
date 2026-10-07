@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { CourseThumb } from '../ui/CourseThumb';
 import { Icon } from '../ui/Icon';
 import { ImagemInvalidaError, TIPOS_CAPA, prepararCapa } from '../../lib/imagem';
+import { GaleriaCapasModal } from './GaleriaCapasModal';
+import type { CapaGaleriaItem } from '../../hooks/useCapa';
 
 interface CapaUploaderProps {
   tipo: 'curso' | 'trilha';
@@ -12,16 +14,29 @@ interface CapaUploaderProps {
   ocupado?: boolean;
   // Recebe a imagem já preparada (redimensionada); quem usa decide se envia na hora ou ao salvar.
   onArquivo: (imagem: Blob) => void | Promise<void>;
+  // Recebe a imagem escolhida na galeria de capas prontas.
+  onGaleria: (item: CapaGaleriaItem) => void | Promise<void>;
   onRemover?: () => void | Promise<void>;
   // Mensagem extra abaixo da prévia (ex.: "será enviada ao salvar").
   aviso?: string;
 }
 
-export function CapaUploader({ tipo, id, capaUrl, ocupado, onArquivo, onRemover, aviso }: CapaUploaderProps) {
+export function CapaUploader({ tipo, id, capaUrl, ocupado, onArquivo, onGaleria, onRemover, aviso }: CapaUploaderProps) {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [preparando, setPreparando] = useState(false);
+  const [galeriaAberta, setGaleriaAberta] = useState(false);
+
+  async function handleGaleria(item: CapaGaleriaItem) {
+    setGaleriaAberta(false);
+    setErro(null);
+    try {
+      await onGaleria(item);
+    } catch (err) {
+      setErro(err instanceof Error && err.message ? err.message : t('common.error'));
+    }
+  }
 
   async function handleEscolha(arquivo: File | undefined) {
     if (inputRef.current) inputRef.current.value = '';
@@ -54,6 +69,10 @@ export function CapaUploader({ tipo, id, capaUrl, ocupado, onArquivo, onRemover,
 
         <div className="capa-uploader-acoes">
           <div className="capa-uploader-botoes">
+            <button type="button" className="btn btn-secondary btn-sm" disabled={trabalhando} onClick={() => setGaleriaAberta(true)}>
+              <Icon name="book" size={14} />
+              {t('admin.capa.gallery')}
+            </button>
             <label className={`btn btn-secondary btn-sm${trabalhando ? ' btn-desabilitado' : ''}`}>
               <input
                 ref={inputRef}
@@ -63,7 +82,7 @@ export function CapaUploader({ tipo, id, capaUrl, ocupado, onArquivo, onRemover,
                 onChange={(e) => handleEscolha(e.target.files?.[0])}
               />
               <Icon name="file" size={14} />
-              {capaUrl ? t('admin.capa.change') : t('admin.capa.choose')}
+              {t('admin.capa.choose')}
             </label>
             {capaUrl && onRemover && (
               <button type="button" className="btn btn-danger btn-sm" disabled={trabalhando} onClick={() => onRemover()}>
@@ -78,6 +97,10 @@ export function CapaUploader({ tipo, id, capaUrl, ocupado, onArquivo, onRemover,
           {erro && <span className="capa-uploader-erro">{erro}</span>}
         </div>
       </div>
+
+      {galeriaAberta && (
+        <GaleriaCapasModal capaAtualUrl={capaUrl} onEscolher={handleGaleria} onClose={() => setGaleriaAberta(false)} />
+      )}
     </div>
   );
 }

@@ -1549,6 +1549,66 @@ textarea {
   color: var(--color-danger);
 }
 
+/* Galeria de capas prontas (pop-up). */
+.galeria-dica {
+  margin: 0 0 1rem;
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 0.75rem;
+}
+
+.galeria-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.galeria-item img {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  border-radius: calc(var(--radius-md) - 2px);
+  display: block;
+  transition: transform 0.15s ease;
+}
+
+.galeria-item:hover img {
+  transform: scale(1.03);
+}
+
+.galeria-item:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.galeria-item-atual {
+  border-color: var(--color-primary);
+}
+
+.galeria-item-nome {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 0.3rem 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.galeria-item-atual .galeria-item-nome {
+  color: var(--color-primary);
+}
+
 /* Chave liga/desliga (checkbox estilizado). */
 .prazo-campo {
   display: flex;

@@ -140,6 +140,23 @@ public class CursosController : ControllerBase
         return new CapaDto(_capas.Url(caminho));
     }
 
+    // Usa uma imagem da galeria como capa (a imagem da galeria é compartilhada e não é apagada).
+    [HttpPut("{id:guid}/capa/galeria")]
+    [Authorize(Roles = RoleNames.Admin)]
+    public async Task<ActionResult<CapaDto>> EscolherCapaDaGaleria(Guid id, [FromBody] EscolherCapaGaleriaRequest request)
+    {
+        var caminho = await _capas.CaminhoDaGaleriaAsync(request.Nome);
+        if (caminho is null) return BadRequest(new { message = "Imagem não encontrada na galeria." });
+
+        var curso = await _rest.GetByIdAsync<CursoRow>("cursos", id);
+        if (curso is null) return NotFound();
+
+        await _rest.UpdateAsync<CursoRow>("cursos", PostgrestFilter.Eq("id", id), new { capa_path = caminho });
+        await _capas.RemoverAsync(curso.CapaPath);
+
+        return new CapaDto(_capas.Url(caminho));
+    }
+
     // Remove a capa: o curso volta a usar a ilustração padrão.
     [HttpDelete("{id:guid}/capa")]
     [Authorize(Roles = RoleNames.Admin)]

@@ -73,11 +73,11 @@ export function AdminCursoFormPage() {
       const criado = await criarMutation.mutateAsync(valores);
       // Capa escolhida antes de salvar: envia agora que o curso existe. Se falhar, dá pra
       // reenviar na tela de edição — o curso já foi criado.
-      if (capaPendente.imagem) {
+      if (capaPendente.temEscolha) {
         try {
-          await capa.enviar.mutateAsync({ id: criado.id, arquivo: capaPendente.imagem });
+          await capaPendente.aplicar(criado.id, capa);
         } catch {
-          /* segue para a edição */
+          /* dá pra escolher de novo na edição */
         }
       }
       navigate(`/admin/cursos/${criado.id}/editar`, { replace: true, state: { criadoAgora: true } });
@@ -140,9 +140,12 @@ export function AdminCursoFormPage() {
                   tipo="curso"
                   id={id!}
                   capaUrl={cursoQuery.data?.capaUrl ?? null}
-                  ocupado={capa.enviar.isPending || capa.remover.isPending}
+                  ocupado={capa.ocupado}
                   onArquivo={async (imagem) => {
                     await capa.enviar.mutateAsync({ id: id!, arquivo: imagem });
+                  }}
+                  onGaleria={async (item) => {
+                    await capa.escolherGaleria.mutateAsync({ id: id!, nome: item.nome });
                   }}
                   onRemover={async () => {
                     await capa.remover.mutateAsync(id!);
@@ -153,9 +156,10 @@ export function AdminCursoFormPage() {
                   tipo="curso"
                   id="novo"
                   capaUrl={capaPendente.previa}
-                  onArquivo={capaPendente.definir}
+                  onArquivo={capaPendente.definirArquivo}
+                  onGaleria={capaPendente.definirGaleria}
                   onRemover={capaPendente.limpar}
-                  aviso={capaPendente.imagem ? t('admin.capa.pending') : undefined}
+                  aviso={capaPendente.temEscolha ? t('admin.capa.pending') : undefined}
                 />
               )}
             </div>
@@ -211,7 +215,7 @@ export function AdminCursoFormPage() {
 
           <div className="form-card-footer">
             {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
-            <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending || capa.enviar.isPending}>
+            <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending || capa.ocupado}>
               {t('common.save')}
             </button>
           </div>

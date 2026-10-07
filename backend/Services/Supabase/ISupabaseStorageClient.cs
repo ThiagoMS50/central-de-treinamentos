@@ -7,4 +7,6 @@ public interface ISupabaseStorageClient
     Task DeleteAsync(string bucket, string path);
     // URL fixa de um arquivo num bucket público (não faz chamada HTTP).
     string GetPublicUrl(string bucket, string path);
+    // Nomes dos arquivos dentro de uma "pasta" (prefixo) do bucket, em ordem alfabética.
+    Task<List<string>> ListAsync(string bucket, string prefix);
 }
