@@ -39,7 +39,7 @@ public class PerfisController : ControllerBase
         _authAdmin = authAdmin;
     }
 
-    private static ProfileDto ToDto(ProfileRow row) => new(row.Id, row.Nome, row.Email, row.Role);
+    private static ProfileDto ToDto(ProfileRow row) => new(row.Id, row.Nome, row.Email, row.Role, row.TutorialResetadoEm);
 
     [HttpGet("me")]
     public async Task<ActionResult<ProfileDto>> GetMe()
@@ -132,6 +132,31 @@ public class PerfisController : ControllerBase
     // Exclui o usuário por completo: apaga primeiro no Supabase Auth, o que cascateia sozinho pra
     // profiles e tudo que referencia profiles.id (matrículas, progresso de aulas, respostas de
     // quiz, pontos, badges, certificados) — não sobra rastro nenhum do usuário.
+    // Admin pede para a pessoa ver o tutorial de novo: na próxima vez que ela entrar, o tutorial
+    // abre sozinho (o front compara esta data com quando ela viu o tutorial pela última vez).
+    [HttpPost("{id:guid}/tutorial/redefinir")]
+    [Authorize(Roles = RoleNames.Admin)]
+    public async Task<ActionResult<ProfileDto>> RedefinirTutorial(Guid id)
+    {
+        ProfileRow? atualizado;
+        try
+        {
+            atualizado = await _rest.UpdateAsync<ProfileRow>(
+                "profiles",
+                PostgrestFilter.Eq("id", id),
+                new { tutorial_resetado_em = DateTimeOffset.UtcNow });
+        }
+        catch (SupabaseRestException)
+        {
+            // Coluna ainda não existe no banco (migração 008 não aplicada).
+            return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                new { message = "Recurso indisponível: rode a migração supabase/migration_008_tutorial.sql no Supabase." });
+        }
+
+        if (atualizado is null) return NotFound();
+        return ToDto(atualizado);
+    }
+
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> Excluir(Guid id)

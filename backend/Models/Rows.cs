@@ -10,6 +10,7 @@ public class ProfileRow
     public string Nome { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Role { get; set; } = "aluno";
+    public DateTimeOffset? TutorialResetadoEm { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 }
 

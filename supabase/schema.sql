@@ -11,6 +11,7 @@ create table if not exists public.profiles (
   nome text not null,
   email text not null,
   role text not null default 'aluno' check (role in ('aluno', 'admin')),
+  tutorial_resetado_em timestamptz, -- Admin pediu para a pessoa ver o tutorial de novo
   created_at timestamptz not null default now()
 );
 

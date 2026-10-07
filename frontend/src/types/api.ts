@@ -7,6 +7,8 @@ export interface Profile {
   nome: string;
   email: string;
   role: Role;
+  // Quando o Admin pediu para a pessoa ver o tutorial de novo (null = nunca).
+  tutorialResetadoEm: string | null;
 }
 
 export interface CursoListItem {

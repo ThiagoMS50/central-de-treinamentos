@@ -1,6 +1,7 @@
 namespace LmsApi.Dtos;
 
-public record ProfileDto(Guid Id, string Nome, string Email, string Role);
+// TutorialResetadoEm: quando o Admin pediu para a pessoa ver o tutorial de novo (null = nunca).
+public record ProfileDto(Guid Id, string Nome, string Email, string Role, DateTimeOffset? TutorialResetadoEm);
 
 public record EnsureProfileRequest(string? Nome);
 

@@ -262,7 +262,12 @@
       "startedAt": "Iniciado el",
       "completedAt": "Completado el",
       "deleteTitle": "Eliminar usuario",
-      "confirmDeleteUser": "¿Seguro que quieres eliminar a \"{{nome}}\"? Esto elimina la cuenta y todo el progreso, puntos, certificados y respuestas de cuestionarios de esta persona — no se puede deshacer."
+      "confirmDeleteUser": "¿Seguro que quieres eliminar a \"{{nome}}\"? Esto elimina la cuenta y todo el progreso, puntos, certificados y respuestas de cuestionarios de esta persona — no se puede deshacer.",
+      "resetTutorial": "Restablecer tutorial",
+      "resetTutorialHint": "Hace que el tutorial se abra de nuevo la próxima vez que la persona entre",
+      "resetTutorialAction": "Restablecer",
+      "resetTutorialConfirm": "{{nome}} verá el tutorial automáticamente la próxima vez que entre al sistema. ¿Continuar?",
+      "resetTutorialDone": "¡Listo! {{nome}} verá el tutorial la próxima vez que entre."
     },
     "configuracoes": {
       "title": "Configuración",

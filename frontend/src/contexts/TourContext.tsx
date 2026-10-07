@@ -68,15 +68,21 @@ export const TourContext = createContext<TourContextValue | undefined>(undefined
 
 function markSeen(userId: string) {
   try {
-    localStorage.setItem(STORAGE_PREFIX + userId, '1');
+    localStorage.setItem(STORAGE_PREFIX + userId, new Date().toISOString());
   } catch {
     // localStorage indisponível (ex: navegação privada) — não bloqueia o uso do app
   }
 }
 
-function hasSeen(userId: string): boolean {
+// Viu o tutorial e o Admin não pediu para rever depois disso. Registros antigos ('1', sem data)
+// contam como vistos, a menos que exista uma redefinição.
+function hasSeen(userId: string, resetadoEm: string | null): boolean {
   try {
-    return !!localStorage.getItem(STORAGE_PREFIX + userId);
+    const visto = localStorage.getItem(STORAGE_PREFIX + userId);
+    if (!visto) return false;
+    if (!resetadoEm) return true;
+    const vistoEm = Date.parse(visto);
+    return !Number.isNaN(vistoEm) && vistoEm >= Date.parse(resetadoEm);
   } catch {
     return true;
   }
@@ -100,7 +106,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     definirUsuarioMissoes(profile?.id ?? null);
     if (!profile) return;
-    if (!hasSeen(profile.id)) {
+    if (!hasSeen(profile.id, profile.tutorialResetadoEm)) {
       setStepIndex(0);
       setOpen(true);
     }

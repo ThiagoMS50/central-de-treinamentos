@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useUsuariosQuery, useAtualizarUsuarioMutation, useExcluirUsuarioMutation } from '../../hooks/useUsuarios';
+import {
+  useUsuariosQuery,
+  useAtualizarUsuarioMutation,
+  useExcluirUsuarioMutation,
+  useRedefinirTutorialMutation,
+} from '../../hooks/useUsuarios';
 import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
 import { AdminTabs } from '../../components/admin/AdminTabs';
 import { AlunoProgressoModal } from '../../components/AlunoProgressoModal';
@@ -17,6 +22,9 @@ export function AdminUsuariosPage() {
   const usuariosQuery = useUsuariosQuery();
   const atualizarMutation = useAtualizarUsuarioMutation();
   const excluirMutation = useExcluirUsuarioMutation();
+  const redefinirTutorialMutation = useRedefinirTutorialMutation();
+  const [tutorialParaRedefinir, setTutorialParaRedefinir] = useState<{ id: string; nome: string } | null>(null);
+  const [tutorialRedefinido, setTutorialRedefinido] = useState<string | null>(null);
   const [alunoSelecionado, setAlunoSelecionado] = useState<{ id: string; nome: string } | null>(null);
   const [usuarioParaExcluir, setUsuarioParaExcluir] = useState<{ id: string; nome: string } | null>(null);
 
@@ -26,6 +34,7 @@ export function AdminUsuariosPage() {
 
   const usuarios = usuariosQuery.data;
   const erroExclusao = excluirMutation.error instanceof ApiError ? excluirMutation.error.message : null;
+  const erroTutorial = redefinirTutorialMutation.error instanceof ApiError ? redefinirTutorialMutation.error.message : null;
 
   return (
     <div className="page">
@@ -33,6 +42,12 @@ export function AdminUsuariosPage() {
       <h1>{t('admin.usuarios.title')}</h1>
 
       {erroExclusao && <ErrorBanner message={erroExclusao} />}
+      {erroTutorial && <ErrorBanner message={erroTutorial} />}
+      {tutorialRedefinido && (
+        <div className="success-banner" role="status">
+          {t('admin.usuarios.resetTutorialDone', { nome: tutorialRedefinido })}
+        </div>
+      )}
 
       <div className="table-wrap">
         <table className="data-table">
@@ -68,6 +83,14 @@ export function AdminUsuariosPage() {
                     <button
                       type="button"
                       className="btn btn-secondary"
+                      title={t('admin.usuarios.resetTutorialHint')}
+                      onClick={() => setTutorialParaRedefinir({ id: usuario.id, nome: usuario.nome })}
+                    >
+                      {t('admin.usuarios.resetTutorial')}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
                       onClick={() => setAlunoSelecionado({ id: usuario.id, nome: usuario.nome })}
                     >
                       {t('admin.usuarios.viewProgress')}
@@ -94,6 +117,22 @@ export function AdminUsuariosPage() {
           alunoId={alunoSelecionado.id}
           nome={alunoSelecionado.nome}
           onClose={() => setAlunoSelecionado(null)}
+        />
+      )}
+
+      {tutorialParaRedefinir && (
+        <ConfirmDialog
+          title={t('admin.usuarios.resetTutorial')}
+          message={t('admin.usuarios.resetTutorialConfirm', { nome: tutorialParaRedefinir.nome })}
+          confirmLabel={t('admin.usuarios.resetTutorialAction')}
+          variant="primary"
+          onConfirm={() => {
+            const alvo = tutorialParaRedefinir;
+            setTutorialParaRedefinir(null);
+            setTutorialRedefinido(null);
+            redefinirTutorialMutation.mutate(alvo.id, { onSuccess: () => setTutorialRedefinido(alvo.nome) });
+          }}
+          onCancel={() => setTutorialParaRedefinir(null)}
         />
       )}
 

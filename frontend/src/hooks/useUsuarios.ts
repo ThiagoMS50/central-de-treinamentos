@@ -15,6 +15,15 @@ export function useAtualizarUsuarioMutation() {
   });
 }
 
+// Admin pede para a pessoa ver o tutorial de novo na próxima vez que entrar.
+export function useRedefinirTutorialMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => apiFetch<Profile>(`/perfis/${id}/tutorial/redefinir`, { method: 'POST' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usuarios'] }),
+  });
+}
+
 export function useExcluirUsuarioMutation() {
   const queryClient = useQueryClient();
   return useMutation({

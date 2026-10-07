@@ -262,7 +262,12 @@
       "startedAt": "Iniciado em",
       "completedAt": "Concluído em",
       "deleteTitle": "Excluir usuário",
-      "confirmDeleteUser": "Tem certeza que deseja excluir \"{{nome}}\"? Isso remove a conta e todo o progresso, pontos, certificados e respostas de quiz dessa pessoa — não pode ser desfeito."
+      "confirmDeleteUser": "Tem certeza que deseja excluir \"{{nome}}\"? Isso remove a conta e todo o progresso, pontos, certificados e respostas de quiz dessa pessoa — não pode ser desfeito.",
+      "resetTutorial": "Redefinir tutorial",
+      "resetTutorialHint": "Faz o tutorial abrir de novo na próxima vez que a pessoa entrar",
+      "resetTutorialAction": "Redefinir",
+      "resetTutorialConfirm": "{{nome}} verá o tutorial automaticamente na próxima vez que entrar no sistema. Continuar?",
+      "resetTutorialDone": "Pronto! {{nome}} verá o tutorial na próxima vez que entrar."
     },
     "configuracoes": {
       "title": "Configurações",
