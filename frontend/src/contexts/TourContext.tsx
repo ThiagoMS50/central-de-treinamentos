@@ -5,7 +5,8 @@ import { useCursosQuery } from '../hooks/useCursos';
 import { useConfiguracoesQuery } from '../hooks/useConfiguracoes';
 import { definirUsuarioMissoes, marcarMissao } from '../lib/missoes';
 
-const STORAGE_PREFIX = 'lms_tour_seen_';
+// "v2": o tutorial interativo substituiu o tour antigo — quem só viu o antigo vê o novo uma vez.
+const STORAGE_PREFIX = 'lms_tutorial_v2_seen_';
 
 // Um passo do tutorial (estilo videogame): destaca um elemento real da tela ([data-tour="..."])
 // e explica o que ele faz. Passos com "acao" esperam o usuário clicar no elemento para avançar
