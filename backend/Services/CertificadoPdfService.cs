@@ -95,9 +95,10 @@ public class CertificadoPdfService
         y += 26;
 
         // ---------- Curso/trilha ----------
-        gfx.DrawString(model.EhTrilha ? "concluiu com êxito a trilha de aprendizagem" : "concluiu com êxito o curso",
-            new XFont("Jakarta", 13), new XSolidBrush(TextoSuave), new XPoint(MargemConteudo, y), XStringFormats.TopLeft);
-        y += 22;
+        // Mesmo estilo do "CERTIFICAMOS QUE": as duas frases de ligação formam um par visual.
+        gfx.DrawString(model.EhTrilha ? "CONCLUIU COM ÊXITO A TRILHA DE APRENDIZAGEM" : "CONCLUIU COM ÊXITO O CURSO",
+            new XFont("Jakarta SemiBold", 10), new XSolidBrush(TextoSuave), new XPoint(MargemConteudo, y), XStringFormats.TopLeft);
+        y += 20;
 
         var fonteTitulo = new XFont("Jakarta SemiBold", 21);
         var linhasTitulo = QuebrarLinhas(gfx, model.Titulo, fonteTitulo, larguraConteudo, maxLinhas: 2);
