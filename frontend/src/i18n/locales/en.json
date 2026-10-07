@@ -222,6 +222,18 @@
       "emptySelected": "No courses included yet.",
       "emptyAvailable": "No courses available."
     },
+    "capa": {
+      "title": "Cover image",
+      "hint": "JPG, PNG or WebP, up to 5 MB. A landscape image works best (e.g. 1600 × 700 px).",
+      "default": "Without a cover, the card uses the default illustration.",
+      "choose": "Upload image",
+      "change": "Change image",
+      "remove": "Remove",
+      "sending": "Uploading image...",
+      "pending": "The image will be uploaded when you save.",
+      "invalidType": "Use a JPG, PNG or WebP image.",
+      "tooLarge": "The image can be at most 5 MB."
+    },
     "usuarios": {
       "title": "Users",
       "nome": "Name",

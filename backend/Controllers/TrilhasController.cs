@@ -14,11 +14,13 @@ public class TrilhasController : ControllerBase
 {
     private readonly ISupabaseRestClient _rest;
     private readonly ICurrentUserService _currentUser;
+    private readonly CapaService _capas;
 
-    public TrilhasController(ISupabaseRestClient rest, ICurrentUserService currentUser)
+    public TrilhasController(ISupabaseRestClient rest, ICurrentUserService currentUser, CapaService capas)
     {
         _rest = rest;
         _currentUser = currentUser;
+        _capas = capas;
     }
 
     [HttpGet]
@@ -36,7 +38,7 @@ public class TrilhasController : ControllerBase
             var total = cursoIds.Count;
             var concluidos = cursoIds.Count(id => concluidoPorCurso.Contains(id));
             var progresso = total == 0 ? 0 : (double)concluidos / total * 100;
-            resultado.Add(new TrilhaListItemDto(trilha.Id, trilha.Titulo, trilha.Descricao, total, concluidos, progresso, total > 0 && concluidos == total));
+            resultado.Add(new TrilhaListItemDto(trilha.Id, trilha.Titulo, trilha.Descricao, total, concluidos, progresso, total > 0 && concluidos == total, _capas.Url(trilha.CapaPath)));
         }
 
         return resultado;
@@ -66,8 +68,8 @@ public class TrilhasController : ControllerBase
             var status = matriculaPorCurso.TryGetValue(v.CursoId, out var m)
                 ? (m.ConcluidoEm.HasValue ? "concluido" : "em_andamento")
                 : "nao_iniciado";
-            var titulo = cursosPorId.TryGetValue(v.CursoId, out var curso) ? curso.Titulo : "?";
-            return new TrilhaCursoDto(v.CursoId, titulo, v.Ordem, status);
+            cursosPorId.TryGetValue(v.CursoId, out var curso);
+            return new TrilhaCursoDto(v.CursoId, curso?.Titulo ?? "?", v.Ordem, status, _capas.Url(curso?.CapaPath));
         }).ToList();
 
         var total = cursosDto.Count;
@@ -75,7 +77,7 @@ public class TrilhasController : ControllerBase
         var progresso = total == 0 ? 0 : (double)concluidos / total * 100;
 
         return new TrilhaDetailDto(trilha.Id, trilha.Titulo, trilha.Descricao, total, concluidos, progresso,
-            total > 0 && concluidos == total, cursosDto);
+            total > 0 && concluidos == total, cursosDto, _capas.Url(trilha.CapaPath));
     }
 
     [HttpPost]
@@ -83,7 +85,7 @@ public class TrilhasController : ControllerBase
     public async Task<ActionResult<TrilhaListItemDto>> Criar([FromBody] CreateOrUpdateTrilhaRequest request)
     {
         var criada = await _rest.InsertAsync<TrilhaRow>("trilhas", new { titulo = request.Titulo, descricao = request.Descricao });
-        return new TrilhaListItemDto(criada.Id, criada.Titulo, criada.Descricao, 0, 0, 0, false);
+        return new TrilhaListItemDto(criada.Id, criada.Titulo, criada.Descricao, 0, 0, 0, false, _capas.Url(criada.CapaPath));
     }
 
     [HttpPut("{id:guid}")]
@@ -93,15 +95,50 @@ public class TrilhasController : ControllerBase
         var atualizada = await _rest.UpdateAsync<TrilhaRow>("trilhas", PostgrestFilter.Eq("id", id),
             new { titulo = request.Titulo, descricao = request.Descricao });
         if (atualizada is null) return NotFound();
-        return new TrilhaListItemDto(atualizada.Id, atualizada.Titulo, atualizada.Descricao, 0, 0, 0, false);
+        return new TrilhaListItemDto(atualizada.Id, atualizada.Titulo, atualizada.Descricao, 0, 0, 0, false, _capas.Url(atualizada.CapaPath));
     }
 
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> Excluir(Guid id)
     {
+        var trilha = await _rest.GetByIdAsync<TrilhaRow>("trilhas", id);
         await _rest.DeleteAsync("trilhas", PostgrestFilter.Eq("id", id));
+        await _capas.RemoverAsync(trilha?.CapaPath);
         return NoContent();
+    }
+
+    // Envia (ou troca) a imagem de capa da trilha. A capa anterior é apagada do Storage.
+    [HttpPost("{id:guid}/capa")]
+    [Authorize(Roles = RoleNames.Admin)]
+    [RequestSizeLimit(6_000_000)]
+    public async Task<ActionResult<CapaDto>> EnviarCapa(Guid id, IFormFile? arquivo)
+    {
+        var erro = CapaService.Validar(arquivo);
+        if (erro is not null) return BadRequest(new { message = erro });
+
+        var trilha = await _rest.GetByIdAsync<TrilhaRow>("trilhas", id);
+        if (trilha is null) return NotFound();
+
+        var caminho = await _capas.EnviarAsync("trilhas", id, arquivo!);
+        await _rest.UpdateAsync<TrilhaRow>("trilhas", PostgrestFilter.Eq("id", id), new { capa_path = caminho });
+        await _capas.RemoverAsync(trilha.CapaPath);
+
+        return new CapaDto(_capas.Url(caminho));
+    }
+
+    // Remove a capa: a trilha volta a usar a ilustração padrão.
+    [HttpDelete("{id:guid}/capa")]
+    [Authorize(Roles = RoleNames.Admin)]
+    public async Task<ActionResult<CapaDto>> RemoverCapa(Guid id)
+    {
+        var trilha = await _rest.GetByIdAsync<TrilhaRow>("trilhas", id);
+        if (trilha is null) return NotFound();
+
+        await _rest.UpdateAsync<TrilhaRow>("trilhas", PostgrestFilter.Eq("id", id), new { capa_path = (string?)null });
+        await _capas.RemoverAsync(trilha.CapaPath);
+
+        return new CapaDto(null);
     }
 
     [HttpPut("{id:guid}/cursos")]

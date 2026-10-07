@@ -497,15 +497,58 @@ textarea {
   background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--color-text) 4%, transparent) 0 1px, transparent 1px 14px);
 }
 
-.course-thumb-neutral .course-thumb-letter {
+/* Capa enviada pelo Admin: preenche o espaço, recortando o excesso. */
+.course-thumb-capa {
+  background: var(--color-surface-2);
+}
+
+.course-thumb-capa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Ilustração padrão (sem capa). Cores pelos tokens, então funciona nos dois temas. */
+.ilustracao {
   position: relative;
   z-index: 1;
-  font-weight: 800;
-  background: var(--gradient-brand);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  opacity: 0.75;
+  height: 74%;
+  width: auto;
+  max-width: 88%;
+}
+
+.course-thumb-sm .ilustracao {
+  height: 100%;
+  max-width: 100%;
+}
+
+.course-thumb-lg .ilustracao {
+  height: 64%;
+}
+
+.ilus-traco {
+  stroke: color-mix(in srgb, var(--color-primary) 55%, var(--color-text-muted));
+}
+
+.ilus-fundo {
+  fill: var(--color-surface);
+}
+
+.ilus-suave {
+  fill: var(--color-border);
+}
+
+.ilustracao-clara .ilus-traco {
+  stroke: #fff;
+}
+
+.ilustracao-clara .ilus-fundo {
+  fill: rgba(255, 255, 255, 0.18);
+}
+
+.ilustracao-clara .ilus-suave {
+  fill: rgba(255, 255, 255, 0.35);
 }
 
 /* Marca (destaque do topo): degradê forte com brilho e listras. */
@@ -522,31 +565,18 @@ textarea {
     repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 14px);
 }
 
-.course-thumb-brand .course-thumb-letter {
-  position: relative;
-  z-index: 1;
-  color: rgba(255, 255, 255, 0.92);
-  font-weight: 800;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-}
 
 .course-thumb-sm {
   width: 52px;
   height: 52px;
 }
 
-.course-thumb-sm .course-thumb-letter {
-  font-size: 1.35rem;
-}
 
 .course-thumb-md {
   width: 100%;
   aspect-ratio: 16 / 7;
 }
 
-.course-thumb-md .course-thumb-letter {
-  font-size: 2.6rem;
-}
 
 .course-thumb-lg {
   width: 180px;
@@ -556,9 +586,6 @@ textarea {
   box-shadow: 0 20px 50px rgba(200, 79, 168, 0.35);
 }
 
-.course-thumb-lg .course-thumb-letter {
-  font-size: 5rem;
-}
 
 /* Título e descrição limitados a 2 linhas, e o rodapé (badges/progresso) empurrado para
    baixo: assim os cards de uma mesma linha do grid ficam com o rodapé alinhado. */
@@ -1432,6 +1459,94 @@ textarea {
 
 .form-card-footer-solto .hint-text {
   margin-right: auto;
+}
+
+/* Envio da imagem de capa: prévia no formato do card + ações ao lado. */
+.capa-uploader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.capa-uploader-corpo {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.capa-uploader-previa {
+  position: relative;
+  width: 280px;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.capa-uploader-previa .course-thumb {
+  border-radius: 0;
+}
+
+.capa-uploader-previa-ocupada .course-thumb {
+  opacity: 0.45;
+}
+
+.capa-uploader-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -9px 0 0 -9px;
+}
+
+.capa-uploader-acoes {
+  flex: 1 1 220px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 400;
+}
+
+.capa-uploader-botoes {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+
+/* O botão de arquivo é um <label>: anula o layout em coluna dos rótulos do formulário. */
+.capa-uploader-botoes label.btn {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.capa-uploader-botoes label.btn input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.btn-desabilitado {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.capa-uploader-aviso {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.capa-uploader-erro {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-danger);
 }
 
 /* Chave liga/desliga (checkbox estilizado). */

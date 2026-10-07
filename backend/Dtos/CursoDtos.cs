@@ -11,7 +11,8 @@ public record CursoListItemDto(
     int? PrazoDias,
     string Status,
     string? PrazoStatus,
-    DateTimeOffset? PrazoEm);
+    DateTimeOffset? PrazoEm,
+    string? CapaUrl);
 
 public record MaterialDto(Guid Id, string Titulo, int Ordem);
 
@@ -30,7 +31,8 @@ public record CursoDetailDto(
     string? PrazoStatus,
     DateTimeOffset? PrazoEm,
     bool TemQuiz,
-    List<AulaDto> Aulas);
+    List<AulaDto> Aulas,
+    string? CapaUrl);
 
 public record CreateOrUpdateCursoRequest(
     string Titulo,
@@ -46,6 +48,9 @@ public record CreateOrUpdateAulaRequest(string Titulo, int Ordem, string? VideoU
 public record ConcluirAulaResponse(bool CursoConcluido, List<Guid> TrilhasCompletas);
 
 public record MaterialDownloadDto(string Url);
+
+// Resposta do envio/remoção de capa (curso ou trilha). CapaUrl null = sem capa (usa a ilustração padrão).
+public record CapaDto(string? CapaUrl);
 
 // Status de um curso para um aluno específico — usado no acompanhamento de progresso
 // (Administração/Gestor), com as mesmas convenções de Status/PrazoStatus acima.

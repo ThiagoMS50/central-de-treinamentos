@@ -222,6 +222,18 @@
       "emptySelected": "Aún no hay cursos incluidos.",
       "emptyAvailable": "No hay cursos disponibles."
     },
+    "capa": {
+      "title": "Imagen de portada",
+      "hint": "JPG, PNG o WebP, hasta 5 MB. Mejor una imagen horizontal (ej.: 1600 × 700 px).",
+      "default": "Sin portada, la tarjeta usa la ilustración predeterminada.",
+      "choose": "Subir imagen",
+      "change": "Cambiar imagen",
+      "remove": "Quitar",
+      "sending": "Subiendo imagen...",
+      "pending": "La imagen se subirá cuando guardes.",
+      "invalidType": "Usa una imagen JPG, PNG o WebP.",
+      "tooLarge": "La imagen puede tener como máximo 5 MB."
+    },
     "usuarios": {
       "title": "Usuarios",
       "nome": "Nombre",

@@ -8,6 +8,9 @@ import { AulasManager } from '../../components/admin/AulasManager';
 import { QuizBuilder } from '../../components/admin/QuizBuilder';
 import { AdminTabs } from '../../components/admin/AdminTabs';
 import { useSavedFeedback } from '../../hooks/useSavedFeedback';
+import { useCapaMutations } from '../../hooks/useCapa';
+import { useCapaPendente } from '../../hooks/useCapaPendente';
+import { CapaUploader } from '../../components/admin/CapaUploader';
 
 const VALORES_INICIAIS: CursoFormValues = {
   titulo: '',
@@ -30,6 +33,8 @@ export function AdminCursoFormPage() {
   const criarMutation = useCriarCursoMutation();
   const atualizarMutation = useAtualizarCursoMutation(id ?? '');
   const { salvo, mostrar } = useSavedFeedback();
+  const capa = useCapaMutations('cursos');
+  const capaPendente = useCapaPendente();
 
   const [valores, setValores] = useState<CursoFormValues>(VALORES_INICIAIS);
   const [aba, setAba] = useState<Aba>('info');
@@ -66,6 +71,15 @@ export function AdminCursoFormPage() {
       mostrar();
     } else {
       const criado = await criarMutation.mutateAsync(valores);
+      // Capa escolhida antes de salvar: envia agora que o curso existe. Se falhar, dá pra
+      // reenviar na tela de edição — o curso já foi criado.
+      if (capaPendente.imagem) {
+        try {
+          await capa.enviar.mutateAsync({ id: criado.id, arquivo: capaPendente.imagem });
+        } catch {
+          /* segue para a edição */
+        }
+      }
       navigate(`/admin/cursos/${criado.id}/editar`, { replace: true, state: { criadoAgora: true } });
     }
   }
@@ -120,6 +134,31 @@ export function AdminCursoFormPage() {
       {aba === 'info' && (
         <form onSubmit={handleSubmit} className="form-card">
           <div className="form-grid">
+            <div className="form-grid-full">
+              {editando ? (
+                <CapaUploader
+                  tipo="curso"
+                  id={id!}
+                  capaUrl={cursoQuery.data?.capaUrl ?? null}
+                  ocupado={capa.enviar.isPending || capa.remover.isPending}
+                  onArquivo={async (imagem) => {
+                    await capa.enviar.mutateAsync({ id: id!, arquivo: imagem });
+                  }}
+                  onRemover={async () => {
+                    await capa.remover.mutateAsync(id!);
+                  }}
+                />
+              ) : (
+                <CapaUploader
+                  tipo="curso"
+                  id="novo"
+                  capaUrl={capaPendente.previa}
+                  onArquivo={capaPendente.definir}
+                  onRemover={capaPendente.limpar}
+                  aviso={capaPendente.imagem ? t('admin.capa.pending') : undefined}
+                />
+              )}
+            </div>
             <label className="form-grid-full">
               {t('admin.cursos.titulo')}
               <input
@@ -172,7 +211,7 @@ export function AdminCursoFormPage() {
 
           <div className="form-card-footer">
             {salvo && <span className="saved-banner">✓ {t('common.savedSuccessfully')}</span>}
-            <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending}>
+            <button type="submit" className="btn btn-primary" disabled={criarMutation.isPending || atualizarMutation.isPending || capa.enviar.isPending}>
               {t('common.save')}
             </button>
           </div>

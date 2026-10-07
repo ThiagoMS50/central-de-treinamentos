@@ -14,6 +14,9 @@ import { Spinner, ErrorBanner } from '../../components/ui/Feedback';
 import { AdminTabs } from '../../components/admin/AdminTabs';
 import { useSavedFeedback } from '../../hooks/useSavedFeedback';
 import { Icon } from '../../components/ui/Icon';
+import { useCapaMutations } from '../../hooks/useCapa';
+import { useCapaPendente } from '../../hooks/useCapaPendente';
+import { CapaUploader } from '../../components/admin/CapaUploader';
 
 interface SelecaoCurso {
   cursoId: string;
@@ -34,6 +37,8 @@ export function AdminTrilhaFormPage() {
   const atualizarMutation = useAtualizarTrilhaMutation(id ?? '');
   const queryClient = useQueryClient();
   const { salvo, mostrar } = useSavedFeedback();
+  const capa = useCapaMutations('trilhas');
+  const capaPendente = useCapaPendente();
 
   const [valores, setValores] = useState<TrilhaFormValues>({ titulo: '', descricao: '' });
   const [selecao, setSelecao] = useState<SelecaoCurso[]>([]);
@@ -97,6 +102,15 @@ export function AdminTrilhaFormPage() {
     } else {
       const criada = await criarMutation.mutateAsync(valores);
       trilhaId = criada.id;
+      // Capa escolhida antes de salvar: envia agora que a trilha existe (se falhar, dá pra
+      // reenviar na edição).
+      if (capaPendente.imagem) {
+        try {
+          await capa.enviar.mutateAsync({ id: criada.id, arquivo: capaPendente.imagem });
+        } catch {
+          /* segue */
+        }
+      }
     }
 
     if (trilhaId) {
@@ -129,6 +143,31 @@ export function AdminTrilhaFormPage() {
         <section className="form-card">
           <h2 className="form-card-titulo">{t('admin.trilhas.infoTitle')}</h2>
           <div className="form-grid">
+            <div className="form-grid-full">
+              {editando ? (
+                <CapaUploader
+                  tipo="trilha"
+                  id={id!}
+                  capaUrl={trilhaQuery.data?.capaUrl ?? null}
+                  ocupado={capa.enviar.isPending || capa.remover.isPending}
+                  onArquivo={async (imagem) => {
+                    await capa.enviar.mutateAsync({ id: id!, arquivo: imagem });
+                  }}
+                  onRemover={async () => {
+                    await capa.remover.mutateAsync(id!);
+                  }}
+                />
+              ) : (
+                <CapaUploader
+                  tipo="trilha"
+                  id="nova"
+                  capaUrl={capaPendente.previa}
+                  onArquivo={capaPendente.definir}
+                  onRemover={capaPendente.limpar}
+                  aviso={capaPendente.imagem ? t('admin.capa.pending') : undefined}
+                />
+              )}
+            </div>
             <label className="form-grid-full">
               {t('admin.trilhas.titulo')}
               <input

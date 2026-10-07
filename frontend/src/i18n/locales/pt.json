@@ -222,6 +222,18 @@
       "emptySelected": "Nenhum curso incluído ainda.",
       "emptyAvailable": "Nenhum curso disponível."
     },
+    "capa": {
+      "title": "Imagem de capa",
+      "hint": "JPG, PNG ou WebP, até 5 MB. Prefira uma imagem horizontal (ex.: 1600 × 700 px).",
+      "default": "Sem capa, o card usa a ilustração padrão.",
+      "choose": "Enviar imagem",
+      "change": "Trocar imagem",
+      "remove": "Remover",
+      "sending": "Enviando imagem...",
+      "pending": "A imagem será enviada quando você salvar.",
+      "invalidType": "Use uma imagem JPG, PNG ou WebP.",
+      "tooLarge": "A imagem pode ter no máximo 5 MB."
+    },
     "usuarios": {
       "title": "Usuários",
       "nome": "Nome",

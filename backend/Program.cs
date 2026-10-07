@@ -80,6 +80,7 @@ builder.Services.AddScoped<VisibilidadeService>();
 builder.Services.AddScoped<GamificacaoService>();
 builder.Services.AddScoped<ConfiguracoesService>();
 builder.Services.AddScoped<ProgressoService>();
+builder.Services.AddScoped<CapaService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<CertificadoPdfService>();
 

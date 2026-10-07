@@ -92,7 +92,7 @@ export function DashboardPage() {
               <div className="hero-art" aria-hidden="true">
                 <span className="hero-art-deco hero-art-deco-1" />
                 <span className="hero-art-deco hero-art-deco-2" />
-                <CourseThumb id={sugerido.id} titulo={sugerido.titulo} size="lg" variant="brand" />
+                <CourseThumb id={sugerido.id} capaUrl={sugerido.capaUrl} size="lg" variant="brand" />
               </div>
             </section>
           )}
@@ -109,7 +109,7 @@ export function DashboardPage() {
           <div className="trilha-row">
             {trilhasQuery.data.map((trilha) => (
               <Link key={trilha.id} to={`/trilhas/${trilha.id}`} className="trilha-tile">
-                <CourseThumb id={trilha.id} titulo={trilha.titulo} size="sm" />
+                <CourseThumb id={trilha.id} tipo="trilha" capaUrl={trilha.capaUrl} size="sm" />
                 <div className="trilha-tile-body">
                   <h3>{trilha.titulo}</h3>
                   {ehAdmin ? (
@@ -163,7 +163,7 @@ export function DashboardPage() {
           <div className="card-grid">
             {cursosFiltrados.map((curso) => (
               <Link key={curso.id} to={`/cursos/${curso.id}`} className="card card-link course-card">
-                <CourseThumb id={curso.id} titulo={curso.titulo} />
+                <CourseThumb id={curso.id} capaUrl={curso.capaUrl} />
                 <div className="course-card-body">
                   <h3>{curso.titulo}</h3>
                   {curso.descricao && <p className="card-description">{curso.descricao}</p>}

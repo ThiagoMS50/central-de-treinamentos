@@ -25,6 +25,8 @@
    - **Importante**: por padrão o Supabase exige que a pessoa confirme o e-mail (clicando num link) antes de liberar o acesso. Isso é diferente de "aprovação" (ninguém precisa aprovar manualmente), mas ainda depende do envio de e-mail estar funcionando. Para uma apresentação sem depender de checar caixa de entrada, você pode desligar essa confirmação em **Authentication → Sign In / Providers → Email → "Confirm email"** (desmarcar). Com isso, o cadastro libera acesso imediato.
 4. No **SQL Editor**, cole e rode o conteúdo de [supabase/schema.sql](supabase/schema.sql) — cria todas as tabelas (perfis, cursos, trilhas, matrículas, quiz, certificados) com RLS habilitado (só a `service_role` key do backend acessa).
 5. Em **Storage**, crie o bucket `materiais-cursos` (documentos/slides dos cursos) — **deixe como privado** (não marcar "Public bucket"). Os certificados são gerados na hora pelo backend, não precisam de bucket próprio.
+   - O bucket `capas` (imagens de capa de cursos e trilhas, **público**) já é criado pelo próprio `schema.sql` — não precisa criar à mão.
+6. **Projeto que já estava rodando antes das capas?** Rode também, no SQL Editor, o conteúdo de [supabase/migration_006_capas.sql](supabase/migration_006_capas.sql) — adiciona a coluna da capa em cursos/trilhas e cria o bucket `capas`. Sem isso, o envio de capa no Admin falha (o resto do sistema continua funcionando, só sem capas).
 
 ## 2. Rodar o projeto localmente
 

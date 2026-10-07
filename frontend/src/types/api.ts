@@ -20,6 +20,8 @@ export interface CursoListItem {
   status: CursoStatus;
   prazoStatus: PrazoStatus;
   prazoEm: string | null;
+  // URL pública da imagem de capa; null = sem capa (o front mostra a ilustração padrão).
+  capaUrl: string | null;
 }
 
 export interface Material {
@@ -64,6 +66,7 @@ export interface TrilhaListItem {
   cursosConcluidos: number;
   progressoPercentual: number;
   completa: boolean;
+  capaUrl: string | null;
 }
 
 export interface TrilhaCurso {
@@ -71,6 +74,7 @@ export interface TrilhaCurso {
   titulo: string;
   ordem: number;
   status: CursoStatus;
+  capaUrl: string | null;
 }
 
 export interface TrilhaDetail extends TrilhaListItem {

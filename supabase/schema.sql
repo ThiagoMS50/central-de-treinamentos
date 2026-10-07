@@ -20,6 +20,7 @@ create table if not exists public.trilhas (
   id uuid primary key default gen_random_uuid(),
   titulo text not null,
   descricao text,
+  capa_path text, -- imagem de capa (opcional) no bucket público "capas"
   created_at timestamptz not null default now()
 );
 
@@ -31,6 +32,7 @@ create table if not exists public.cursos (
   carga_horaria_horas numeric(6,2) not null default 0,
   tem_prazo boolean not null default false,
   prazo_dias integer,
+  capa_path text, -- imagem de capa (opcional) no bucket público "capas"
   created_at timestamptz not null default now()
 );
 
@@ -195,3 +197,12 @@ alter table public.configuracoes enable row level security;
 
 insert into public.configuracoes (chave, valor) values ('ranking_habilitado', true)
 on conflict (chave) do nothing;
+
+-- 12. Bucket público das imagens de capa (cursos e trilhas). Imagens de vitrine, sem dado
+-- sensível: URL fixa, usada direto no <img>. Upload/exclusão só pelo backend (service role).
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('capas', 'capas', true, 5242880, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do update
+  set public = excluded.public,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;

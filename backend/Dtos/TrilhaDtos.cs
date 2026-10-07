@@ -7,9 +7,10 @@ public record TrilhaListItemDto(
     int TotalCursos,
     int CursosConcluidos,
     double ProgressoPercentual,
-    bool Completa);
+    bool Completa,
+    string? CapaUrl);
 
-public record TrilhaCursoDto(Guid CursoId, string Titulo, int Ordem, string Status);
+public record TrilhaCursoDto(Guid CursoId, string Titulo, int Ordem, string Status, string? CapaUrl);
 
 public record TrilhaDetailDto(
     Guid Id,
@@ -19,7 +20,8 @@ public record TrilhaDetailDto(
     int CursosConcluidos,
     double ProgressoPercentual,
     bool Completa,
-    List<TrilhaCursoDto> Cursos);
+    List<TrilhaCursoDto> Cursos,
+    string? CapaUrl);
 
 public record CreateOrUpdateTrilhaRequest(string Titulo, string? Descricao);
 

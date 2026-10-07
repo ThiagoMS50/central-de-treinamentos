@@ -85,7 +85,7 @@ export function TrilhaDetalhePage() {
                   {ok ? <Icon name="check" size={14} /> : i + 1}
                 </span>
                 <div className="timeline-card">
-                  <CourseThumb id={curso.cursoId} titulo={curso.titulo} size="sm" />
+                  <CourseThumb id={curso.cursoId} capaUrl={curso.capaUrl} size="sm" />
                   <div className="timeline-card-texto">
                     <h3>{curso.titulo}</h3>
                     {!ehAdmin && <StatusBadge status={curso.status} />}

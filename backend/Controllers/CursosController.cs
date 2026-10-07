@@ -16,20 +16,22 @@ public class CursosController : ControllerBase
     private readonly ISupabaseStorageClient _storage;
     private readonly ICurrentUserService _currentUser;
     private readonly ProgressoService _progresso;
+    private readonly CapaService _capas;
 
-    public CursosController(ISupabaseRestClient rest, ISupabaseStorageClient storage, ICurrentUserService currentUser, ProgressoService progresso)
+    public CursosController(ISupabaseRestClient rest, ISupabaseStorageClient storage, ICurrentUserService currentUser, ProgressoService progresso, CapaService capas)
     {
         _rest = rest;
         _storage = storage;
         _currentUser = currentUser;
         _progresso = progresso;
+        _capas = capas;
     }
 
-    private static CursoListItemDto ToListItemDto(CursoRow curso, MatriculaRow? matricula)
+    private CursoListItemDto ToListItemDto(CursoRow curso, MatriculaRow? matricula)
     {
         var (status, prazoStatus, prazoEm) = ProgressoService.CalcularStatus(curso, matricula);
         return new CursoListItemDto(curso.Id, curso.Titulo, curso.Descricao, curso.CargaHorariaHoras,
-            curso.TemPrazo, curso.PrazoDias, status, prazoStatus, prazoEm);
+            curso.TemPrazo, curso.PrazoDias, status, prazoStatus, prazoEm, _capas.Url(curso.CapaPath));
     }
 
     [HttpGet]
@@ -60,7 +62,8 @@ public class CursosController : ControllerBase
             curso.Id, curso.Titulo, curso.Descricao, curso.CargaHorariaHoras,
             curso.TemPrazo, curso.PrazoDias, status, prazoStatus, prazoEm,
             quizzes.Count > 0,
-            aulas);
+            aulas,
+            _capas.Url(curso.CapaPath));
     }
 
     [HttpPost]
@@ -112,7 +115,42 @@ public class CursosController : ControllerBase
             }
         }
 
+        var curso = await _rest.GetByIdAsync<CursoRow>("cursos", id);
         await _rest.DeleteAsync("cursos", PostgrestFilter.Eq("id", id));
+        await _capas.RemoverAsync(curso?.CapaPath);
         return NoContent();
+    }
+
+    // Envia (ou troca) a imagem de capa do curso. A capa anterior é apagada do Storage.
+    [HttpPost("{id:guid}/capa")]
+    [Authorize(Roles = RoleNames.Admin)]
+    [RequestSizeLimit(6_000_000)]
+    public async Task<ActionResult<CapaDto>> EnviarCapa(Guid id, IFormFile? arquivo)
+    {
+        var erro = CapaService.Validar(arquivo);
+        if (erro is not null) return BadRequest(new { message = erro });
+
+        var curso = await _rest.GetByIdAsync<CursoRow>("cursos", id);
+        if (curso is null) return NotFound();
+
+        var caminho = await _capas.EnviarAsync("cursos", id, arquivo!);
+        await _rest.UpdateAsync<CursoRow>("cursos", PostgrestFilter.Eq("id", id), new { capa_path = caminho });
+        await _capas.RemoverAsync(curso.CapaPath);
+
+        return new CapaDto(_capas.Url(caminho));
+    }
+
+    // Remove a capa: o curso volta a usar a ilustração padrão.
+    [HttpDelete("{id:guid}/capa")]
+    [Authorize(Roles = RoleNames.Admin)]
+    public async Task<ActionResult<CapaDto>> RemoverCapa(Guid id)
+    {
+        var curso = await _rest.GetByIdAsync<CursoRow>("cursos", id);
+        if (curso is null) return NotFound();
+
+        await _rest.UpdateAsync<CursoRow>("cursos", PostgrestFilter.Eq("id", id), new { capa_path = (string?)null });
+        await _capas.RemoverAsync(curso.CapaPath);
+
+        return new CapaDto(null);
     }
 }

@@ -19,6 +19,7 @@ public class TrilhaRow
     public Guid Id { get; set; }
     public string Titulo { get; set; } = string.Empty;
     public string? Descricao { get; set; }
+    public string? CapaPath { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 }
 
@@ -30,6 +31,7 @@ public class CursoRow
     public decimal CargaHorariaHoras { get; set; }
     public bool TemPrazo { get; set; }
     public int? PrazoDias { get; set; }
+    public string? CapaPath { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 }
 
