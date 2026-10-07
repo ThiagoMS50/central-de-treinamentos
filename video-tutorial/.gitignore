@@ -6,3 +6,5 @@ teste-*.mp3
 render-pdf.html
 gravacao.log
 tts.log
+audio-*/
+saida-*/

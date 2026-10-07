@@ -5,9 +5,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { DIR_AUDIO, DIR_SAIDA, META } from './config.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
-const SAIDA = path.join(AQUI, 'saida');
+const SAIDA = DIR_SAIDA;
 const TAXA = 48000;
 const tl = JSON.parse(fs.readFileSync(path.join(SAIDA, 'linha-do-tempo.json'), 'utf8'));
 const total = Math.ceil((tl.duracaoMs / 1000) * TAXA);
@@ -16,7 +17,7 @@ const amostra = (ms) => Math.round((ms / 1000) * TAXA);
 // ---------------------------------------------------------------- Narração
 const voz = new Float32Array(total);
 for (const n of tl.narracoes) {
-  const pcm = execFileSync('ffmpeg', ['-v', 'error', '-i', path.join(AQUI, 'audio', `${n.id}.mp3`), '-f', 'f32le', '-ac', '1', '-ar', String(TAXA), '-'], { maxBuffer: 1 << 30 });
+  const pcm = execFileSync('ffmpeg', ['-v', 'error', '-i', path.join(DIR_AUDIO, `${n.id}.mp3`), '-f', 'f32le', '-ac', '1', '-ar', String(TAXA), '-'], { maxBuffer: 1 << 30 });
   const dados = new Float32Array(pcm.buffer, pcm.byteOffset, pcm.byteLength / 4);
   const ini = amostra(n.ms);
   for (let i = 0; i < dados.length && ini + i < total; i++) voz[ini + i] += dados[i] * 1.05;
@@ -134,7 +135,7 @@ fs.writeFileSync(arqAudio, wav(saida, 2));
 console.log(`áudio mixado (${(total / TAXA / 60).toFixed(1)} min, ganho ${ganho.toFixed(2)})`);
 
 // ---------------------------------------------------------------- Vídeo final
-const final = path.join(SAIDA, 'tutorial-central-de-treinamentos.mp4');
+const final = path.join(SAIDA, META.arquivoFinal);
 execFileSync('ffmpeg', [
   '-y', '-v', 'error', '-i', path.join(SAIDA, 'video.mp4'), '-i', arqAudio,
   '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11', '-ar', '48000',

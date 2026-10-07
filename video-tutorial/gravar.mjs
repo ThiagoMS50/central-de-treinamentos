@@ -6,10 +6,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { CENAS } from './cenas.mjs';
+import { CENAS, DIR_AUDIO, DIR_SAIDA } from './config.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
-const SAIDA = path.join(AQUI, 'saida');
+const SAIDA = DIR_SAIDA;
 fs.mkdirSync(SAIDA, { recursive: true });
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const URL_DEMO = 'http://localhost:5199/demo.html?reiniciar';
@@ -20,7 +20,7 @@ const FPS = 30;
 const MATERIAL_PDF = path.join(AQUI, 'guia-escuta-ativa.pdf');
 const CERTIFICADO_PNG = path.join(AQUI, 'certificado.png');
 
-const duracoes = JSON.parse(fs.readFileSync(path.join(AQUI, 'audio', 'duracoes.json'), 'utf8'));
+const duracoes = JSON.parse(fs.readFileSync(path.join(DIR_AUDIO, 'duracoes.json'), 'utf8'));
 const [idIni, idFim] = process.argv.slice(2);
 const iIni = idIni ? CENAS.findIndex((c) => c.id === idIni) : 0;
 const iFim = idFim ? CENAS.findIndex((c) => c.id === idFim) : CENAS.length - 1;

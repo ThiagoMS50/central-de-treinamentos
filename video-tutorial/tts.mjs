@@ -3,13 +3,13 @@
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
-import { CENAS } from './cenas.mjs';
+import { CENAS, DIR_AUDIO } from './config.mjs';
 
 const require = createRequire(import.meta.url);
 const { MsEdgeTTS, OUTPUT_FORMAT } = require('msedge-tts');
 
 export const VOZ = process.env.VOZ ?? 'pt-BR-ThalitaMultilingualNeural';
-const DIR = new URL('./audio/', import.meta.url);
+const DIR = new URL(`file:///${DIR_AUDIO.replace(/\\/g, '/')}/`);
 fs.mkdirSync(DIR, { recursive: true });
 const arqDuracoes = new URL('duracoes.json', DIR);
 const duracoes = fs.existsSync(arqDuracoes) ? JSON.parse(fs.readFileSync(arqDuracoes, 'utf8')) : {};
