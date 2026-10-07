@@ -2,7 +2,7 @@
 
 Roteiro de direção do tutorial oficial da plataforma: um tour guiado, no estilo de introdução de videogame, para quem nunca usou o sistema. Primeiro o **Administrador**, depois o **Aluno**, em um único vídeo.
 
-> Este documento é gerado a partir de `video-tutorial/${META.arquivoCenas}` — o mesmo arquivo que comanda a gravação. Para mudar uma fala ou uma ação, edite as cenas e gere o vídeo de novo (veja "Como regenerar" no final).
+> Este documento é gerado a partir de `video-tutorial/cenas.mjs` — o mesmo arquivo que comanda a gravação. Para mudar uma fala ou uma ação, edite as cenas e gere o vídeo de novo (veja "Como regenerar" no final).
 
 ## Ficha técnica
 

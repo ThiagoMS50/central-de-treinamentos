@@ -16,7 +16,7 @@ L(`# ${META.titulo}`);
 L();
 L(META.descricao);
 L();
-L('> Este documento é gerado a partir de `video-tutorial/${META.arquivoCenas}` — o mesmo arquivo que comanda a gravação. Para mudar uma fala ou uma ação, edite as cenas e gere o vídeo de novo (veja "Como regenerar" no final).');
+L(`> Este documento é gerado a partir de \`video-tutorial/${META.arquivoCenas}\` — o mesmo arquivo que comanda a gravação. Para mudar uma fala ou uma ação, edite as cenas e gere o vídeo de novo (veja "Como regenerar" no final).`);
 L();
 L('## Ficha técnica');
 L();

@@ -2,7 +2,7 @@
 
 Roteiro do vídeo de apresentação, seguindo o formato do desafio: **Mostre seu LMS** (fluxos do administrador e do aluno), **Conte como construiu** (fácil, difícil e onde a IA ajudou) e **Mostre o ponto forte**.
 
-> Este documento é gerado a partir de `video-tutorial/${META.arquivoCenas}` — o mesmo arquivo que comanda a gravação. Para mudar uma fala ou uma ação, edite as cenas e gere o vídeo de novo (veja "Como regenerar" no final).
+> Este documento é gerado a partir de `video-tutorial/cenas-apresentacao.mjs` — o mesmo arquivo que comanda a gravação. Para mudar uma fala ou uma ação, edite as cenas e gere o vídeo de novo (veja "Como regenerar" no final).
 
 ## Ficha técnica
 
