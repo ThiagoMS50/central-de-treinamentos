@@ -1,0 +1,8 @@
+node_modules/
+saida/
+quadros/
+audio/
+teste-*.mp3
+render-pdf.html
+gravacao.log
+tts.log
