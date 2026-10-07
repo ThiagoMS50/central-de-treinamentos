@@ -58,7 +58,7 @@ public record CapaGaleriaDto(string Nome, string Url);
 public record EscolherCapaGaleriaRequest(string? Nome);
 
 // Status de um curso para um aluno específico — usado no acompanhamento de progresso
-// (Administração/Gestor), com as mesmas convenções de Status/PrazoStatus acima.
+// (Administração), com as mesmas convenções de Status/PrazoStatus acima.
 public record ProgressoCursoDto(
     Guid CursoId,
     string Titulo,

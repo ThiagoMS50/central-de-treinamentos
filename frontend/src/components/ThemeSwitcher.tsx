@@ -3,6 +3,7 @@ import { useTheme } from '../hooks/useTheme';
 import type { ThemeMode } from '../contexts/ThemeContext';
 import { Dropdown, DropdownItem } from './ui/Dropdown';
 import { Icon, type IconName } from './ui/Icon';
+import { marcarMissao } from '../lib/missoes';
 
 const OPCOES: { mode: ThemeMode; icon: IconName }[] = [
   { mode: 'dark', icon: 'moon' },
@@ -25,6 +26,7 @@ export function ThemeSwitcher() {
             icon={<Icon name={opcao.icon} size={16} />}
             onSelect={() => {
               setMode(opcao.mode);
+              marcarMissao('personalizar');
               close();
             }}
           >

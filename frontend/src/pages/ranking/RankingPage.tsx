@@ -6,6 +6,7 @@ import { useConfiguracoesQuery } from '../../hooks/useConfiguracoes';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { ParticipanteDetalheModal } from '../../components/ParticipanteDetalheModal';
 import { Icon } from '../../components/ui/Icon';
+import { marcarMissao } from '../../lib/missoes';
 
 export function RankingPage() {
   const { t } = useTranslation();
@@ -13,6 +14,11 @@ export function RankingPage() {
   const configuracoesQuery = useConfiguracoesQuery();
   const query = useRankingQuery();
   const [participanteSelecionado, setParticipanteSelecionado] = useState<string | null>(null);
+
+  // Missão "Visitar o ranking" (card Primeiros passos).
+  useEffect(() => {
+    marcarMissao('ranking');
+  }, []);
 
   // Se o Admin desativou o ranking, essa tela não deve ficar acessível nem por link direto.
   useEffect(() => {
@@ -33,7 +39,7 @@ export function RankingPage() {
       {query.data && query.data.length === 0 && <EmptyState message={t('ranking.empty')} />}
 
       {query.data && query.data.length > 0 && (
-        <ol className="ranking-lista" aria-label={t('ranking.title')}>
+        <ol className="ranking-lista" aria-label={t('ranking.title')} data-tour="ranking">
           {query.data.map((item) => (
             <li
               key={item.alunoId}

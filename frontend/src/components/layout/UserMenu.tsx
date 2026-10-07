@@ -18,6 +18,7 @@ export function UserMenu() {
     <>
       <Dropdown
         label={t('userMenu.open')}
+        dataTour="conta"
         triggerClassName="user-chip"
         trigger={
           <>

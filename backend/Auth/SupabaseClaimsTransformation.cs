@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace LmsApi.Auth;
 
-// Roda a cada requisição autenticada: busca o perfil (papel/gestor/nome) no Supabase e injeta
+// Roda a cada requisição autenticada: busca o perfil (papel/nome) no Supabase e injeta
 // como claims, para que [Authorize(Roles = ...)] funcione normalmente nos controllers.
 // Se o perfil ainda não existe (usuário acabou de se cadastrar), nenhuma role é adicionada —
 // então rotas com [Authorize(Roles=...)] corretamente barram, mas [Authorize] simples (como o
@@ -45,8 +45,6 @@ public class SupabaseClaimsTransformation : IClaimsTransformation
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, profile.Role));
                 identity.AddClaim(new Claim("nome", profile.Nome));
-                if (profile.ManagerId.HasValue)
-                    identity.AddClaim(new Claim("manager_id", profile.ManagerId.Value.ToString()));
             }
         }
         catch (Exception ex)

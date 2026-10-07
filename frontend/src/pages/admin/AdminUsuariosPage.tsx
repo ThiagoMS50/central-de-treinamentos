@@ -9,7 +9,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { ApiError } from '../../lib/apiClient';
 import type { Role } from '../../types/api';
 
-const PAPEIS: Role[] = ['aluno', 'gestor', 'admin'];
+const PAPEIS: Role[] = ['aluno', 'admin'];
 
 export function AdminUsuariosPage() {
   const { t } = useTranslation();
@@ -41,7 +41,6 @@ export function AdminUsuariosPage() {
               <th>{t('admin.usuarios.nome')}</th>
               <th>{t('admin.usuarios.email')}</th>
               <th>{t('admin.usuarios.role')}</th>
-              <th>{t('admin.usuarios.manager')}</th>
               <th></th>
             </tr>
           </thead>
@@ -54,7 +53,7 @@ export function AdminUsuariosPage() {
                   <select
                     value={usuario.role}
                     onChange={(e) =>
-                      atualizarMutation.mutate({ id: usuario.id, role: e.target.value as Role, managerId: usuario.managerId })
+                      atualizarMutation.mutate({ id: usuario.id, role: e.target.value as Role })
                     }
                   >
                     {PAPEIS.map((papel) => (
@@ -62,27 +61,6 @@ export function AdminUsuariosPage() {
                         {t(`roles.${papel}`)}
                       </option>
                     ))}
-                  </select>
-                </td>
-                <td>
-                  <select
-                    value={usuario.managerId ?? ''}
-                    onChange={(e) =>
-                      atualizarMutation.mutate({
-                        id: usuario.id,
-                        role: usuario.role,
-                        managerId: e.target.value || null,
-                      })
-                    }
-                  >
-                    <option value="">{t('admin.usuarios.none')}</option>
-                    {usuarios
-                      .filter((u) => u.id !== usuario.id)
-                      .map((u) => (
-                        <option key={u.id} value={u.id}>
-                          {u.nome}
-                        </option>
-                      ))}
                   </select>
                 </td>
                 <td>

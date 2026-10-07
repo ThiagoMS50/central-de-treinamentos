@@ -8,8 +8,6 @@ public interface ICurrentUserService
     string Email { get; }
     string? Nome { get; }
     string? Role { get; }
-    Guid? ManagerId { get; }
     bool HasProfile { get; }
     bool IsAdmin { get; }
-    bool IsGestor { get; }
 }

@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCursosQuery } from '../../hooks/useCursos';
 import { useRelatorioDashboardQuery, useResumoPorAlunoQuery, exportarRelatorioCsv, type RelatorioFiltro } from '../../hooks/useRelatorios';
 import { Spinner, EmptyState, ErrorBanner } from '../../components/ui/Feedback';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { AlunoProgressoModal } from '../../components/AlunoProgressoModal';
+import { marcarMissao } from '../../lib/missoes';
 
 export function RelatoriosPage() {
+  // Missão "Ver relatórios" (card Primeiros passos do Admin).
+  useEffect(() => {
+    marcarMissao('relatorios');
+  }, []);
+
   const { t } = useTranslation();
   const cursosQuery = useCursosQuery();
   const [filtro, setFiltro] = useState<RelatorioFiltro>({});
@@ -112,31 +118,6 @@ export function RelatoriosPage() {
             )}
           </section>
 
-          {dashboardQuery.data.progressoPorEquipe.length > 0 && (
-            <section>
-              <h2>{t('relatorios.teamProgress')}</h2>
-              <div className="table-wrap">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>{t('admin.usuarios.manager')}</th>
-                      <th>{t('relatorios.user')}</th>
-                      <th>%</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dashboardQuery.data.progressoPorEquipe.map((eq) => (
-                      <tr key={eq.gestorId}>
-                        <td>{eq.gestorNome}</td>
-                        <td>{eq.totalAlunos}</td>
-                        <td>{eq.progressoMedioPercentual.toFixed(1)}%</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          )}
         </>
       )}
 

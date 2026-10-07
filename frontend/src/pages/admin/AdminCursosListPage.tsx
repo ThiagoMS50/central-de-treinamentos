@@ -17,7 +17,7 @@ export function AdminCursosListPage() {
       <AdminTabs />
       <div className="page-header">
         <h1>{t('admin.cursos.title')}</h1>
-        <Link to="/admin/cursos/novo" className="btn btn-primary">
+        <Link to="/admin/cursos/novo" className="btn btn-primary" data-tour="novo-curso">
           {t('admin.cursos.new')}
         </Link>
       </div>

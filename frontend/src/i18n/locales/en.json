@@ -257,8 +257,6 @@
       "nome": "Name",
       "email": "Email",
       "role": "Role",
-      "manager": "Manager",
-      "none": "None",
       "viewProgress": "View progress",
       "progressTitle": "{{nome}}'s progress",
       "startedAt": "Started on",
@@ -274,7 +272,6 @@
   },
   "roles": {
     "aluno": "Student",
-    "gestor": "Team manager",
     "admin": "Administrator"
   },
   "relatorios": {
@@ -287,50 +284,82 @@
     "completionRate": "Overall completion rate",
     "avgTime": "Average completion time (days)",
     "avgQuizScore": "Average quiz score",
-    "teamProgress": "Progress by team",
     "noData": "No data for the selected filters.",
     "from": "From",
     "to": "To"
   },
   "tour": {
-    "skip": "Skip",
+    "skip": "Skip tutorial",
     "next": "Next",
-    "prev": "Previous",
+    "prev": "Back",
+    "start": "Start",
     "finish": "Finish",
-    "stepCounter": "Step {{current}} of {{total}}",
-    "replay": "Watch tour again",
+    "stepCounter": "Mission {{current}} of {{total}}",
+    "replay": "Replay tutorial",
+    "actionDone": "Nice one!",
+    "doneTitle": "Tutorial complete!",
+    "doneBody": "You now know how to use the platform. Keep going with the \"First steps\" missions on your dashboard.",
+    "doneAction": "Let's go",
     "steps": {
       "welcome": {
-        "title": "Welcome to the Training Hub!",
-        "body": "Let's take a quick tour of the platform's main features. You can skip at any time."
+        "title": "Welcome! 👋",
+        "body": "In under 2 minutes you'll learn how to use the platform. Follow the missions — in some of them, you click to move on."
       },
-      "dashboard": {
-        "title": "Your training",
-        "body": "Here you see every available learning track and course, with each one's status: not started, in progress, or completed."
+      "menu": {
+        "title": "Your menu",
+        "body": "Use it to move between your courses, the ranking and, if you are an admin, platform management."
       },
-      "curso": {
-        "title": "Inside a course",
-        "body": "Opening a course, you move through its lessons with the Previous/Next buttons, downloading each lesson's materials. When the course has a quiz, it shows up as the final step — no attempt limit, but every question needs to be answered correctly."
+      "destaque": {
+        "title": "Your next step",
+        "body": "This highlight shows the most important course for you right now — overdue and in-progress ones come first."
       },
-      "certificado": {
-        "title": "Complete and issue a certificate",
-        "body": "Completing the last lesson (or, if the course has a quiz, answering every question correctly) automatically takes you to the certificate screen — a PDF ready to download right away, with a validation code."
+      "cursos": {
+        "title": "Your courses",
+        "body": "All courses live here. Use the filters to see only in progress, not started or completed."
+      },
+      "abrirCurso": {
+        "title": "Open a course",
+        "body": "Let's see what a course looks like inside.",
+        "action": "Click the highlighted course"
+      },
+      "indice": {
+        "title": "Course content",
+        "body": "Here are the steps: overview, lessons, quiz and certificate. You can go back to finished ones; the next ones unlock as you progress."
+      },
+      "avancar": {
+        "title": "Move through lessons",
+        "body": "Watched the lesson and checked the materials? Click Next to complete it. At the end come the quiz and your certificate."
+      },
+      "irRanking": {
+        "title": "Ranking time",
+        "body": "Completing courses and getting quizzes right earns points and achievements.",
+        "action": "Click Ranking in the menu"
       },
       "ranking": {
-        "title": "Points, achievements and ranking",
-        "body": "You earn points by completing courses, tracks, and correct quiz answers, plus unlock achievements at milestones. Here you see your position on the overall ranking."
+        "title": "Ranking",
+        "body": "See your position, everyone's points and open the details to see achievements."
       },
-      "idioma": {
-        "title": "Language and your account",
-        "body": "At the top of the screen you can switch language (Português, English, Español) and theme (dark, light or system). Click your name to change it, replay this tour or sign out."
+      "irAdmin": {
+        "title": "Administration",
+        "body": "This is where you create courses, tracks and manage users.",
+        "action": "Click Administration in the menu"
+      },
+      "novoCurso": {
+        "title": "Create a course",
+        "body": "Start here: course details, cover, lessons with video and materials, and the quiz."
       },
       "relatorios": {
-        "title": "Team reports",
-        "body": "As a Team manager, you have access to Reports: track your team's progress, see who's overdue, and export the data as CSV."
+        "title": "Reports",
+        "body": "Track course completion, see who is overdue and export the data as CSV."
       },
-      "admin": {
-        "title": "Administration area",
-        "body": "As an Administrator, you also have access to Administration: create courses, lessons, materials, quizzes, learning tracks, and manage each user's role (student, manager, or admin)."
+      "preferencias": {
+        "title": "Your way",
+        "body": "Switch language (Português, English, Español) and theme (dark, light or system) here at the top."
+      },
+      "conta": {
+        "title": "Your account",
+        "body": "From your name you can change how your name appears, replay this tutorial or sign out.",
+        "action": "Click your name"
       }
     }
   },
@@ -367,5 +396,53 @@
     "noneCompleted": "No courses completed yet.",
     "pointsShort": "pts",
     "youLabel": "You"
+  },
+  "missoes": {
+    "title": "First steps",
+    "subtitle": "{{done}} of {{total}} missions completed",
+    "allDone": "All missions completed! 🎉",
+    "hide": "Hide",
+    "items": {
+      "tutorial": {
+        "title": "Take the tutorial",
+        "hint": "Learn the platform in 2 minutes"
+      },
+      "abrirCurso": {
+        "title": "Open your first course",
+        "hint": "Pick a course and get started"
+      },
+      "concluirCurso": {
+        "title": "Complete a course",
+        "hint": "Finish the lessons and earn the certificate"
+      },
+      "ranking": {
+        "title": "Visit the ranking",
+        "hint": "See your position and points"
+      },
+      "conquista": {
+        "title": "Earn your first achievement",
+        "hint": "Complete a course or ace a quiz"
+      },
+      "personalizar": {
+        "title": "Make it yours",
+        "hint": "Change the theme or language at the top"
+      },
+      "criarCurso": {
+        "title": "Create a course",
+        "hint": "Add the first course to the platform"
+      },
+      "capa": {
+        "title": "Set a cover",
+        "hint": "Pick one from the gallery or upload an image"
+      },
+      "criarTrilha": {
+        "title": "Create a track",
+        "hint": "Group courses into a sequence"
+      },
+      "relatorios": {
+        "title": "Check the reports",
+        "hint": "Follow everyone's progress"
+      }
+    }
   }
 }

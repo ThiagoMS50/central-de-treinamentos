@@ -30,16 +30,6 @@ public class CurrentUserService : ICurrentUserService
 
     public string? Role => User.FindFirst(ClaimTypes.Role)?.Value;
 
-    public Guid? ManagerId
-    {
-        get
-        {
-            var raw = User.FindFirst("manager_id")?.Value;
-            return Guid.TryParse(raw, out var id) ? id : null;
-        }
-    }
-
     public bool HasProfile => Role is not null;
     public bool IsAdmin => Role == RoleNames.Admin;
-    public bool IsGestor => Role == RoleNames.Gestor;
 }

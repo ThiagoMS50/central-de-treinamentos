@@ -18,7 +18,7 @@ public class ProgressoService
     }
 
     // Compartilhado com CursosController — mesma regra usada tanto para "meu progresso"
-    // quanto para o acompanhamento de um aluno pela Administração/Gestor.
+    // quanto para o acompanhamento de um aluno pela Administração.
     public static (string status, string? prazoStatus, DateTimeOffset? prazoEm) CalcularStatus(CursoRow curso, MatriculaRow? matricula)
     {
         if (matricula is null) return ("nao_iniciado", null, null);
@@ -32,7 +32,7 @@ public class ProgressoService
     }
 
     // Status de TODOS os cursos para um aluno específico — usado no acompanhamento de progresso
-    // (Administração/Gestor), diferente do "meus pontos" que só lista o que já foi concluído.
+    // (Administração), diferente do "meus pontos" que só lista o que já foi concluído.
     public async Task<List<ProgressoCursoDto>> ObterProgressoDeAlunoAsync(Guid alunoId)
     {
         var cursos = await _rest.SelectAsync<CursoRow>("cursos", order: "created_at.asc");

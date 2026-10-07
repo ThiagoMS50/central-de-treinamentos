@@ -257,8 +257,6 @@
       "nome": "Nome",
       "email": "E-mail",
       "role": "Papel",
-      "manager": "Gestor",
-      "none": "Nenhum",
       "viewProgress": "Ver progresso",
       "progressTitle": "Progresso de {{nome}}",
       "startedAt": "Iniciado em",
@@ -274,7 +272,6 @@
   },
   "roles": {
     "aluno": "Aluno",
-    "gestor": "Gestor de equipe",
     "admin": "Administrador"
   },
   "relatorios": {
@@ -287,50 +284,82 @@
     "completionRate": "Taxa de conclusão geral",
     "avgTime": "Tempo médio de conclusão (dias)",
     "avgQuizScore": "Nota média nos quizzes",
-    "teamProgress": "Progresso por equipe",
     "noData": "Sem dados para os filtros selecionados.",
     "from": "De",
     "to": "Até"
   },
   "tour": {
-    "skip": "Pular",
+    "skip": "Pular tutorial",
     "next": "Próximo",
-    "prev": "Anterior",
+    "prev": "Voltar",
+    "start": "Começar",
     "finish": "Concluir",
-    "stepCounter": "Passo {{current}} de {{total}}",
-    "replay": "Ver tour novamente",
+    "stepCounter": "Missão {{current}} de {{total}}",
+    "replay": "Ver tutorial novamente",
+    "actionDone": "Mandou bem!",
+    "doneTitle": "Tutorial concluído!",
+    "doneBody": "Agora você já sabe usar a plataforma. Continue pelas missões de \"Primeiros passos\" no seu painel.",
+    "doneAction": "Bora começar",
     "steps": {
       "welcome": {
-        "title": "Bem-vindo(a) à Central de Treinamentos!",
-        "body": "Vamos fazer um tour rápido pelas principais funções da plataforma. Você pode pular a qualquer momento."
+        "title": "Bem-vindo(a)! 👋",
+        "body": "Em menos de 2 minutos você vai aprender a usar a plataforma. Siga as missões — em algumas, é você quem clica para avançar."
       },
-      "dashboard": {
-        "title": "Seus treinamentos",
-        "body": "Aqui você vê todas as trilhas e todos os cursos disponíveis, com o status de cada um: não iniciado, em andamento ou concluído."
+      "menu": {
+        "title": "Seu menu",
+        "body": "Por aqui você navega entre seus cursos, o ranking e, se for administrador, a gestão da plataforma."
       },
-      "curso": {
-        "title": "Dentro de um curso",
-        "body": "Ao abrir um curso, você navega pelas aulas com os botões Anterior/Avançar, baixando os materiais de cada uma. Quando o curso tem quiz, ele aparece como a última etapa — sem limite de tentativas, mas é preciso acertar todas as perguntas."
+      "destaque": {
+        "title": "Seu próximo passo",
+        "body": "Este destaque mostra o curso mais importante para você agora — atrasados e em andamento aparecem primeiro."
       },
-      "certificado": {
-        "title": "Concluir e emitir certificado",
-        "body": "Ao concluir a última aula (ou acertar todas as perguntas do quiz, quando o curso tiver um), você é levado automaticamente para a tela do certificado — um PDF disponível para download na hora, com um código de validação."
+      "cursos": {
+        "title": "Seus cursos",
+        "body": "Todos os cursos ficam aqui. Use os filtros para ver só os em andamento, não iniciados ou concluídos."
+      },
+      "abrirCurso": {
+        "title": "Abra um curso",
+        "body": "Vamos ver como é por dentro de um curso.",
+        "action": "Clique no curso destacado"
+      },
+      "indice": {
+        "title": "Conteúdo do curso",
+        "body": "Aqui estão as etapas: apresentação, aulas, quiz e certificado. Você pode voltar às que já fez; as próximas liberam conforme avança."
+      },
+      "avancar": {
+        "title": "Avance nas aulas",
+        "body": "Assistiu à aula e viu os materiais? Clique em Avançar para concluí-la. No fim vem o quiz e o seu certificado."
+      },
+      "irRanking": {
+        "title": "Hora do ranking",
+        "body": "Concluir cursos e acertar quizzes rende pontos e conquistas.",
+        "action": "Clique em Ranking no menu"
       },
       "ranking": {
-        "title": "Pontos, conquistas e ranking",
-        "body": "Você ganha pontos ao concluir cursos, trilhas e acertar perguntas do quiz, além de desbloquear conquistas por marcos. Aqui você vê sua posição no ranking geral."
+        "title": "Ranking",
+        "body": "Veja sua posição, os pontos de cada pessoa e abra os detalhes para ver as conquistas."
       },
-      "idioma": {
-        "title": "Idioma e sua conta",
-        "body": "No topo da tela você troca o idioma (Português, English, Español) e o tema (escuro, claro ou do sistema). Clicando no seu nome, você pode alterar seu nome, rever este tour ou sair da conta."
+      "irAdmin": {
+        "title": "Administração",
+        "body": "É aqui que você cria cursos, trilhas e gerencia os usuários.",
+        "action": "Clique em Administração no menu"
+      },
+      "novoCurso": {
+        "title": "Crie um curso",
+        "body": "Comece por aqui: dados do curso, capa, aulas com vídeo e materiais, e o quiz."
       },
       "relatorios": {
-        "title": "Relatórios da equipe",
-        "body": "Como Gestor, você tem acesso a Relatórios: acompanhe o progresso da sua equipe, veja quem está atrasado e exporte os dados em CSV."
+        "title": "Relatórios",
+        "body": "Acompanhe a conclusão dos cursos, veja quem está atrasado e exporte os dados em CSV."
       },
-      "admin": {
-        "title": "Área de Administração",
-        "body": "Como Administrador, você também tem acesso a Administração: cadastre cursos, aulas, materiais, quizzes, trilhas, e gerencie o papel de cada usuário (aluno, gestor ou admin)."
+      "preferencias": {
+        "title": "Do seu jeito",
+        "body": "Troque o idioma (Português, English, Español) e o tema (escuro, claro ou do sistema) aqui no topo."
+      },
+      "conta": {
+        "title": "Sua conta",
+        "body": "No seu nome você altera como seu nome aparece, revê este tutorial ou sai da conta.",
+        "action": "Clique no seu nome"
       }
     }
   },
@@ -367,5 +396,53 @@
     "noneCompleted": "Nenhum curso concluído ainda.",
     "pointsShort": "pts",
     "youLabel": "Você"
+  },
+  "missoes": {
+    "title": "Primeiros passos",
+    "subtitle": "{{done}} de {{total}} missões concluídas",
+    "allDone": "Todas as missões concluídas! 🎉",
+    "hide": "Ocultar",
+    "items": {
+      "tutorial": {
+        "title": "Fazer o tutorial",
+        "hint": "Aprenda a usar a plataforma em 2 minutos"
+      },
+      "abrirCurso": {
+        "title": "Abrir seu primeiro curso",
+        "hint": "Escolha um curso e comece"
+      },
+      "concluirCurso": {
+        "title": "Concluir um curso",
+        "hint": "Termine as aulas e ganhe o certificado"
+      },
+      "ranking": {
+        "title": "Visitar o ranking",
+        "hint": "Veja sua posição e seus pontos"
+      },
+      "conquista": {
+        "title": "Ganhar sua primeira conquista",
+        "hint": "Conclua um curso ou acerte um quiz"
+      },
+      "personalizar": {
+        "title": "Deixar do seu jeito",
+        "hint": "Troque o tema ou o idioma no topo da tela"
+      },
+      "criarCurso": {
+        "title": "Criar um curso",
+        "hint": "Cadastre o primeiro curso da plataforma"
+      },
+      "capa": {
+        "title": "Definir uma capa",
+        "hint": "Escolha da galeria ou envie uma imagem"
+      },
+      "criarTrilha": {
+        "title": "Criar uma trilha",
+        "hint": "Agrupe cursos numa sequência"
+      },
+      "relatorios": {
+        "title": "Ver os relatórios",
+        "hint": "Acompanhe o progresso de todos"
+      }
+    }
   }
 }

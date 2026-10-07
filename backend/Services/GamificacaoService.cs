@@ -225,7 +225,7 @@ public class GamificacaoService
         pontosPorAluno = pontosPorAluno.Where(kv => !idsAdmin.Contains(kv.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
         var nomesPorId = profiles.ToDictionary(p => p.Id, p => p.Nome);
 
-        // Visibilidade dos detalhes: aluno só o próprio, gestor o próprio + liderados, admin todos.
+        // Visibilidade dos detalhes: aluno só o próprio, admin todos.
         var podeVerDetalhes = await _visibilidade.ResolverAsync(chamadorId);
 
         var ranking = pontosPorAluno

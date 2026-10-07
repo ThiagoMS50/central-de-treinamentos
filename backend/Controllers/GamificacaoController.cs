@@ -43,7 +43,7 @@ public class GamificacaoController : ControllerBase
 
     // Detalhe de um participante (cursos/trilhas concluídos + pontos de cada um + conquistas),
     // usado no pop-up que abre ao clicar em alguém no ranking. Visibilidade: aluno só o próprio,
-    // gestor o próprio + liderados, admin qualquer um.
+    // admin qualquer um.
     [HttpGet("participante/{alunoId:guid}")]
     public async Task<ActionResult<DetalheParticipanteDto>> Participante(Guid alunoId)
     {

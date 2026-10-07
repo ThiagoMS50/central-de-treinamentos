@@ -9,6 +9,7 @@ import { ProgressBar } from '../../components/ui/ProgressBar';
 import { CourseThumb } from '../../components/ui/CourseThumb';
 import { Icon } from '../../components/ui/Icon';
 import { GamificacaoWidget } from '../../components/GamificacaoWidget';
+import { MissoesCard } from '../../components/MissoesCard';
 import { useAuth } from '../../hooks/useAuth';
 import { useConfiguracoesQuery } from '../../hooks/useConfiguracoes';
 import type { CursoListItem, CursoStatus } from '../../types/api';
@@ -67,7 +68,7 @@ export function DashboardPage() {
       {(sugerido || mostrarGamificacao) && (
         <div className={`dashboard-top${sugerido && mostrarGamificacao ? ' dashboard-top-split' : ''}`}>
           {sugerido && (
-            <section className="hero">
+            <section className="hero" data-tour="destaque">
               <div className="hero-text">
                 <span className="hero-eyebrow">
                   {sugerido.prazoStatus === 'atrasado'
@@ -99,6 +100,8 @@ export function DashboardPage() {
           {mostrarGamificacao && <GamificacaoWidget />}
         </div>
       )}
+
+      <MissoesCard />
 
       <section>
         <h2 className="section-title">{ehAdmin ? t('dashboard.trilhasTitleAdmin') : t('dashboard.trilhasTitle')}</h2>
@@ -132,7 +135,7 @@ export function DashboardPage() {
         )}
       </section>
 
-      <section>
+      <section data-tour="cursos">
         <div className="section-header">
           <h2 className="section-title">{t('dashboard.cursosTitle')}</h2>
           {!ehAdmin && cursosBuscados.length > 0 && (
@@ -161,8 +164,13 @@ export function DashboardPage() {
         )}
         {cursosFiltrados.length > 0 && (
           <div className="card-grid">
-            {cursosFiltrados.map((curso) => (
-              <Link key={curso.id} to={`/cursos/${curso.id}`} className="card card-link course-card">
+            {cursosFiltrados.map((curso, i) => (
+              <Link
+                key={curso.id}
+                to={`/cursos/${curso.id}`}
+                className="card card-link course-card"
+                data-tour={i === 0 ? 'primeiro-curso' : undefined}
+              >
                 <CourseThumb id={curso.id} capaUrl={curso.capaUrl} />
                 <div className="course-card-body">
                   <h3>{curso.titulo}</h3>

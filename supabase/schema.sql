@@ -10,8 +10,7 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   nome text not null,
   email text not null,
-  role text not null default 'aluno' check (role in ('aluno', 'gestor', 'admin')),
-  manager_id uuid references public.profiles(id) on delete set null,
+  role text not null default 'aluno' check (role in ('aluno', 'admin')),
   created_at timestamptz not null default now()
 );
 
@@ -158,7 +157,6 @@ create index if not exists idx_materiais_aula on public.materiais(aula_id);
 create index if not exists idx_aula_progresso_aluno on public.aula_progresso(aluno_id);
 create index if not exists idx_matriculas_curso on public.matriculas(curso_id);
 create index if not exists idx_matriculas_aluno on public.matriculas(aluno_id);
-create index if not exists idx_profiles_manager on public.profiles(manager_id);
 create index if not exists idx_pontos_eventos_aluno on public.pontos_eventos(aluno_id);
 
 -- RLS: habilitado em tudo, sem policies — só a service_role key (backend) acessa.

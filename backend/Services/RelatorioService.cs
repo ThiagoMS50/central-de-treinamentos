@@ -33,19 +33,13 @@ public class RelatorioService
         List<RespostaQuizRow> Respostas,
         List<AlternativaRow> Alternativas);
 
-    private async Task<DadosBrutos> CarregarAsync(RelatorioFiltro filtro, List<Guid>? escopoAlunoIds)
+    private async Task<DadosBrutos> CarregarAsync(RelatorioFiltro filtro)
     {
         var profiles = await _rest.SelectAsync<ProfileRow>("profiles");
         var cursos = await _rest.SelectAsync<CursoRow>("cursos");
         var matriculas = await _rest.SelectAsync<MatriculaRow>("matriculas");
         var respostas = await _rest.SelectAsync<RespostaQuizRow>("respostas_quiz");
         var alternativas = await _rest.SelectAsync<AlternativaRow>("alternativas");
-
-        if (escopoAlunoIds is not null)
-        {
-            var escopoSet = escopoAlunoIds.ToHashSet();
-            matriculas = matriculas.Where(m => escopoSet.Contains(m.AlunoId)).ToList();
-        }
 
         if (filtro.CursoId.HasValue)
             matriculas = matriculas.Where(m => m.CursoId == filtro.CursoId.Value).ToList();
@@ -59,10 +53,9 @@ public class RelatorioService
         return new DadosBrutos(profiles, cursos, matriculas, respostas, alternativas);
     }
 
-    public async Task<RelatorioDashboardDto> GerarDashboardAsync(RelatorioFiltro filtro, List<Guid>? escopoAlunoIds)
+    public async Task<RelatorioDashboardDto> GerarDashboardAsync(RelatorioFiltro filtro)
     {
-        var dados = await CarregarAsync(filtro, escopoAlunoIds);
-        var profilesPorId = dados.Profiles.ToDictionary(p => p.Id);
+        var dados = await CarregarAsync(filtro);
 
         var totalMatriculas = dados.Matriculas.Count;
         var totalConcluidas = dados.Matriculas.Count(m => m.ConcluidoEm.HasValue);
@@ -74,47 +67,27 @@ public class RelatorioService
             .Average();
 
         var alternativasPorId = dados.Alternativas.ToDictionary(a => a.Id);
-        var respostasEscopo = escopoAlunoIds is null
-            ? dados.Respostas
-            : dados.Respostas.Where(r => escopoAlunoIds.Contains(r.AlunoId)).ToList();
-        var notaMedia = respostasEscopo.Count == 0
+        var notaMedia = dados.Respostas.Count == 0
             ? 0
-            : respostasEscopo.Count(r => alternativasPorId.TryGetValue(r.AlternativaId, out var alt) && alt.Correta) * 100.0 / respostasEscopo.Count;
-
-        var progressoPorEquipe = new List<EquipeProgressoDto>();
-        var gruposPorGestor = dados.Profiles.Where(p => p.ManagerId.HasValue).GroupBy(p => p.ManagerId!.Value);
-        foreach (var grupo in gruposPorGestor)
-        {
-            if (!profilesPorId.TryGetValue(grupo.Key, out var gestor)) continue;
-            var idsDoGrupo = grupo.Select(p => p.Id).ToHashSet();
-            var matriculasDoGrupo = dados.Matriculas.Where(m => idsDoGrupo.Contains(m.AlunoId)).ToList();
-            var progresso = matriculasDoGrupo.Count == 0
-                ? 0
-                : (double)matriculasDoGrupo.Count(m => m.ConcluidoEm.HasValue) / matriculasDoGrupo.Count * 100;
-            progressoPorEquipe.Add(new EquipeProgressoDto(gestor.Id, gestor.Nome, grupo.Count(), progresso));
-        }
+            : dados.Respostas.Count(r => alternativasPorId.TryGetValue(r.AlternativaId, out var alt) && alt.Correta) * 100.0 / dados.Respostas.Count;
 
         return new RelatorioDashboardDto(
             Math.Round(taxaGeral, 1),
             Math.Round(tempoMedio, 1),
-            Math.Round(notaMedia, 1),
-            progressoPorEquipe.OrderByDescending(p => p.TotalAlunos).ToList());
+            Math.Round(notaMedia, 1));
     }
 
     // Roster de colaboradores com um resumo de conclusão (independente dos filtros de
     // curso/período do dashboard) — usado na tabela "Colaboradores" dos Relatórios, cada linha
     // com um botão que abre o pop-up de detalhe (mesmo componente da tela de Usuários).
-    public async Task<List<AlunoResumoDto>> GerarResumoPorAlunoAsync(List<Guid>? escopoAlunoIds)
+    public async Task<List<AlunoResumoDto>> GerarResumoPorAlunoAsync()
     {
         var profiles = await _rest.SelectAsync<ProfileRow>("profiles", order: "nome.asc");
         var cursos = await _rest.SelectAsync<CursoRow>("cursos");
         var matriculas = await _rest.SelectAsync<MatriculaRow>("matriculas");
 
-        // Administrador não é "aluno" pra fins de relatório (mesma regra do ranking) — quando o
-        // escopo é uma equipe específica (gestor), já vem só com os liderados dela.
-        var alunos = escopoAlunoIds is null
-            ? profiles.Where(p => p.Role != RoleNames.Admin).ToList()
-            : profiles.Where(p => escopoAlunoIds.Contains(p.Id)).ToList();
+        // Administrador não é "aluno" pra fins de relatório (mesma regra do ranking).
+        var alunos = profiles.Where(p => p.Role != RoleNames.Admin).ToList();
 
         var totalCursos = cursos.Count;
         var matriculasPorAluno = matriculas.GroupBy(m => m.AlunoId).ToDictionary(g => g.Key, g => g.ToList());
@@ -130,9 +103,9 @@ public class RelatorioService
         .ToList();
     }
 
-    public async Task<byte[]> GerarCsvAsync(RelatorioFiltro filtro, List<Guid>? escopoAlunoIds)
+    public async Task<byte[]> GerarCsvAsync(RelatorioFiltro filtro)
     {
-        var dados = await CarregarAsync(filtro, escopoAlunoIds);
+        var dados = await CarregarAsync(filtro);
         var cursosPorId = dados.Cursos.ToDictionary(c => c.Id);
         var profilesPorId = dados.Profiles.ToDictionary(p => p.Id);
         var alternativasPorId = dados.Alternativas.ToDictionary(a => a.Id);
@@ -142,13 +115,12 @@ public class RelatorioService
         // para CSV — com vírgula, o Excel brasileiro joga tudo numa coluna só.
         const string separador = ";";
         var sb = new StringBuilder();
-        sb.AppendLine(string.Join(separador, "aluno", "equipe_gestor", "curso", "status", "iniciado_em", "concluido_em", "prazo", "atrasado", "nota_quiz_media"));
+        sb.AppendLine(string.Join(separador, "aluno", "curso", "status", "iniciado_em", "concluido_em", "prazo", "atrasado", "nota_quiz_media"));
 
         foreach (var m in dados.Matriculas)
         {
             var aluno = profilesPorId.GetValueOrDefault(m.AlunoId);
             var curso = cursosPorId.GetValueOrDefault(m.CursoId);
-            var gestorNome = aluno?.ManagerId is Guid gid && profilesPorId.TryGetValue(gid, out var gestor) ? gestor.Nome : "";
             var status = m.ConcluidoEm.HasValue ? "concluido" : "em_andamento";
             DateTimeOffset? prazoEm = curso is { TemPrazo: true, PrazoDias: not null }
                 ? m.IniciadoEm.AddDays(curso.PrazoDias!.Value)
@@ -162,7 +134,6 @@ public class RelatorioService
 
             sb.AppendLine(string.Join(separador,
                 CsvEscape(aluno?.Nome ?? string.Empty),
-                CsvEscape(gestorNome),
                 CsvEscape(curso?.Titulo ?? string.Empty),
                 status,
                 m.IniciadoEm.ToString("yyyy-MM-dd"),

@@ -10,7 +10,7 @@ namespace LmsApi.Controllers;
 
 [ApiController]
 [Route("api/relatorios")]
-[Authorize(Roles = RoleNames.GestorOuAdmin)]
+[Authorize(Roles = RoleNames.Admin)]
 public class RelatoriosController : ControllerBase
 {
     private readonly ISupabaseRestClient _rest;
@@ -22,16 +22,6 @@ public class RelatoriosController : ControllerBase
         _rest = rest;
         _currentUser = currentUser;
         _relatorios = relatorios;
-    }
-
-    // Gestor sempre é restrito à própria equipe (calculada a partir do token, nunca de um
-    // parâmetro vindo do frontend); admin vê todo mundo (escopo nulo = sem filtro de aluno).
-    private async Task<List<Guid>?> ResolverEscopoAsync()
-    {
-        if (_currentUser.IsAdmin) return null;
-
-        var equipe = await _rest.SelectAsync<ProfileRow>("profiles", PostgrestFilter.Eq("manager_id", _currentUser.UserId));
-        return equipe.Select(p => p.Id).ToList();
     }
 
     private static RelatorioFiltro MontarFiltro(DateTimeOffset? periodoInicio, DateTimeOffset? periodoFim, Guid? cursoId, Guid? usuarioId) => new()
@@ -49,17 +39,14 @@ public class RelatoriosController : ControllerBase
         [FromQuery] Guid? cursoId,
         [FromQuery] Guid? usuarioId)
     {
-        var escopo = await ResolverEscopoAsync();
         var filtro = MontarFiltro(periodoInicio, periodoFim, cursoId, usuarioId);
-        var dashboard = await _relatorios.GerarDashboardAsync(filtro, escopo);
-        return dashboard;
+        return await _relatorios.GerarDashboardAsync(filtro);
     }
 
     [HttpGet("por-aluno")]
     public async Task<ActionResult<List<AlunoResumoDto>>> PorAluno()
     {
-        var escopo = await ResolverEscopoAsync();
-        return await _relatorios.GerarResumoPorAlunoAsync(escopo);
+        return await _relatorios.GerarResumoPorAlunoAsync();
     }
 
     [HttpGet("export.csv")]
@@ -69,9 +56,8 @@ public class RelatoriosController : ControllerBase
         [FromQuery] Guid? cursoId,
         [FromQuery] Guid? usuarioId)
     {
-        var escopo = await ResolverEscopoAsync();
         var filtro = MontarFiltro(periodoInicio, periodoFim, cursoId, usuarioId);
-        var csvBytes = await _relatorios.GerarCsvAsync(filtro, escopo);
+        var csvBytes = await _relatorios.GerarCsvAsync(filtro);
         return File(csvBytes, "text/csv", "relatorio.csv");
     }
 }

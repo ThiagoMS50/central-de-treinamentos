@@ -17,7 +17,6 @@ export function AppLayout() {
   const [menuAberto, setMenuAberto] = useState(false);
   const configuracoesQuery = useConfiguracoesQuery();
   const rankingHabilitado = configuracoesQuery.data?.rankingHabilitado ?? true;
-  const podeVerRelatorios = profile?.role === 'gestor' || profile?.role === 'admin';
   const ehAdmin = profile?.role === 'admin';
 
   const linkClass = ({ isActive }: { isActive: boolean }) => `nav-link${isActive ? ' nav-link-active' : ''}`;
@@ -33,28 +32,28 @@ export function AppLayout() {
             <Logo />
           </div>
 
-          <nav className="sidebar-nav" onClick={() => setMenuAberto(false)}>
+          <nav className="sidebar-nav" data-tour="menu" onClick={() => setMenuAberto(false)}>
             <span className="sidebar-section">{t('nav.sectionLearn')}</span>
             <NavLink to="/cursos" className={linkClass}>
               <Icon name="compass" />
               {t('nav.cursos')}
             </NavLink>
             {rankingHabilitado && (
-              <NavLink to="/ranking" className={linkClass}>
+              <NavLink to="/ranking" className={linkClass} data-tour="nav-ranking">
                 <Icon name="trophy" />
                 {t('nav.ranking')}
               </NavLink>
             )}
 
-            {(podeVerRelatorios || ehAdmin) && <span className="sidebar-section">{t('nav.sectionManage')}</span>}
-            {podeVerRelatorios && (
-              <NavLink to="/relatorios" className={linkClass}>
+            {ehAdmin && <span className="sidebar-section">{t('nav.sectionManage')}</span>}
+            {ehAdmin && (
+              <NavLink to="/relatorios" className={linkClass} data-tour="nav-relatorios">
                 <Icon name="chart" />
                 {t('nav.relatorios')}
               </NavLink>
             )}
             {ehAdmin && (
-              <NavLink to="/admin/cursos" className={linkClass}>
+              <NavLink to="/admin/cursos" className={linkClass} data-tour="nav-admin">
                 <Icon name="settings" />
                 {t('nav.admin')}
               </NavLink>
@@ -77,8 +76,10 @@ export function AppLayout() {
               <Logo />
             </div>
             <div className="topbar-actions">
-              <LanguageSwitcher />
-              <ThemeSwitcher />
+              <div className="topbar-prefs" data-tour="preferencias">
+                <LanguageSwitcher />
+                <ThemeSwitcher />
+              </div>
               <UserMenu />
             </div>
           </header>

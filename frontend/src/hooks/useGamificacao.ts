@@ -2,8 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '../lib/apiClient';
 import type { DetalheParticipante, MeuProgressoGamificacao, RankingItem } from '../types/api';
 
-export function useMeuProgressoGamificacaoQuery() {
-  return useQuery({ queryKey: ['gamificacao', 'me'], queryFn: () => apiFetch<MeuProgressoGamificacao>('/gamificacao/me') });
+// habilitado=false quando o ranking está desligado (o endpoint responde 403 nesse caso).
+export function useMeuProgressoGamificacaoQuery(habilitado = true) {
+  return useQuery({
+    queryKey: ['gamificacao', 'me'],
+    queryFn: () => apiFetch<MeuProgressoGamificacao>('/gamificacao/me'),
+    enabled: habilitado,
+  });
 }
 
 export function useRankingQuery() {

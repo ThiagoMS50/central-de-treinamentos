@@ -5,13 +5,15 @@ interface DropdownProps {
   trigger: ReactNode;
   triggerClassName?: string;
   label: string;
+  // Marca o botão para o tutorial (data-tour).
+  dataTour?: string;
   align?: 'left' | 'right';
   // Recebe uma função para fechar o menu (ex.: depois de escolher uma opção).
   children: (close: () => void) => ReactNode;
 }
 
 // Menu suspenso simples: abre no clique, fecha ao clicar fora, com Esc ou ao escolher uma opção.
-export function Dropdown({ trigger, triggerClassName = 'icon-button', label, align = 'right', children }: DropdownProps) {
+export function Dropdown({ trigger, triggerClassName = 'icon-button', label, dataTour, align = 'right', children }: DropdownProps) {
   const [aberto, setAberto] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,6 +38,7 @@ export function Dropdown({ trigger, triggerClassName = 'icon-button', label, ali
       <button
         type="button"
         className={triggerClassName}
+        data-tour={dataTour}
         aria-haspopup="menu"
         aria-expanded={aberto}
         aria-label={label}

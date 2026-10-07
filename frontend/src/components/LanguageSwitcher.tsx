@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Dropdown, DropdownItem } from './ui/Dropdown';
 import { Icon } from './ui/Icon';
+import { marcarMissao } from '../lib/missoes';
 
 // Cada idioma aparece no próprio idioma, para quem não entende o atual achar o seu.
 const LANGUAGES = [
@@ -32,6 +33,7 @@ export function LanguageSwitcher() {
             icon={<span className="dropdown-item-code">{lang.short}</span>}
             onSelect={() => {
               i18n.changeLanguage(lang.code);
+              marcarMissao('personalizar');
               close();
             }}
           >

@@ -150,7 +150,7 @@ export function CursoDetalhePage() {
       </header>
 
       <div className="curso-layout">
-        <aside className="curso-indice" aria-label={t('curso.content')}>
+        <aside className="curso-indice" aria-label={t('curso.content')} data-tour="indice">
           <h2 className="curso-indice-titulo">{t('curso.content')}</h2>
           <ol className="step-list">
             {steps.map((s, i) => {
@@ -259,6 +259,7 @@ export function CursoDetalhePage() {
               className={eBotaoConcluirCurso || (!noUltimoPasso && !ehAdmin) ? 'btn btn-primary' : 'btn btn-secondary'}
               disabled={!podeAvancar || concluirAulaMutation.isPending}
               onClick={handleAvancar}
+              data-tour="avancar"
             >
               {eBotaoConcluirCurso ? t('curso.concluirCurso') : `${t('curso.nextStep')} →`}
             </button>

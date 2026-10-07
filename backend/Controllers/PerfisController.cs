@@ -20,7 +20,7 @@ public class PerfisController : ControllerBase
     private readonly VisibilidadeService _visibilidade;
     private readonly ISupabaseAuthAdminClient _authAdmin;
 
-    private static readonly string[] PapeisValidos = { RoleNames.Aluno, RoleNames.Gestor, RoleNames.Admin };
+    private static readonly string[] PapeisValidos = { RoleNames.Aluno, RoleNames.Admin };
     private const int NomeMaxLength = 120;
 
     public PerfisController(
@@ -39,7 +39,7 @@ public class PerfisController : ControllerBase
         _authAdmin = authAdmin;
     }
 
-    private static ProfileDto ToDto(ProfileRow row) => new(row.Id, row.Nome, row.Email, row.Role, row.ManagerId);
+    private static ProfileDto ToDto(ProfileRow row) => new(row.Id, row.Nome, row.Email, row.Role);
 
     [HttpGet("me")]
     public async Task<ActionResult<ProfileDto>> GetMe()
@@ -49,8 +49,8 @@ public class PerfisController : ControllerBase
         return ToDto(profile);
     }
 
-    // Cada usuário (qualquer papel) pode alterar o próprio nome — e só o nome: papel e gestor
-    // continuam exclusivos do Administrador (PUT /api/perfis/{id}).
+    // Cada usuário (qualquer papel) pode alterar o próprio nome — e só o nome: o papel continua
+    // exclusivo do Administrador (PUT /api/perfis/{id}).
     [HttpPut("me")]
     public async Task<ActionResult<ProfileDto>> AtualizarMeuNome([FromBody] UpdateMeuNomeRequest request)
     {
@@ -123,7 +123,7 @@ public class PerfisController : ControllerBase
         var atualizado = await _rest.UpdateAsync<ProfileRow>(
             "profiles",
             PostgrestFilter.Eq("id", id),
-            new { role = request.Role, manager_id = (object?)request.ManagerId });
+            new { role = request.Role });
 
         if (atualizado is null) return NotFound();
         return ToDto(atualizado);
@@ -154,10 +154,9 @@ public class PerfisController : ControllerBase
     }
 
     // Acompanhamento de progresso: status de todos os cursos para um aluno específico (usado na
-    // Administração e por Gestores). Visibilidade: admin vê qualquer um, gestor só os liderados
-    // (e a si mesmo).
+    // Administração).
     [HttpGet("{alunoId:guid}/progresso")]
-    [Authorize(Roles = RoleNames.GestorOuAdmin)]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<ActionResult<List<ProgressoCursoDto>>> Progresso(Guid alunoId)
     {
         if (!await _visibilidade.PodeVerAsync(_currentUser.UserId, alunoId))

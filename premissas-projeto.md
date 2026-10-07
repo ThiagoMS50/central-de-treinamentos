@@ -34,27 +34,26 @@
 ## 5. Papéis e permissões
 
 - **Aluno** (perfil base): todo colaborador cadastrado é automaticamente um Aluno, com acesso aos treinamentos disponíveis para ele. Não é preciso liberar acesso individualmente.
-- **Gestor de equipe**: acompanha o progresso dos seus liderados, mas não cria conteúdo.
-- **Administrador**: gerencia usuários, permissões e configurações gerais da plataforma — incluindo excluir um usuário por completo (a conta de login e todo o progresso, pontos, badges, certificados e respostas de quiz dessa pessoa são removidos juntos, sem deixar rastro; não é possível excluir a própria conta nem o último Administrador restante).
+- **Administrador**: gerencia usuários, permissões, relatórios e configurações gerais da plataforma — incluindo excluir um usuário por completo (a conta de login e todo o progresso, pontos, badges, certificados e respostas de quiz dessa pessoa são removidos juntos, sem deixar rastro; não é possível excluir a própria conta nem o último Administrador restante).
+- **Só dois papéis**: o antigo papel de "Gestor de equipe" (que acompanhava os próprios liderados) foi removido — o acompanhamento de progresso e os relatórios ficam com o Administrador.
 - *(Não há, por ora, um perfil dedicado de "Instrutor/criador de conteúdo" — a criação de cursos fica a cargo do Administrador, a menos que isso seja revisto depois.)*
 
 ## 6. Cadastro de usuários
 
 - Modelo: **autocadastro sem aprovação** nesta primeira versão. O colaborador se cadastra sozinho (provavelmente usando e-mail corporativo) e já tem acesso imediato como Aluno, sem depender de aprovação de um Administrador. *(Pode ser revisto para exigir aprovação ou validação de domínio de e-mail em uma fase futura, se necessário.)*
 - **Autenticação**: login próprio (e-mail/senha) gerenciado dentro do próprio LMS — sem SSO corporativo nesta versão.
-- **Alterar o próprio nome**: qualquer usuário (Aluno, Gestor ou Administrador) pode alterar o próprio nome pelo menu que abre ao clicar no seu nome, no topo da tela ("Alterar meu nome"). Só o nome: o papel e o gestor continuam sendo definidos apenas pelo Administrador. O novo nome passa a valer no ranking e também nos certificados, inclusive nos já emitidos (o PDF é gerado na hora com o nome atual).
+- **Alterar o próprio nome**: qualquer usuário (Aluno ou Administrador) pode alterar o próprio nome pelo menu que abre ao clicar no seu nome, no topo da tela ("Alterar meu nome"). Só o nome: o papel continua sendo definido apenas pelo Administrador. O novo nome passa a valer no ranking e também nos certificados, inclusive nos já emitidos (o PDF é gerado na hora com o nome atual).
 
 ## 7. Acompanhamento e relatórios
 
 - **Progresso individual**: cada usuário acompanha seu próprio andamento e histórico.
 - **Certificado de conclusão**: formato padrão de mercado — PDF gerado automaticamente ao finalizar um curso ou trilha, contendo nome do colaborador, nome do curso/trilha, carga horária, data de conclusão e um código de validação/autenticidade.
-- **Relatório gerencial**: seguindo o padrão de mercado de LMS, cobrindo:
+- **Relatório gerencial** (acesso só do Administrador): seguindo o padrão de mercado de LMS, cobrindo:
   - Taxa de conclusão por curso/trilha (quem completou, quem está em andamento, quem não iniciou).
   - Colaboradores com pendências/atrasados (para cursos com prazo).
   - Tempo médio de conclusão.
   - Nota/desempenho médio nos quizzes de prática.
-  - Progresso agregado por equipe/gestor (visão do time de cada Gestor de equipe).
-  - Filtros por período, curso/trilha, equipe e colaborador.
+  - Filtros por período, curso/trilha e colaborador.
   - Exportação dos dados (CSV/Excel).
   - Dashboard com indicadores visuais (gráficos de conclusão, engajamento e pendências), atualizado em tempo real (sem necessidade de gerar relatório periódico agendado nesta versão).
 
@@ -65,9 +64,18 @@
   - **Badges (conquistas)**: 5 selos fixos de marco — Primeiro Passo (1º curso concluído), Maratonista (5 cursos), Mestre em Aprendizado (10 cursos), Trilha Completa (1ª trilha concluída) e Nota Máxima (100% de acerto em um quiz).
   - **Ranking**: lista geral de colaboradores ordenada por pontos, visível para todos (reforça o engajamento, no estilo Duolingo/plataformas de e-learning gamificadas). O Administrador não participa do ranking (ele gerencia conteúdo, não "estuda").
   - **Tela do ranking**: lista com posição (medalhas de ouro/prata/bronze no top 3), avatar, nome, pontos e botão "Ver detalhes"; a linha da própria pessoa fica destacada com a etiqueta "Você".
-  - **Detalhe por participante**: no ranking, dá pra abrir um pop-up com um resumo (pontos e quantidade de cursos, trilhas e conquistas), as conquistas (as obtidas com a data, as bloqueadas esmaecidas com cadeado) e os cursos/trilhas concluídos com os pontos e a data de cada um — respeitando uma regra de visibilidade: o Aluno só vê o próprio detalhe, o Gestor vê o próprio e o dos seus liderados diretos, e o Administrador vê o de todo mundo.
-  - **Configurável pelo Administrador**: o ranking (pontos, badges e a própria página) pode ser inteiramente desativado em Administração → Configurações. Quando desativado, ele some do menu, do painel principal e do tour guiado — para todo mundo, não só pra quem desativou.
+  - **Detalhe por participante**: no ranking, dá pra abrir um pop-up com um resumo (pontos e quantidade de cursos, trilhas e conquistas), as conquistas (as obtidas com a data, as bloqueadas esmaecidas com cadeado) e os cursos/trilhas concluídos com os pontos e a data de cada um — respeitando uma regra de visibilidade: o Aluno só vê o próprio detalhe e o Administrador vê o de todo mundo.
+  - **Configurável pelo Administrador**: o ranking (pontos, badges e a própria página) pode ser inteiramente desativado em Administração → Configurações. Quando desativado, ele some do menu, do painel principal, do tutorial e das missões de Primeiros passos — para todo mundo, não só pra quem desativou.
   - *(Pontuação e badges continuam com regras fixas no código, não configuráveis pelo Administrador nesta versão — deixar administrável fica registrado como possível evolução futura.)*
+
+## 8.1 Tutorial e Primeiros passos
+
+- **Tutorial interativo (estilo videogame)**: abre sozinho no primeiro acesso e pode ser revisto pelo menu do nome ("Ver tutorial novamente"). A tela escurece e só o elemento da vez fica iluminado (cliques fora dele ficam bloqueados), com um balão explicando o que ele faz e o progresso "Missão X de N". Em alguns passos o usuário precisa **fazer a ação** para avançar (abrir um curso, ir ao Ranking, ir à Administração, abrir o menu do próprio nome). Ao final, uma tela de vitória leva de volta ao painel.
+  - O roteiro muda por papel: o Aluno vê painel, cursos, dentro de um curso, ranking, preferências e conta; o Administrador vê também Administração, criação de curso e Relatórios. Passos cujo elemento não existe para aquele usuário são pulados sozinhos, e no celular (menu lateral recolhido) os passos de ação viram "Próximo".
+- **Primeiros passos (missões)**: card no painel com missões que se marcam sozinhas conforme o uso, com barra de progresso; quando todas são concluídas, pode ser ocultado.
+  - Aluno: fazer o tutorial, abrir o primeiro curso, concluir um curso, visitar o ranking, ganhar a primeira conquista e personalizar tema/idioma (ranking e conquista só aparecem com o ranking ligado).
+  - Administrador: fazer o tutorial, criar um curso, definir uma capa, criar uma trilha, ver os relatórios e personalizar tema/idioma.
+  - As missões que dependem de ações na tela (tutorial, ranking, relatórios, personalizar) ficam registradas no navegador da pessoa; as demais vêm dos dados do sistema.
 
 ## 9. Notificações
 

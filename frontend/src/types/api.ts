@@ -1,4 +1,4 @@
-export type Role = 'aluno' | 'gestor' | 'admin';
+export type Role = 'aluno' | 'admin';
 export type CursoStatus = 'nao_iniciado' | 'em_andamento' | 'concluido';
 export type PrazoStatus = 'em_dia' | 'atrasado' | null;
 
@@ -7,7 +7,6 @@ export interface Profile {
   nome: string;
   email: string;
   role: Role;
-  managerId: string | null;
 }
 
 export interface CursoListItem {
@@ -110,18 +109,10 @@ export interface CertificadoListItem {
   codigoValidacao: string;
 }
 
-export interface EquipeProgresso {
-  gestorId: string;
-  gestorNome: string;
-  totalAlunos: number;
-  progressoMedioPercentual: number;
-}
-
 export interface RelatorioDashboard {
   taxaConclusaoGeral: number;
   tempoMedioConclusaoDias: number;
   notaMediaQuizPercentual: number;
-  progressoPorEquipe: EquipeProgresso[];
 }
 
 export interface AlunoResumo {

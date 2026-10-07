@@ -1,44 +1,66 @@
-import { createContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCursosQuery } from '../hooks/useCursos';
 import { useConfiguracoesQuery } from '../hooks/useConfiguracoes';
+import { definirUsuarioMissoes, marcarMissao } from '../lib/missoes';
 
 const STORAGE_PREFIX = 'lms_tour_seen_';
 
-interface TourStep {
+// Um passo do tutorial (estilo videogame): destaca um elemento real da tela ([data-tour="..."])
+// e explica o que ele faz. Passos com "acao" esperam o usuário clicar no elemento para avançar
+// ("faça para continuar"); os demais avançam pelo botão Próximo.
+export interface TourStep {
   key: string;
-  path: (exemploCursoId: string | null) => string;
+  // Tela onde o passo acontece; se a tela atual não casar com "rota", o tutorial navega.
+  rota?: RegExp;
+  path?: (ctx: { cursoId: string | null }) => string;
+  alvo?: string;
+  acao?: boolean;
+  // Se o elemento não existir para este usuário/tela, o passo é pulado sozinho.
+  opcional?: boolean;
 }
 
-const BASE_STEPS: TourStep[] = [
-  { key: 'welcome', path: () => '/cursos' },
-  { key: 'dashboard', path: () => '/cursos' },
-  { key: 'curso', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
-  { key: 'certificado', path: (cursoId) => (cursoId ? `/cursos/${cursoId}` : '/cursos') },
-  { key: 'idioma', path: () => '/cursos' },
-];
+const PAINEL = /^\/cursos\/?$/;
+const CURSO = /^\/cursos\/[^/]+$/;
 
-const RANKING_STEP: TourStep = { key: 'ranking', path: () => '/ranking' };
-const GESTOR_STEP: TourStep = { key: 'relatorios', path: () => '/relatorios' };
-const ADMIN_STEP: TourStep = { key: 'admin', path: () => '/admin/cursos' };
-
-function buildSteps(role: string | undefined, rankingHabilitado: boolean): TourStep[] {
-  const steps = [...BASE_STEPS];
-  if (rankingHabilitado) steps.splice(4, 0, RANKING_STEP);
-  if (role === 'gestor' || role === 'admin') steps.push(GESTOR_STEP);
-  if (role === 'admin') steps.push(ADMIN_STEP);
-  return steps;
+function montarPassos(ehAdmin: boolean, rankingHabilitado: boolean): TourStep[] {
+  const passos: TourStep[] = [
+    { key: 'welcome' },
+    { key: 'menu', rota: PAINEL, path: () => '/cursos', alvo: 'menu' },
+    { key: 'destaque', rota: PAINEL, path: () => '/cursos', alvo: 'destaque', opcional: true },
+    { key: 'cursos', rota: PAINEL, path: () => '/cursos', alvo: 'cursos', opcional: true },
+    { key: 'abrirCurso', rota: PAINEL, path: () => '/cursos', alvo: 'primeiro-curso', acao: true, opcional: true },
+    { key: 'indice', rota: CURSO, path: ({ cursoId }) => (cursoId ? `/cursos/${cursoId}` : '/cursos'), alvo: 'indice', opcional: true },
+    { key: 'avancar', rota: CURSO, path: ({ cursoId }) => (cursoId ? `/cursos/${cursoId}` : '/cursos'), alvo: 'avancar', opcional: true },
+  ];
+  if (rankingHabilitado) {
+    passos.push(
+      { key: 'irRanking', alvo: 'nav-ranking', acao: true },
+      { key: 'ranking', rota: /^\/ranking/, path: () => '/ranking', alvo: 'ranking', opcional: true },
+    );
+  }
+  if (ehAdmin) {
+    passos.push(
+      { key: 'irAdmin', alvo: 'nav-admin', acao: true },
+      { key: 'novoCurso', rota: /^\/admin\/cursos\/?$/, path: () => '/admin/cursos', alvo: 'novo-curso', opcional: true },
+      { key: 'relatorios', alvo: 'nav-relatorios' },
+    );
+  }
+  passos.push({ key: 'preferencias', alvo: 'preferencias' }, { key: 'conta', alvo: 'conta', acao: true });
+  return passos;
 }
 
 interface TourContextValue {
   open: boolean;
+  celebrando: boolean;
   stepIndex: number;
   steps: TourStep[];
   start: () => void;
   next: () => void;
   prev: () => void;
   skip: () => void;
+  fecharCelebracao: () => void;
 }
 
 export const TourContext = createContext<TourContextValue | undefined>(undefined);
@@ -62,16 +84,20 @@ function hasSeen(userId: string): boolean {
 export function TourProvider({ children }: { children: ReactNode }) {
   const { profile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const cursosQuery = useCursosQuery();
   const configuracoesQuery = useConfiguracoesQuery();
   const [open, setOpen] = useState(false);
+  const [celebrando, setCelebrando] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
   const rankingHabilitado = configuracoesQuery.data?.rankingHabilitado ?? true;
-  const steps = useMemo(() => buildSteps(profile?.role, rankingHabilitado), [profile?.role, rankingHabilitado]);
-  const exemploCursoId = cursosQuery.data?.[0]?.id ?? null;
+  const ehAdmin = profile?.role === 'admin';
+  const steps = useMemo(() => montarPassos(ehAdmin, rankingHabilitado), [ehAdmin, rankingHabilitado]);
+  const cursoId = cursosQuery.data?.[0]?.id ?? null;
 
   useEffect(() => {
+    definirUsuarioMissoes(profile?.id ?? null);
     if (!profile) return;
     if (!hasSeen(profile.id)) {
       setStepIndex(0);
@@ -79,26 +105,35 @@ export function TourProvider({ children }: { children: ReactNode }) {
     }
   }, [profile]);
 
-  // Navega para a tela real de cada passo sempre que o tour está aberto e o passo muda.
+  // Leva o usuário para a tela do passo, se ele ainda não estiver nela.
   useEffect(() => {
     if (!open) return;
-    navigate(steps[stepIndex].path(exemploCursoId));
+    const passo = steps[stepIndex];
+    if (passo.rota && passo.path && !passo.rota.test(location.pathname)) navigate(passo.path({ cursoId }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, stepIndex, steps, exemploCursoId]);
+  }, [open, stepIndex, steps]);
+
+  const finish = useCallback(
+    (concluiu: boolean) => {
+      if (profile) {
+        markSeen(profile.id);
+        if (concluiu) marcarMissao('tutorial', profile.id);
+      }
+      setOpen(false);
+      if (concluiu) setCelebrando(true);
+    },
+    [profile],
+  );
+
+  const next = useCallback(() => {
+    if (stepIndex < steps.length - 1) setStepIndex(stepIndex + 1);
+    else finish(true);
+  }, [stepIndex, steps.length, finish]);
 
   function start() {
+    setCelebrando(false);
     setStepIndex(0);
     setOpen(true);
-  }
-
-  function finish() {
-    if (profile) markSeen(profile.id);
-    setOpen(false);
-  }
-
-  function next() {
-    if (stepIndex < steps.length - 1) setStepIndex((i) => i + 1);
-    else finish();
   }
 
   function prev() {
@@ -106,7 +141,23 @@ export function TourProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <TourContext.Provider value={{ open, stepIndex, steps, start, next, prev, skip: finish }}>
+    <TourContext.Provider
+      value={{
+        open,
+        celebrando,
+        stepIndex,
+        steps,
+        start,
+        next,
+        prev,
+        skip: () => finish(false),
+        // Ao fechar a vitória, volta ao painel, onde ficam as missões de Primeiros passos.
+        fecharCelebracao: () => {
+          setCelebrando(false);
+          navigate('/cursos');
+        },
+      }}
+    >
       {children}
     </TourContext.Provider>
   );

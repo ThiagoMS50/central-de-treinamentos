@@ -43,7 +43,7 @@ export function AppRouter() {
           <Route path="/trilhas/:id" element={<TrilhaDetalhePage />} />
           <Route path="/ranking" element={<RankingPage />} />
 
-          <Route element={<RequireRole roles={['gestor', 'admin']} />}>
+          <Route element={<RequireRole roles={['admin']} />}>
             <Route path="/relatorios" element={<RelatoriosPage />} />
           </Route>
 

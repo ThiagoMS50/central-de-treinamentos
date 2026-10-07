@@ -257,8 +257,6 @@
       "nome": "Nombre",
       "email": "Correo electrónico",
       "role": "Rol",
-      "manager": "Gestor",
-      "none": "Ninguno",
       "viewProgress": "Ver progreso",
       "progressTitle": "Progreso de {{nome}}",
       "startedAt": "Iniciado el",
@@ -274,7 +272,6 @@
   },
   "roles": {
     "aluno": "Alumno",
-    "gestor": "Gestor de equipo",
     "admin": "Administrador"
   },
   "relatorios": {
@@ -287,50 +284,82 @@
     "completionRate": "Tasa de finalización general",
     "avgTime": "Tiempo medio de finalización (días)",
     "avgQuizScore": "Puntuación media de los cuestionarios",
-    "teamProgress": "Progreso por equipo",
     "noData": "No hay datos para los filtros seleccionados.",
     "from": "Desde",
     "to": "Hasta"
   },
   "tour": {
-    "skip": "Omitir",
+    "skip": "Saltar tutorial",
     "next": "Siguiente",
-    "prev": "Anterior",
-    "finish": "Finalizar",
-    "stepCounter": "Paso {{current}} de {{total}}",
-    "replay": "Ver el recorrido de nuevo",
+    "prev": "Volver",
+    "start": "Empezar",
+    "finish": "Terminar",
+    "stepCounter": "Misión {{current}} de {{total}}",
+    "replay": "Ver el tutorial de nuevo",
+    "actionDone": "¡Muy bien!",
+    "doneTitle": "¡Tutorial completado!",
+    "doneBody": "Ya sabes usar la plataforma. Sigue con las misiones de \"Primeros pasos\" en tu panel.",
+    "doneAction": "¡Vamos!",
     "steps": {
       "welcome": {
-        "title": "¡Bienvenido(a) a la Central de Capacitaciones!",
-        "body": "Hagamos un recorrido rápido por las principales funciones de la plataforma. Puedes omitirlo en cualquier momento."
+        "title": "¡Bienvenido(a)! 👋",
+        "body": "En menos de 2 minutos aprenderás a usar la plataforma. Sigue las misiones — en algunas, eres tú quien hace clic para avanzar."
       },
-      "dashboard": {
-        "title": "Tus capacitaciones",
-        "body": "Aquí ves todas las rutas de aprendizaje y todos los cursos disponibles, con el estado de cada uno: no iniciado, en curso o completado."
+      "menu": {
+        "title": "Tu menú",
+        "body": "Desde aquí navegas entre tus cursos, el ranking y, si eres administrador, la gestión de la plataforma."
       },
-      "curso": {
-        "title": "Dentro de un curso",
-        "body": "Al abrir un curso, navegas por las clases con los botones Anterior/Siguiente, descargando los materiales de cada una. Cuando el curso tiene cuestionario, aparece como la última etapa — sin límite de intentos, pero hay que acertar todas las preguntas."
+      "destaque": {
+        "title": "Tu próximo paso",
+        "body": "Este destacado muestra el curso más importante para ti ahora — los atrasados y en curso aparecen primero."
       },
-      "certificado": {
-        "title": "Completar y emitir el certificado",
-        "body": "Al completar la última clase (o, si el curso tiene cuestionario, al acertar todas las preguntas), pasas automáticamente a la pantalla del certificado — un PDF listo para descargar al instante, con un código de validación."
+      "cursos": {
+        "title": "Tus cursos",
+        "body": "Todos los cursos están aquí. Usa los filtros para ver solo los en curso, no iniciados o completados."
+      },
+      "abrirCurso": {
+        "title": "Abre un curso",
+        "body": "Veamos cómo es un curso por dentro.",
+        "action": "Haz clic en el curso destacado"
+      },
+      "indice": {
+        "title": "Contenido del curso",
+        "body": "Aquí están las etapas: presentación, clases, quiz y certificado. Puedes volver a las que ya hiciste; las siguientes se desbloquean al avanzar."
+      },
+      "avancar": {
+        "title": "Avanza en las clases",
+        "body": "¿Viste la clase y los materiales? Haz clic en Avanzar para completarla. Al final vienen el quiz y tu certificado."
+      },
+      "irRanking": {
+        "title": "Hora del ranking",
+        "body": "Completar cursos y acertar quizzes da puntos y logros.",
+        "action": "Haz clic en Clasificación en el menú"
       },
       "ranking": {
-        "title": "Puntos, logros y clasificación",
-        "body": "Ganas puntos al completar cursos, rutas y responder correctamente en los cuestionarios, y desbloqueas logros por hitos. Aquí ves tu posición en la clasificación general."
+        "title": "Clasificación",
+        "body": "Mira tu posición, los puntos de cada persona y abre los detalles para ver los logros."
       },
-      "idioma": {
-        "title": "Idioma y tu cuenta",
-        "body": "En la parte superior cambias el idioma (Português, English, Español) y el tema (oscuro, claro o del sistema). Haciendo clic en tu nombre puedes cambiarlo, ver este tour de nuevo o cerrar sesión."
+      "irAdmin": {
+        "title": "Administración",
+        "body": "Aquí creas cursos, rutas y gestionas los usuarios.",
+        "action": "Haz clic en Administración en el menú"
+      },
+      "novoCurso": {
+        "title": "Crea un curso",
+        "body": "Empieza aquí: datos del curso, portada, clases con video y materiales, y el quiz."
       },
       "relatorios": {
-        "title": "Informes del equipo",
-        "body": "Como Gestor de equipo, tienes acceso a Informes: sigue el progreso de tu equipo, ve quién está atrasado y exporta los datos en CSV."
+        "title": "Informes",
+        "body": "Sigue la finalización de los cursos, mira quién está atrasado y exporta los datos en CSV."
       },
-      "admin": {
-        "title": "Área de Administración",
-        "body": "Como Administrador, también tienes acceso a Administración: crea cursos, clases, materiales, cuestionarios, rutas de aprendizaje y gestiona el rol de cada usuario (alumno, gestor o admin)."
+      "preferencias": {
+        "title": "A tu manera",
+        "body": "Cambia el idioma (Português, English, Español) y el tema (oscuro, claro o del sistema) aquí arriba."
+      },
+      "conta": {
+        "title": "Tu cuenta",
+        "body": "En tu nombre puedes cambiar cómo aparece, ver este tutorial de nuevo o cerrar sesión.",
+        "action": "Haz clic en tu nombre"
       }
     }
   },
@@ -367,5 +396,53 @@
     "noneCompleted": "Ningún curso completado aún.",
     "pointsShort": "pts",
     "youLabel": "Tú"
+  },
+  "missoes": {
+    "title": "Primeros pasos",
+    "subtitle": "{{done}} de {{total}} misiones completadas",
+    "allDone": "¡Todas las misiones completadas! 🎉",
+    "hide": "Ocultar",
+    "items": {
+      "tutorial": {
+        "title": "Hacer el tutorial",
+        "hint": "Aprende a usar la plataforma en 2 minutos"
+      },
+      "abrirCurso": {
+        "title": "Abrir tu primer curso",
+        "hint": "Elige un curso y empieza"
+      },
+      "concluirCurso": {
+        "title": "Completar un curso",
+        "hint": "Termina las clases y gana el certificado"
+      },
+      "ranking": {
+        "title": "Visitar el ranking",
+        "hint": "Mira tu posición y tus puntos"
+      },
+      "conquista": {
+        "title": "Ganar tu primer logro",
+        "hint": "Completa un curso o acierta un quiz"
+      },
+      "personalizar": {
+        "title": "Hacerlo a tu manera",
+        "hint": "Cambia el tema o el idioma arriba"
+      },
+      "criarCurso": {
+        "title": "Crear un curso",
+        "hint": "Registra el primer curso de la plataforma"
+      },
+      "capa": {
+        "title": "Definir una portada",
+        "hint": "Elige de la galería o sube una imagen"
+      },
+      "criarTrilha": {
+        "title": "Crear una ruta",
+        "hint": "Agrupa cursos en una secuencia"
+      },
+      "relatorios": {
+        "title": "Ver los informes",
+        "hint": "Sigue el progreso de todos"
+      }
+    }
   }
 }

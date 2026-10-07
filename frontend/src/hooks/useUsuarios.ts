@@ -9,8 +9,8 @@ export function useUsuariosQuery() {
 export function useAtualizarUsuarioMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, role, managerId }: { id: string; role: Role; managerId: string | null }) =>
-      apiFetch<Profile>(`/perfis/${id}`, { method: 'PUT', body: { role, managerId } }),
+    mutationFn: ({ id, role }: { id: string; role: Role }) =>
+      apiFetch<Profile>(`/perfis/${id}`, { method: 'PUT', body: { role } }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usuarios'] }),
   });
 }
